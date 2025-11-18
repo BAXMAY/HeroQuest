@@ -14,7 +14,7 @@ import { FirestorePermissionError } from './errors';
 
 const createProfile = (user: any) => {
     const { firestore } = getSdks(user.app);
-    const userProfileRef = doc(firestore, 'users', user.uid, 'profile');
+    const userProfileRef = doc(firestore, 'users', user.uid);
     const profileData = {
         id: user.uid,
         email: user.email,
@@ -63,7 +63,7 @@ export function initiateGoogleSignIn(authInstance: Auth): void {
     .then(credential => {
         // Check if this is a new user
         const firestore = getSdks(authInstance.app).firestore;
-        const userProfileRef = doc(firestore, 'users', credential.user.uid, 'profile');
+        const userProfileRef = doc(firestore, 'users', credential.user.uid);
         
         // A simple way to check for new user is to try to get their profile
         // A more robust way would be to check metadata, but this is fine for now

@@ -42,7 +42,7 @@ export function AppHeader() {
 
   const userProfileRef = useMemoFirebase(() => {
     if (!user) return null;
-    return doc(firestore, 'users', user.uid, 'profile');
+    return doc(firestore, 'users', user.uid);
   }, [user, firestore]);
 
   const { data: userProfile } = useDoc(userProfileRef);

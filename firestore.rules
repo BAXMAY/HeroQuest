@@ -5,7 +5,7 @@
  * This ruleset enforces a strict user-ownership model for both user profiles and volunteer work submissions. Users can only access and modify data associated with their own user ID.
  *
  * Data Structure:
- * - User profiles are stored under `/users/{userId}/profile`, ensuring each profile is directly associated with a specific user.
+ * - User profiles are stored under `/users/{userId}`, ensuring each profile is directly associated with a specific user.
  * - Volunteer work submissions are stored under `/users/{userId}/volunteer_work/{workId}`, creating a user-specific subcollection for managing submissions.
  *
  * Key Security Decisions:
@@ -21,13 +21,13 @@ service cloud.firestore {
 
     /**
      * @description Controls access to user profile data.
-     * @path /users/{userId}/profile
-     * @allow (create) User with ID 'user123' can create their profile at /users/user123/profile.
-     * @allow (get, update, delete) User with ID 'user123' can read/update/delete their profile at /users/user123/profile.
-     * @deny (create, get, update, delete) User with ID 'user456' cannot access profile at /users/user123/profile.
+     * @path /users/{userId}
+     * @allow (create) User with ID 'user123' can create their profile at /users/user123.
+     * @allow (get, update, delete) User with ID 'user123' can read/update/delete their profile at /users/user123.
+     * @deny (create, get, update, delete) User with ID 'user456' cannot access profile at /users/user123.
      * @principle Enforces document ownership: only the authenticated user can manage their own profile.
      */
-    match /users/{userId}/profile {
+    match /users/{userId} {
       // Allow reads: get
       allow get: if isSignedIn() && isOwner(userId);
 

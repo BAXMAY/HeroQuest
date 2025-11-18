@@ -17,13 +17,13 @@ export default function Home() {
 
   const userProfileRef = useMemoFirebase(() => {
     if (!user) return null;
-    return doc(firestore, 'users', user.uid, 'profile');
+    return doc(firestore, 'users', user.uid);
   }, [user, firestore]);
 
   const { data: userProfile, isLoading: isProfileLoading } = useDoc(userProfileRef);
 
   const userDeeds = deeds
-    .filter((deed) => deed.userId === user?.id && deed.status === "approved")
+    .filter((deed) => deed.userId === user?.uid && deed.status === "approved")
     .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
     .slice(0, 3);
   

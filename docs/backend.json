@@ -102,13 +102,13 @@
   "firestore": {
     "structure": [
       {
-        "path": "/users/{userId}/profile",
+        "path": "/users/{userId}",
         "definition": {
           "entityName": "UserProfile",
           "schema": {
             "$ref": "#/backend/entities/UserProfile"
           },
-          "description": "Stores user profile data.  The path `/users/{userId}/profile` enforces ownership; only the authenticated user with ID `userId` can access this document.",
+          "description": "Stores user profile data.  The path `/users/{userId}` enforces ownership; only the authenticated user with ID `userId` can access this document.",
           "params": [
             {
               "name": "userId",
@@ -138,6 +138,6 @@
         }
       }
     ],
-    "reasoning": "The Firestore data structure is designed to support user profiles and volunteer work submissions for the Deeds & Cheers application, prioritizing security, scalability, and debuggability, especially regarding authorization. \n\n**Authorization Independence:** The structure avoids hierarchical authorization dependencies by storing all necessary authorization information directly within the documents, specifically within the `VolunteerWork` documents.  The `userProfileId` within the `VolunteerWork` collection enables secure lookups of submissions related to a specific user without needing complex `get()` calls in security rules.\n\n**Structural Segregation:** User profiles are stored in a dedicated collection (`/users/{userId}/profile`) to isolate their security requirements from other data. Volunteer work submissions are stored in a subcollection (`/users/{userId}/volunteer_work/{workId}`), ensuring all documents within this subcollection share similar access needs (owned by the user).\n\n**Access Modeling:** The structure employs path-based ownership for user profiles and volunteer work, granting the user full access to their own data. This approach simplifies security rules and makes ownership explicit. Each volunteer work submission is linked to its owner (the user) via the path.\n\n**QAPs (Rules are not Filters):** The segregation of data into user-specific subcollections enables efficient and secure `list` operations. Rules can easily filter by `request.auth.uid` to ensure a user can only access their own profiles and volunteer work submissions. The structure eliminates the need to filter based on document content, thus supporting the QAPs principle."
+    "reasoning": "The Firestore data structure is designed to support user profiles and volunteer work submissions for the Deeds & Cheers application, prioritizing security, scalability, and debuggability, especially regarding authorization. \n\n**Authorization Independence:** The structure avoids hierarchical authorization dependencies by storing all necessary authorization information directly within the documents, specifically within the `VolunteerWork` documents.  The `userProfileId` within the `VolunteerWork` collection enables secure lookups of submissions related to a specific user without needing complex `get()` calls in security rules.\n\n**Structural Segregation:** User profiles are stored in a dedicated collection (`/users/{userId}`) to isolate their security requirements from other data. Volunteer work submissions are stored in a subcollection (`/users/{userId}/volunteer_work/{workId}`), ensuring all documents within this subcollection share similar access needs (owned by the user).\n\n**Access Modeling:** The structure employs path-based ownership for user profiles and volunteer work, granting the user full access to their own data. This approach simplifies security rules and makes ownership explicit. Each volunteer work submission is linked to its owner (the user) via the path.\n\n**QAPs (Rules are not Filters):** The segregation of data into user-specific subcollections enables efficient and secure `list` operations. Rules can easily filter by `request.auth.uid` to ensure a user can only access their own profiles and volunteer work submissions. The structure eliminates the need to filter based on document content, thus supporting the QAPs principle."
   }
 }
