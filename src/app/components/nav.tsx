@@ -65,16 +65,16 @@ export default function Nav() {
       <SidebarFooter>
         <SidebarMenu>
             <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Lorebook">
-                    <Link href="#">
+                <SidebarMenuButton asChild tooltip="Lorebook" isActive={pathname === '/lorebook'}>
+                    <Link href="/lorebook">
                         <BookMarked />
                         <span>Lorebook</span>
                     </Link>
                 </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Settings">
-                    <Link href="#">
+                <SidebarMenuButton asChild tooltip="Settings" isActive={pathname === '/settings'}>
+                    <Link href="/settings">
                         <Settings />
                         <span>Settings</span>
                     </Link>
