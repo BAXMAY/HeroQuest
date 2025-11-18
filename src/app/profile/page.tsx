@@ -15,6 +15,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { getLevelFromXP } from '../lib/levels';
 import { Progress } from '@/components/ui/progress';
+import { Label } from '@/components/ui/label';
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, 'First name is too short').max(50, 'First name is too long'),
