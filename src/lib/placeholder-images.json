@@ -9,7 +9,7 @@
     {
       "id": "avatar2",
       "description": "Avatar for Mia",
-      "imageUrl": "https://images.unsplash.com/photo-1602204127613-88710168e528?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxraWQlMjBzbWlsaW5nfGVufDB8fHx8MTc2MzQ3MzE1MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1602204127613-88710168e528?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxraWQlMjBzbWlsaW5nfGVufDB8fHx8fDE3NjM0NzMxNTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "kid smiling"
     },
     {
@@ -74,39 +74,39 @@
     },
     {
       "id": "reward1",
-      "description": "Dragon sticker pack",
-      "imageUrl": "https://images.unsplash.com/photo-1627916372013-9b6261541936?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdGlja2VyJTIwcGFja3xlbnwwfHx8fDE3NjM0ODk5ODh8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "sticker pack"
+      "description": "Superhero action figure",
+      "imageUrl": "https://images.unsplash.com/photo-1534447422333-3b6924356434?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBhY3Rpb24lMjBmaWd1cmV8ZW58MHx8fHwxNzY1MzAwMjU0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "superhero figure"
     },
     {
       "id": "reward2",
-      "description": "Pouch of seeds",
-      "imageUrl": "https://images.unsplash.com/photo-1572202283335-a65c4903c739?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzZWVkJTIwcG91Y2h8ZW58MHx8fHwxNzYzNDkwMDI3fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "seed pouch"
+      "description": "A bag of gummy snacks",
+      "imageUrl": "https://images.unsplash.com/photo-1599384236319-a0a6538e4118?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxndW1teSUyMHNuYWNrc3xlbnwwfHx8fDE3NjUzMDAyNzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gummy snacks"
     },
     {
       "id": "reward3",
-      "description": "A red cape",
-      "imageUrl": "https://images.unsplash.com/photo-1549643444-24e03b44604a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxyZWQlMjBjYXBlfGVufDB8fHx8MTc2MzQ5MDA1Nnww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "red cape"
+      "description": "A bottle of fruit juice",
+      "imageUrl": "https://images.unsplash.com/photo-1600271886743-f59c58ea3636?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxib3R0bGUlMjBvZiUyMGp1aWNlfGVufDB8fHx8fDE3NjUzMDAzMDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "juice bottle"
     },
     {
       "id": "reward4",
-      "description": "An ancient scroll",
-      "imageUrl": "https://images.unsplash.com/photo-1621262339033-6a7e0f9b6e2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhbmNpZW50JTIwc2Nyb2xsfGVufDB8fHx8MTc2MzQ5MDA4MHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "ancient scroll"
+      "description": "A cute teddy bear",
+      "imageUrl": "https://images.unsplash.com/photo-1532053523171-8c4391a42a4a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx0ZWRkeSUyMGJlYXJ8ZW58MHx8fHwxNzY1MzAwMzMxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "teddy bear"
     },
     {
       "id": "reward5",
-      "description": "A cute mascot",
-      "imageUrl": "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjdXRlJTIwbWFzY290fGVufDB8fHx8MTc2MzQ5MDEwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "cute mascot"
+      "description": "A classic princess doll",
+      "imageUrl": "https://images.unsplash.com/photo-1619688463426-3d23b3337318?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwcm9jZWxhaW4lMjBkb2xsfGVufDB8fHx8fDE3NjUzMDAzNTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "porcelain doll"
     },
     {
       "id": "reward6",
-      "description": "A golden shield",
-      "imageUrl": "https://images.unsplash.com/photo-1601061922572-68095b8f603c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxnb2xkZW4lMjBzaGllbGR8ZW58MHx8fHwxNzYzNDkwMTMxfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "golden shield"
+      "description": "A box of assorted chocolate",
+      "imageUrl": "https://images.unsplash.com/photo-1579582199589-53b503d5225d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxib3glMjBvZiUyMGNob2NvbGF0ZXxlbnwwfHx8fDE3NjUzMDAzODZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chocolate box"
     }
   ]
 }
