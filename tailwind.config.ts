@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['PT Sans', 'sans-serif'],
-        headline: ['PT Sans', 'sans-serif'],
+        body: ['"IM Fell English"', 'serif'],
+        headline: ['MedievalSharp', 'cursive'],
         code: ['monospace'],
       },
       colors: {

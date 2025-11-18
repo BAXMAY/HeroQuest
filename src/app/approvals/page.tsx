@@ -25,7 +25,7 @@ export default function ApprovalsPage() {
       prevDeeds.map((d) => (d.id === deedId ? { ...d, status: newStatus } : d))
     );
     toast({
-      title: `Deed ${newStatus}!`,
+      title: `Quest ${newStatus}!`,
       description: `The submission has been ${newStatus}.`,
       variant: newStatus === 'rejected' ? 'destructive' : 'default',
     });
@@ -34,8 +34,8 @@ export default function ApprovalsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-headline">Pending Approvals</h1>
-        <p className="text-muted-foreground">Review the good deeds and spread the cheer!</p>
+        <h1 className="text-3xl font-bold tracking-tight font-headline">Quest Review</h1>
+        <p className="text-muted-foreground">Review heroic deeds and award experience points!</p>
       </div>
 
       {pendingDeeds.length > 0 ? (
@@ -69,7 +69,7 @@ export default function ApprovalsPage() {
                     />
                   </div>
                   <CardDescription>{deed.description}</CardDescription>
-                  <div className="text-sm font-semibold text-primary">Potential points: {deed.points}</div>
+                  <div className="text-sm font-semibold text-primary">Potential XP: {deed.points}</div>
                 </CardContent>
                 <CardFooter className="flex gap-2">
                   <Button
@@ -95,7 +95,7 @@ export default function ApprovalsPage() {
           <Info className="h-4 w-4" />
           <AlertTitle>All Clear!</AlertTitle>
           <AlertDescription>
-            There are no pending submissions to review. Great job!
+            There are no pending quests to review. Great job!
           </AlertDescription>
         </Alert>
       )}

@@ -41,7 +41,7 @@ export default function SuggestionForm({ trendingDeeds }: SuggestionFormProps) {
       });
       setSuggestions(result);
     } catch (e) {
-      setError('Sorry, the AI is taking a quick break. Please try again in a moment.');
+      setError('Sorry, the Oracle is meditating. Please try again in a moment.');
       console.error(e);
     } finally {
       setIsLoading(false);
@@ -52,12 +52,12 @@ export default function SuggestionForm({ trendingDeeds }: SuggestionFormProps) {
     <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle>Find Your Next Good Deed</CardTitle>
-          <CardDescription>Tell us what you care about, and our AI will find volunteer ideas for you!</CardDescription>
+          <CardTitle>Find Your Next Quest</CardTitle>
+          <CardDescription>Tell us what you care about, and the Oracle will find new adventures for you!</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label className="font-semibold">What are you interested in?</Label>
+            <Label className="font-semibold">What are your interests?</Label>
             <div className="flex flex-wrap gap-4">
               {interestOptions.map((interest) => (
                 <div key={interest} className="flex items-center space-x-2">
@@ -79,7 +79,7 @@ export default function SuggestionForm({ trendingDeeds }: SuggestionFormProps) {
             ) : (
               <Wand2 className="mr-2 h-4 w-4" />
             )}
-            Get Suggestions
+            Consult the Oracle
           </Button>
         </CardContent>
       </Card>
@@ -87,7 +87,7 @@ export default function SuggestionForm({ trendingDeeds }: SuggestionFormProps) {
       {isLoading && (
          <div className="flex items-center justify-center space-x-2 text-muted-foreground">
             <Loader2 className="h-5 w-5 animate-spin"/>
-            <span>Our AI is thinking...</span>
+            <span>The Oracle is scrying the future...</span>
         </div>
       )}
 
@@ -100,7 +100,7 @@ export default function SuggestionForm({ trendingDeeds }: SuggestionFormProps) {
 
       {suggestions && (
         <div>
-            <h2 className="text-2xl font-bold tracking-tight font-headline mb-4">Here are some ideas!</h2>
+            <h2 className="text-2xl font-bold tracking-tight font-headline mb-4">The Oracle has spoken!</h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {suggestions.opportunities.map((opp, index) => (
               <OpportunityCard key={index} opportunity={opp} />

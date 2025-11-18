@@ -17,15 +17,16 @@ import {
   Sparkles,
   LifeBuoy,
   Settings,
+  BookMarked,
 } from 'lucide-react';
-import { HandsHelpingIcon } from './icons';
+import Mascot from './mascot';
 
 const navItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/submit', label: 'Submit Deed', icon: PlusCircle },
-  { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
-  { href: '/approvals', label: 'Approvals', icon: CheckSquare },
-  { href: '/gallery', label: 'Volunteer Gallery', icon: Sparkles },
+  { href: '/submit', label: 'Start Quest', icon: PlusCircle },
+  { href: '/leaderboard', label: 'Hall of Heroes', icon: Trophy },
+  { href: '/approvals', label: 'Quest Review', icon: CheckSquare },
+  { href: '/gallery', label: 'Opportunity Board', icon: Sparkles },
 ];
 
 export default function Nav() {
@@ -35,8 +36,8 @@ export default function Nav() {
     <>
       <SidebarHeader>
         <div className="flex items-center gap-2 p-2">
-            <HandsHelpingIcon className="w-8 h-8 text-primary" />
-            <h2 className="text-xl font-bold font-headline">Deeds & Cheers</h2>
+            <Mascot className="w-8 h-8 text-primary" />
+            <h2 className="text-2xl font-bold font-headline">DeedQuest</h2>
         </div>
       </SidebarHeader>
 
@@ -62,10 +63,10 @@ export default function Nav() {
       <SidebarFooter>
         <SidebarMenu>
             <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Help">
+                <SidebarMenuButton asChild tooltip="Lorebook">
                     <Link href="#">
-                        <LifeBuoy />
-                        <span>Help</span>
+                        <BookMarked />
+                        <span>Lorebook</span>
                     </Link>
                 </SidebarMenuButton>
             </SidebarMenuItem>

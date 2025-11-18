@@ -12,9 +12,9 @@ export default function GalleryPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
             <Sparkles className="w-8 h-8 text-accent"/>
-            Volunteer Opportunity Gallery
+            Opportunity Board
         </h1>
-        <p className="text-muted-foreground">Discover new ways to help, suggested just for you by AI!</p>
+        <p className="text-muted-foreground">Discover new quests, suggested just for you by the Oracle!</p>
       </div>
 
       <SuggestionForm trendingDeeds={trendingDeeds} />

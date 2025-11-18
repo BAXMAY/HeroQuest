@@ -32,7 +32,7 @@ const formSchema = z.object({
     required_error: "Please select a category.",
   }),
   photo: z.any()
-    .refine(files => files?.length == 1, 'Photo is required.')
+    .refine(files => files?.length == 1, 'Proof of your deed is required.')
 });
 
 export default function SubmissionForm() {
@@ -55,8 +55,8 @@ export default function SubmissionForm() {
     setTimeout(() => {
         setIsLoading(false);
         toast({
-            title: "🎉 Deed Submitted!",
-            description: "Your good deed is now pending approval. Great job!",
+            title: "🎉 Quest Submitted!",
+            description: "Your heroic deed is now pending review. Well done, adventurer!",
         });
         form.reset();
         router.push('/');
@@ -71,15 +71,15 @@ export default function SubmissionForm() {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Describe your deed</FormLabel>
+              <FormLabel>Describe your quest</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="e.g., I helped my neighbor water their plants..."
+                  placeholder="e.g., I rescued a cat from a tall tree..."
                   {...field}
                 />
               </FormControl>
               <FormDescription>
-                Tell us what you did in a few words.
+                Recount your tale of heroism.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -94,7 +94,7 @@ export default function SubmissionForm() {
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a category for your deed" />
+                    <SelectValue placeholder="Select a quest category" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -106,7 +106,7 @@ export default function SubmissionForm() {
                 </SelectContent>
               </Select>
               <FormDescription>
-                This helps us organize all the good deeds!
+                This helps the scribes categorize your adventure!
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -117,12 +117,12 @@ export default function SubmissionForm() {
           name="photo"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Upload a Photo</FormLabel>
+              <FormLabel>Upload Proof</FormLabel>
               <FormControl>
                 <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
               </FormControl>
               <FormDescription>
-                A picture of your awesome work.
+                A picture of your legendary accomplishment.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -134,7 +134,7 @@ export default function SubmissionForm() {
             ) : (
               <Send className="mr-2 h-4 w-4" />
             )}
-          Submit for Approval
+          Submit for Review
         </Button>
       </form>
     </Form>

@@ -34,9 +34,9 @@ export default function LeaderboardPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
             <Trophy className="w-8 h-8 text-yellow-500" />
-            Hall of Cheers
+            Hall of Heroes
         </h1>
-        <p className="text-muted-foreground">See who's leading the charge in making a difference!</p>
+        <p className="text-muted-foreground">See which adventurers are leading the charge!</p>
       </div>
 
       <div className="border rounded-lg">
@@ -44,8 +44,8 @@ export default function LeaderboardPage() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px] text-center">Rank</TableHead>
-              <TableHead>Volunteer</TableHead>
-              <TableHead className="text-right">Score</TableHead>
+              <TableHead>Adventurer</TableHead>
+              <TableHead className="text-right">XP</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
