@@ -39,38 +39,38 @@ service cloud.firestore {
 
       // Allow list:
       allow list: if false;
-    }
 
-    /**
-     * @description Controls access to volunteer work submissions.
-     * @path /users/{userId}/volunteer_work/{workId}
-     * @allow (create) User with ID 'user123' can create volunteer work at /users/user123/volunteer_work/work1.
-     * @allow (get, update, delete) User with ID 'user123' can read/update/delete their volunteer work at /users/user123/volunteer_work/work1.
-     * @deny (create, get, update, delete) User with ID 'user456' cannot access volunteer work at /users/user123/volunteer_work/work1.
-     * @principle Enforces document ownership: only the authenticated user can manage their own volunteer work submissions.
-     */
-    match /users/{userId}/volunteer_work/{workId} {
-      // Allow reads: get, list
-      allow get: if isSignedIn() && isOwner(userId);
-      allow list: if isSignedIn() && isOwner(userId);
-
-      // Allow writes: create, update, delete
-      allow create: if isSignedIn() && isOwner(userId) && request.resource.data.userProfileId == userId;
-      allow update: if isSignedIn() && isExistingOwner(userId) && request.resource.data.userProfileId == resource.data.userProfileId;
-      allow delete: if isSignedIn() && isExistingOwner(userId);
-    }
-
-    /**
-     * @description Controls access to user achievements.
-     * @path /users/{userId}/achievements/{achievementId}
-     * @allow (get, list) A user can read their own achievements.
-     * @deny (create, update, delete) Achievements are awarded by the system, so users cannot modify them.
-     * @principle Enforces read-only ownership for achievements.
-     */
-    match /users/{userId}/achievements/{achievementId} {
+      /**
+       * @description Controls access to volunteer work submissions.
+       * @path /users/{userId}/volunteer_work/{workId}
+       * @allow (create) User with ID 'user123' can create volunteer work at /users/user123/volunteer_work/work1.
+       * @allow (get, update, delete) User with ID 'user123' can read/update/delete their volunteer work at /users/user123/volunteer_work/work1.
+       * @deny (create, get, update, delete) User with ID 'user456' cannot access volunteer work at /users/user123/volunteer_work/work1.
+       * @principle Enforces document ownership: only the authenticated user can manage their own volunteer work submissions.
+       */
+      match /volunteer_work/{workId} {
+        // Allow reads: get, list
         allow get: if isSignedIn() && isOwner(userId);
         allow list: if isSignedIn() && isOwner(userId);
-        allow write: if false;
+
+        // Allow writes: create, update, delete
+        allow create: if isSignedIn() && isOwner(userId) && request.resource.data.userProfileId == userId;
+        allow update: if isSignedIn() && isExistingOwner(userId) && request.resource.data.userProfileId == resource.data.userProfileId;
+        allow delete: if isSignedIn() && isExistingOwner(userId);
+      }
+
+      /**
+       * @description Controls access to user achievements.
+       * @path /users/{userId}/achievements/{achievementId}
+       * @allow (get, list) A user can read their own achievements.
+       * @deny (create, update, delete) Achievements are awarded by the system, so users cannot modify them.
+       * @principle Enforces read-only ownership for achievements.
+       */
+      match /achievements/{achievementId} {
+          allow get: if isSignedIn() && isOwner(userId);
+          allow list: if isSignedIn() && isOwner(userId);
+          allow write: if false;
+      }
     }
 
     // ---- Helper functions ----
