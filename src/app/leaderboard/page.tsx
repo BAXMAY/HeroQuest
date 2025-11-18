@@ -1,7 +1,7 @@
 import { users } from '@/app/lib/mock-data';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Crown, Trophy } from 'lucide-react';
+import { Crown, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 export default function LeaderboardPage() {
@@ -33,7 +33,7 @@ export default function LeaderboardPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
-            <Trophy className="w-8 h-8 text-yellow-500" />
+            <Users className="w-8 h-8 text-primary" />
             Hall of Heroes
         </h1>
         <p className="text-muted-foreground">See which adventurers are leading the charge!</p>

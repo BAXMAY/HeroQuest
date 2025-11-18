@@ -1,4 +1,4 @@
-import type { User, Deed, Reward } from './types';
+import type { User, Deed, Reward, Achievement } from './types';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const getImage = (id: string) => PlaceHolderImages.find(img => img.id === id)?.imageUrl || `https://picsum.photos/seed/${id}/400/300`;
@@ -129,4 +129,55 @@ export const rewards: Reward[] = [
     cost: 500,
     image: getImage('reward6'),
   },
+];
+
+export const allAchievements: Achievement[] = [
+    {
+        id: 'first-quest',
+        name: 'First Quest',
+        description: 'Complete your very first quest.',
+        icon: 'Shield',
+    },
+    {
+        id: 'earth-guardian',
+        name: 'Earth Guardian',
+        description: 'Complete 3 environment-related quests.',
+        icon: 'Shield',
+    },
+    {
+        id: 'animal-friend',
+        name: 'Animal Friend',
+        description: 'Complete 3 quests helping animals.',
+        icon: 'Shield',
+    },
+    {
+        id: 'community-pillar',
+        name: 'Community Pillar',
+        description: 'Complete 5 community quests.',
+        icon: 'Shield',
+    },
+    {
+        id: 'xp-novice',
+        name: 'XP Novice',
+        description: 'Earn 100 total XP.',
+        icon: 'Shield',
+    },
+    {
+        id: 'xp-master',
+        name: 'XP Master',
+        description: 'Earn 1000 total XP.',
+        icon: 'Shield',
+    },
+    {
+        id: 'quest-enthusiast',
+        name: 'Quest Enthusiast',
+        description: 'Complete 5 total quests.',
+        icon: 'Shield',
+    },
+    {
+        id: 'legendary-hero',
+        name: 'Legendary Hero',
+        description: 'Complete 20 total quests.',
+        icon: 'Shield',
+    },
 ];
