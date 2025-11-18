@@ -2,12 +2,21 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { allAchievements } from '@/app/lib/mock-data';
-import { Shield, Trophy, CheckCircle2 } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import type { Achievement } from '@/app/lib/types';
 import { cn } from '@/lib/utils';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Trophy, CheckCircle2, Shield } from 'lucide-react';
+
+const Icon = ({ name, className }: { name: string; className: string }) => {
+  const LucideIcon = (LucideIcons as any)[name];
+  if (!LucideIcon) {
+    return <Shield className={className} />; // Fallback icon
+  }
+  return <LucideIcon className={className} />;
+};
+
 
 export default function AchievementsPage() {
     const { user } = useUser();
@@ -47,7 +56,7 @@ export default function AchievementsPage() {
                 <Card key={ach.id} className={cn("flex flex-col text-center items-center transition-all", isUnlocked ? 'border-primary bg-primary/5' : 'bg-card opacity-70')}>
                     <CardHeader className="pb-2">
                         <div className={cn("w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2", isUnlocked ? 'bg-primary/10' : 'bg-secondary')}>
-                            <Shield className={cn("w-8 h-8", isUnlocked ? 'text-primary' : 'text-muted-foreground')}/>
+                           <Icon name={ach.icon} className={cn("w-8 h-8", isUnlocked ? 'text-primary' : 'text-muted-foreground')} />
                         </div>
                         <CardTitle className="text-base">{ach.name}</CardTitle>
                     </CardHeader>
