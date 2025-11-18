@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Award, LogOut, Settings, User as UserIcon, Coins, Loader2, LogIn, Languages, Check } from 'lucide-react';
+import { Award, LogOut, Settings, User as UserIcon, Coins, Loader2, LogIn } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth, useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
@@ -57,6 +57,10 @@ export function AppHeader() {
     }
   };
   
+  const handleLanguageToggle = () => {
+    setLanguage(language === 'en' ? 'th' : 'en');
+  };
+
   const isLoading = isUserLoading || isProfileLoading;
   const displayName = userProfile?.firstName || user?.displayName || t('adventurer');
   const currentLevel = getLevelFromXP(userProfile?.totalPoints);
@@ -71,24 +75,9 @@ export function AppHeader() {
         <h1 className="text-lg font-semibold md:text-xl font-headline">{title}</h1>
       </div>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon">
-                <Languages className="h-[1.2rem] w-[1.2rem]" />
-                <span className="sr-only">Change language</span>
-            </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setLanguage('en')} className="flex justify-between">
-                <span>English</span>
-                {language === 'en' && <Check className="h-4 w-4" />}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setLanguage('th')} className="flex justify-between">
-                <span>ไทย</span>
-                {language === 'th' && <Check className="h-4 w-4" />}
-            </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <Button variant="outline" onClick={handleLanguageToggle} className="w-16">
+        {language === 'en' ? 'EN' : 'ไทย'}
+      </Button>
 
       {isLoading ? (
         <Loader2 className="h-6 w-6 animate-spin" />
