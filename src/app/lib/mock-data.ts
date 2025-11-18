@@ -157,10 +157,34 @@ export const allAchievements: Achievement[] = [
         icon: 'Users',
     },
     {
+        id: 'book-worm',
+        name: 'Book Worm',
+        description: 'Complete 3 education quests.',
+        icon: 'BookOpen',
+    },
+    {
+        id: 'health-hero',
+        name: 'Health Hero',
+        description: 'Complete 3 health-related quests.',
+        icon: 'HeartPulse',
+    },
+    {
+        id: 'jack-of-all-deeds',
+        name: 'Jack of All Deeds',
+        description: 'Complete a quest in every category.',
+        icon: 'Shapes',
+    },
+    {
         id: 'xp-novice',
         name: 'XP Novice',
         description: 'Earn 100 total XP.',
         icon: 'Star',
+    },
+    {
+        id: 'quest-enthusiast',
+        name: 'Quest Enthusiast',
+        description: 'Complete 5 total quests.',
+        icon: 'Swords',
     },
     {
         id: 'xp-master',
@@ -169,10 +193,10 @@ export const allAchievements: Achievement[] = [
         icon: 'Gem',
     },
     {
-        id: 'quest-enthusiast',
-        name: 'Quest Enthusiast',
-        description: 'Complete 5 total quests.',
-        icon: 'Swords',
+        id: 'xp-grandmaster',
+        name: 'XP Grandmaster',
+        description: 'Earn 5000 total XP.',
+        icon: 'BrainCircuit',
     },
     {
         id: 'legendary-hero',
