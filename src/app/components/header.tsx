@@ -24,6 +24,7 @@ const pageTitles: { [key: string]: string } = {
   '/': 'Dashboard',
   '/submit': 'Start a New Quest',
   '/leaderboard': 'Hall of Heroes',
+  '/achievements': 'Trophy Room',
   '/approvals': 'Quest Review',
   '/gallery': 'Opportunity Board',
   '/rewards': 'Reward Shop',
@@ -32,6 +33,7 @@ const pageTitles: { [key: string]: string } = {
   '/lorebook': 'Lorebook',
   '/login': 'Login',
   '/register': 'Register',
+  '/roadmap': 'Level Roadmap',
 };
 
 export function AppHeader() {

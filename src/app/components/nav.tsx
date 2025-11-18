@@ -19,6 +19,7 @@ import {
   BookMarked,
   ShoppingBag,
   Users,
+  Map,
 } from 'lucide-react';
 import Mascot from './mascot';
 
@@ -27,6 +28,7 @@ const navItems = [
   { href: '/submit', label: 'Start Quest', icon: PlusCircle },
   { href: '/leaderboard', label: 'Hall of Heroes', icon: Users },
   { href: '/achievements', label: 'Trophy Room', icon: Trophy },
+  { href: '/roadmap', label: 'Level Roadmap', icon: Map },
   { href: '/approvals', label: 'Quest Review', icon: CheckSquare },
   { href: '/gallery', label: 'Opportunity Board', icon: Sparkles },
   { href: '/rewards', label: 'Reward Shop', icon: ShoppingBag },
