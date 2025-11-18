@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { deeds } from "@/app/lib/mock-data";
+import { deeds as mockDeeds } from "@/app/lib/mock-data";
 import { ArrowUpRight, Award, PlusCircle, Coins, Loader2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -11,6 +11,8 @@ import Mascot from "@/app/components/mascot";
 import { useDoc, useFirestore, useMemoFirebase, useUser } from "@/firebase";
 import { doc } from "firebase/firestore";
 import { useLanguage } from "@/app/context/language-context";
+
+const anonymousStarterDeeds = mockDeeds.slice(0, 2).map(d => ({...d, status: 'approved'}));
 
 export default function Home() {
   const { user, isUserLoading } = useUser();
@@ -24,10 +26,11 @@ export default function Home() {
 
   const { data: userProfile, isLoading: isProfileLoading } = useDoc(userProfileRef);
 
-  const userDeeds = deeds
+  const userDeeds = (user?.isAnonymous ? anonymousStarterDeeds : mockDeeds
     .filter((deed) => deed.userId === user?.uid && deed.status === "approved")
     .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
-    .slice(0, 3);
+    .slice(0, 3)
+    );
   
   const isLoading = isUserLoading || isProfileLoading;
 

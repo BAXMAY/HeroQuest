@@ -28,7 +28,7 @@ const createProfile = (user: User, firestore: Firestore) => {
         profilePicture: user.photoURL || '',
         totalPoints: isAnonymous ? 150 : 0,
         braveCoins: isAnonymous ? 15 : 0,
-        questsCompleted: 0,
+        questsCompleted: isAnonymous ? 2 : 0,
     };
 
     setDoc(userProfileRef, profileData, { merge: true }).catch(error => {
