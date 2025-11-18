@@ -1,6 +1,6 @@
 'use client';
 
-import { useUser, useFirestore, useDoc, updateDocumentNonBlocking, useMemoFirebase } from '@/firebase';
+import { useUser, useFirestore, useDoc, updateDocumentNonBlocking, useMemoFirebase, useCollection } from '@/firebase';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,14 +8,16 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { doc } from 'firebase/firestore';
-import { Award, Coins, Loader2, Save } from 'lucide-react';
+import { collection, doc } from 'firebase/firestore';
+import { Award, Coins, Loader2, Save, Shield } from 'lucide-react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { getLevelFromXP } from '../lib/levels';
 import { Progress } from '@/components/ui/progress';
 import { Label } from '@/components/ui/label';
+import { Achievement } from '../lib/types';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, 'First name is too short').max(50, 'First name is too long'),
@@ -35,7 +37,14 @@ export default function ProfilePage() {
     return doc(firestore, 'users', user.uid);
   }, [user, firestore]);
 
+  const achievementsRef = useMemoFirebase(() => {
+    if (!user) return null;
+    return collection(firestore, 'users', user.uid, 'achievements');
+  }, [user, firestore]);
+
+
   const { data: userProfile, isLoading: isProfileLoading } = useDoc<any>(userProfileRef);
+  const { data: achievements, isLoading: areAchievementsLoading } = useCollection<Achievement>(achievementsRef);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -65,7 +74,7 @@ export default function ProfilePage() {
     });
   };
   
-  const isLoading = isUserLoading || isProfileLoading;
+  const isLoading = isUserLoading || isProfileLoading || areAchievementsLoading;
 
   if (isLoading) {
     return (
@@ -133,6 +142,38 @@ export default function ProfilePage() {
             <Progress value={(userProfile.totalPoints / 2000) * 100} className="h-2 mt-1" />
              <p className="text-xs text-muted-foreground mt-1 text-right">Level {currentLevel.level}</p>
           </div>
+        </CardContent>
+      </Card>
+
+       <Card>
+        <CardHeader>
+          <CardTitle>Achievements</CardTitle>
+          <CardDescription>Trophies from your heroic journey.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {achievements && achievements.length > 0 ? (
+            <TooltipProvider>
+              <div className="flex flex-wrap gap-4">
+                {achievements.map((ach) => (
+                  <Tooltip key={ach.id}>
+                    <TooltipTrigger>
+                      <div className="flex flex-col items-center gap-2 p-3 rounded-lg border bg-accent/10 w-24 h-24 justify-center">
+                        <Shield className="w-8 h-8 text-accent" />
+                        <span className="text-xs font-semibold text-center truncate w-full">{ach.name}</span>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="font-bold">{ach.name}</p>
+                      <p className="text-sm text-muted-foreground">{ach.description}</p>
+                      <p className="text-xs text-muted-foreground/80 mt-1">Unlocked: {new Date(ach.unlockedAt).toLocaleDateString()}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                ))}
+              </div>
+            </TooltipProvider>
+          ) : (
+            <p className="text-muted-foreground text-sm">Your trophy case is empty. Complete quests to earn achievements!</p>
+          )}
         </CardContent>
       </Card>
 

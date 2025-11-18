@@ -91,12 +91,49 @@
         "submissionDate",
         "status"
       ]
+    },
+    "Achievement": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Achievement",
+      "description": "Represents an achievement unlocked by a user.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the achievement."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the achievement."
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of how the achievement was earned."
+        },
+        "icon": {
+          "type": "string",
+          "description": "An identifier for the icon representing the achievement."
+        },
+        "unlockedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date and time the achievement was unlocked."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "icon",
+        "unlockedAt"
+      ]
     }
   },
   "auth": {
     "providers": [
       "password",
-      "anonymous"
+      "anonymous",
+      "google.com"
     ]
   },
   "firestore": {
@@ -133,6 +170,26 @@
             {
               "name": "workId",
               "description": "The unique identifier of the volunteer work submission."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/achievements/{achievementId}",
+        "definition": {
+          "entityName": "Achievement",
+          "schema": {
+            "$ref": "#/backend/entities/Achievement"
+          },
+          "description": "Stores achievements unlocked by a user. Ownership is enforced by the path, allowing only the authenticated user to access their own achievements.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user, corresponding to their Firebase Authentication UID."
+            },
+            {
+              "name": "achievementId",
+              "description": "The unique identifier for the achievement."
             }
           ]
         }
