@@ -60,7 +60,9 @@ export function AppHeader() {
         title: 'Logged Out',
         description: 'You have successfully logged out.',
       });
-      // The onAuthStateChanged listener in the provider will handle anonymous sign-in.
+      // The onAuthStateChanged listener in the provider will handle anonymous sign-in,
+      // or the user can navigate to login/register.
+      router.push('/login');
     } catch (error) {
       console.error("Logout Error: ", error);
       toast({
@@ -124,7 +126,7 @@ export function AppHeader() {
                  <DropdownMenuItem asChild>
                     <Link href="/register">
                         <UserIcon className="mr-2 h-4 w-4" />
-                        <span>Sign Up</span>
+                        <span>Sign Up to Save Progress</span>
                     </Link>
                 </DropdownMenuItem>
             ) : (
@@ -149,7 +151,7 @@ export function AppHeader() {
               {isAnonymous ? (
                 <>
                   <LogIn className="mr-2 h-4 w-4" />
-                  <span>Login / Register</span>
+                  <span>Login</span>
                 </>
               ) : (
                 <>
