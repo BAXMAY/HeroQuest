@@ -25,12 +25,15 @@ const pageTitles: { [key: string]: string } = {
   '/profile': 'Your Profile',
   '/settings': 'Settings',
   '/lorebook': 'Lorebook',
+  '/login': 'Login',
+  '/register': 'Register',
 };
 
 export function AppHeader() {
   const user = currentUser;
   const pathname = usePathname();
   const title = pageTitles[pathname] || 'HeroQuest';
+  const showUserMenu = false; // We can change this once we have real auth
   
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 md:px-6">
@@ -40,51 +43,57 @@ export function AppHeader() {
         <h1 className="text-lg font-semibold md:text-xl font-headline">{title}</h1>
       </div>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-            <Avatar className="h-10 w-10 border-2 border-primary/50">
-              <AvatarImage src={user.avatar} alt={user.name} data-ai-hint="child portrait" />
-              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-            </Avatar>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" align="end">
-          <DropdownMenuLabel className="font-normal">
-            <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">{user.name}</p>
-              <div className="text-xs leading-none text-muted-foreground flex items-center justify-between">
-                <div className="flex items-center">
-                    <Award className="w-3 h-3 mr-1 text-yellow-500"/>
-                    {user.score.toLocaleString()} XP
-                </div>
-                <div className="flex items-center">
-                    <Coins className="w-3 h-3 mr-1 text-amber-500"/>
-                    {user.braveCoins.toLocaleString()}
+      {showUserMenu ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+              <Avatar className="h-10 w-10 border-2 border-primary/50">
+                <AvatarImage src={user.avatar} alt={user.name} data-ai-hint="child portrait" />
+                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="end">
+            <DropdownMenuLabel className="font-normal">
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium leading-none">{user.name}</p>
+                <div className="text-xs leading-none text-muted-foreground flex items-center justify-between">
+                  <div className="flex items-center">
+                      <Award className="w-3 h-3 mr-1 text-yellow-500"/>
+                      {user.score.toLocaleString()} XP
+                  </div>
+                  <div className="flex items-center">
+                      <Coins className="w-3 h-3 mr-1 text-amber-500"/>
+                      {user.braveCoins.toLocaleString()}
+                  </div>
                 </div>
               </div>
-            </div>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <Link href="/profile">
-              <UserIcon className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href="/settings">
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Settings</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <LogOut className="mr-2 h-4 w-4" />
-            <span>Log out</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/profile">
+                <UserIcon className="mr-2 h-4 w-4" />
+                <span>Profile</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/settings">
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Log out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : (
+        <Button asChild variant="outline">
+          <Link href="/login">Login</Link>
+        </Button>
+      )}
     </header>
   );
 }
