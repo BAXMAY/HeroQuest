@@ -49,7 +49,14 @@ export default function RoadmapPage() {
                 </TableHeader>
                 <TableBody>
                     {levels.map((level) => (
-                    <TableRow key={level.level} className={cn(currentLevel?.level === level.level && "bg-primary/10 font-bold")}>
+                    <TableRow 
+                        key={level.level} 
+                        className={cn(currentLevel?.level === level.level && "bg-primary/20 font-bold border-y-2 border-primary")}
+                        style={{
+                            // Create a subtle gradient from transparent to primary color as levels increase
+                            background: `linear-gradient(90deg, hsl(var(--primary) / ${level.level / 200}) 0%, transparent 100%)`
+                        }}
+                    >
                         <TableCell>
                            <div className="flex items-center gap-2">
                              {currentLevel?.level === level.level && <Badge>Current</Badge>}
