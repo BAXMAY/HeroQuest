@@ -28,5 +28,5 @@ export type Reward = {
   name: string;
   description: string;
   cost: number;
-  icon: string;
+  image: string;
 };

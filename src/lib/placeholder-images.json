@@ -71,6 +71,42 @@
       "description": "Charity run photo",
       "imageUrl": "https://images.unsplash.com/photo-1648544373826-8ac225f98062?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjaGFyaXR5JTIwcnVufGVufDB8fHx8MTc2MzQ3MzE1MHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "charity run"
+    },
+    {
+      "id": "reward1",
+      "description": "Dragon sticker pack",
+      "imageUrl": "https://images.unsplash.com/photo-1627916372013-9b6261541936?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdGlja2VyJTIwcGFja3xlbnwwfHx8fDE3NjM0ODk5ODh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "sticker pack"
+    },
+    {
+      "id": "reward2",
+      "description": "Pouch of seeds",
+      "imageUrl": "https://images.unsplash.com/photo-1572202283335-a65c4903c739?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzZWVkJTIwcG91Y2h8ZW58MHx8fHwxNzYzNDkwMDI3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "seed pouch"
+    },
+    {
+      "id": "reward3",
+      "description": "A red cape",
+      "imageUrl": "https://images.unsplash.com/photo-1549643444-24e03b44604a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxyZWQlMjBjYXBlfGVufDB8fHx8MTc2MzQ5MDA1Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "red cape"
+    },
+    {
+      "id": "reward4",
+      "description": "An ancient scroll",
+      "imageUrl": "https://images.unsplash.com/photo-1621262339033-6a7e0f9b6e2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhbmNpZW50JTIwc2Nyb2xsfGVufDB8fHx8MTc2MzQ5MDA4MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ancient scroll"
+    },
+    {
+      "id": "reward5",
+      "description": "A cute mascot",
+      "imageUrl": "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjdXRlJTIwbWFzY290fGVufDB8fHx8MTc2MzQ5MDEwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cute mascot"
+    },
+    {
+      "id": "reward6",
+      "description": "A golden shield",
+      "imageUrl": "https://images.unsplash.com/photo-1601061922572-68095b8f603c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxnb2xkZW4lMjBzaGllbGR8ZW58MHx8fHwxNzYzNDkwMTMxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "golden shield"
     }
   ]
 }

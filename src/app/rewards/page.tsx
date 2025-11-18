@@ -1,22 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { rewards as initialRewards, currentUser } from '@/app/lib/mock-data';
 import { useToast } from '@/hooks/use-toast';
-import { Coins, ShoppingBag, Sparkles, Leaf, Shirt, ScrollText, Heart, ShieldCheck } from 'lucide-react';
+import { Coins, ShoppingBag, Sparkles } from 'lucide-react';
 import type { Reward } from '@/app/lib/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-
-const iconMap: { [key: string]: React.ElementType } = {
-  Sparkles,
-  Leaf,
-  Shirt,
-  ScrollText,
-  Heart,
-  ShieldCheck,
-};
 
 export default function RewardsPage() {
   const [braveCoins, setBraveCoins] = useState(currentUser.braveCoins);
@@ -62,18 +54,21 @@ export default function RewardsPage() {
       {initialRewards.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {initialRewards.map((reward) => {
-            const Icon = iconMap[reward.icon] || Sparkles;
             const canAfford = braveCoins >= reward.cost;
 
             return (
-              <Card key={reward.id} className="flex flex-col">
+              <Card key={reward.id} className="flex flex-col overflow-hidden">
+                <div className="relative w-full h-40">
+                  <Image 
+                    src={reward.image} 
+                    alt={reward.name} 
+                    fill 
+                    className="object-cover"
+                    data-ai-hint="reward item"
+                  />
+                </div>
                 <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-primary/10 rounded-lg">
-                      <Icon className="w-6 h-6 text-primary" />
-                    </div>
-                    <CardTitle className="text-lg leading-tight">{reward.name}</CardTitle>
-                  </div>
+                  <CardTitle className="text-lg leading-tight">{reward.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-grow">
                   <CardDescription>{reward.description}</CardDescription>
