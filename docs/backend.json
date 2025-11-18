@@ -35,6 +35,14 @@
         "totalPoints": {
           "type": "number",
           "description": "The total points accumulated by the user."
+        },
+        "braveCoins": {
+          "type": "number",
+          "description": "The total brave coins accumulated by the user."
+        },
+        "questsCompleted": {
+          "type": "number",
+          "description": "The total number of quests completed by the user."
         }
       },
       "required": [

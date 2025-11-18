@@ -12,22 +12,23 @@ import { doc, setDoc, Firestore, getDoc } from 'firebase/firestore';
 import { getSdks } from '.';
 import { errorEmitter } from './error-emitter';
 import { FirestorePermissionError } from './errors';
+import { UserProfile } from '@/app/lib/types';
 
 const createProfile = (user: User, firestore: Firestore) => {
     const userProfileRef = doc(firestore, 'users', user.uid);
     
-    // Anonymous users get a starter pack of points and coins
     const isAnonymous = user.isAnonymous;
-    const startingPoints = isAnonymous ? 150 : 0;
 
-    const profileData = {
+    const profileData: UserProfile = {
         id: user.uid,
-        email: user.email,
+        email: user.email || '',
         firstName: user.displayName?.split(' ')[0] || (isAnonymous ? 'Anonymous' : (user.email?.split('@')[0] || '')),
         lastName: user.displayName?.split(' ')[1] || (isAnonymous ? 'Adventurer' : ''),
-        username: user.email?.split('@')[0] || '',
+        username: user.email?.split('@')[0] || `user_${user.uid.substring(0, 5)}`,
         profilePicture: user.photoURL || '',
-        totalPoints: startingPoints,
+        totalPoints: isAnonymous ? 150 : 0,
+        braveCoins: isAnonymous ? 15 : 0,
+        questsCompleted: 0,
     };
 
     setDoc(userProfileRef, profileData, { merge: true }).catch(error => {

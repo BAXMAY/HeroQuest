@@ -76,7 +76,7 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <div className="text-5xl font-bold text-amber-500 font-headline">
-              {0}
+              {(userProfile?.braveCoins || 0).toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
               Your treasure to spend

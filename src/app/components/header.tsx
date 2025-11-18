@@ -114,7 +114,7 @@ export function AppHeader() {
                       </div>
                       <div className="flex items-center">
                           <Coins className="w-3 h-3 mr-1 text-amber-500"/>
-                          {0}
+                          {(userProfile.braveCoins || 0).toLocaleString()}
                       </div>
                     </div>
                   </>

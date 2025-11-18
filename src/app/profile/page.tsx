@@ -9,14 +9,14 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { collection, doc } from 'firebase/firestore';
-import { Award, Coins, Loader2, Save, Shield } from 'lucide-react';
+import { Award, Coins, Loader2, Save, Shield, Star } from 'lucide-react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { getLevelFromXP } from '../lib/levels';
 import { Progress } from '@/components/ui/progress';
 import { Label } from '@/components/ui/label';
-import { Achievement } from '../lib/types';
+import { Achievement, UserProfile } from '../lib/types';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const profileFormSchema = z.object({
@@ -43,7 +43,7 @@ export default function ProfilePage() {
   }, [user, firestore]);
 
 
-  const { data: userProfile, isLoading: isProfileLoading } = useDoc<any>(userProfileRef);
+  const { data: userProfile, isLoading: isProfileLoading } = useDoc<UserProfile>(userProfileRef);
   const { data: achievements, isLoading: areAchievementsLoading } = useCollection<Achievement>(achievementsRef);
 
   const form = useForm<ProfileFormValues>({
@@ -125,14 +125,14 @@ export default function ProfilePage() {
             <div className="p-4 bg-secondary/50 rounded-lg">
                 <div className="flex items-center justify-center gap-2">
                     <Coins className="w-6 h-6 text-amber-500"/>
-                    <p className="text-2xl font-bold font-headline">{0}</p>
+                    <p className="text-2xl font-bold font-headline">{(userProfile.braveCoins || 0).toLocaleString()}</p>
                 </div>
               <p className="text-sm text-muted-foreground">Brave Coins</p>
             </div>
             <div className="p-4 bg-secondary/50 rounded-lg">
                 <div className="flex items-center justify-center gap-2">
-                    <Award className="w-6 h-6 text-green-500"/>
-                    <p className="text-2xl font-bold font-headline">{0}</p>
+                    <Star className="w-6 h-6 text-green-500"/>
+                    <p className="text-2xl font-bold font-headline">{(userProfile.questsCompleted || 0).toLocaleString()}</p>
                 </div>
               <p className="text-sm text-muted-foreground">Quests Completed</p>
             </div>
@@ -165,7 +165,7 @@ export default function ProfilePage() {
                     <TooltipContent>
                       <p className="font-bold">{ach.name}</p>
                       <p className="text-sm text-muted-foreground">{ach.description}</p>
-                      <p className="text-xs text-muted-foreground/80 mt-1">Unlocked: {new Date(ach.unlockedAt).toLocaleDateString()}</p>
+                      {ach.unlockedAt && <p className="text-xs text-muted-foreground/80 mt-1">Unlocked: {new Date(ach.unlockedAt).toLocaleDateString()}</p>}
                     </TooltipContent>
                   </Tooltip>
                 ))}
