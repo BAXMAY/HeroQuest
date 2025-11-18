@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { currentUser, deeds, users } from "@/app/lib/mock-data";
-import { ArrowUpRight, Award, PlusCircle } from "lucide-react";
+import { currentUser, deeds } from "@/app/lib/mock-data";
+import { ArrowUpRight, Award, PlusCircle, Coins } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
@@ -35,11 +35,26 @@ export default function Home() {
             <Award className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-5xl font-bold text-primary-dark font-headline animate-pulse">
-              {user.score.toLocaleString()} XP
+            <div className="text-5xl font-bold text-primary font-headline">
+              {user.score.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              Keep up the great work!
+              Total experience earned
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Brave Coins</CardTitle>
+            <Coins className="w-4 h-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-5xl font-bold text-amber-500 font-headline">
+              {user.braveCoins.toLocaleString()}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Your treasure to spend
             </p>
           </CardContent>
         </Card>
