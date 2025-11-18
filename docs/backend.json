@@ -1,226 +1,143 @@
 {
   "entities": {
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Represents a user profile in the Deeds & Cheers application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the UserProfile entity."
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The first name of the user."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The last name of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the user.",
+          "format": "email"
+        },
+        "username": {
+          "type": "string",
+          "description": "The username of the user."
+        },
+        "profilePicture": {
+          "type": "string",
+          "description": "URL to the user's profile picture.",
+          "format": "uri"
+        },
+        "totalPoints": {
+          "type": "number",
+          "description": "The total points accumulated by the user."
+        }
+      },
+      "required": [
+        "id",
+        "firstName",
+        "lastName",
+        "email",
+        "username"
+      ]
+    },
     "VolunteerWork": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "VolunteerWork",
       "type": "object",
-      "description": "Represents a volunteer work submission by a child.",
+      "description": "Represents a volunteer work submission.",
       "properties": {
         "id": {
           "type": "string",
           "description": "Unique identifier for the VolunteerWork entity."
         },
-        "userId": {
+        "userProfileId": {
           "type": "string",
-          "description": "Reference to User. (Relationship: User 1:N VolunteerWork)"
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:N VolunteerWork)"
         },
         "description": {
           "type": "string",
           "description": "Description of the volunteer work performed."
         },
-        "photoUrl": {
-          "type": "string",
-          "description": "URL of the photo submitted as evidence of the volunteer work.",
-          "format": "uri"
+        "photos": {
+          "type": "array",
+          "description": "URLs to the photos of the volunteer work.",
+          "items": {
+            "type": "string"
+          }
         },
         "submissionDate": {
           "type": "string",
           "description": "Date and time when the volunteer work was submitted.",
           "format": "date-time"
         },
-        "approvalStatus": {
+        "status": {
           "type": "string",
-          "description": "Status of the approval for the volunteer work (e.g., 'pending', 'approved', 'rejected')."
+          "description": "The status of submission, such as pending, approved, or rejected."
         },
         "pointsAwarded": {
           "type": "number",
-          "description": "Points awarded for the volunteer work, after approval."
+          "description": "The points awarded for the volunteer work."
         }
       },
       "required": [
         "id",
-        "userId",
+        "userProfileId",
         "description",
-        "photoUrl",
         "submissionDate",
-        "approvalStatus"
-      ]
-    },
-    "User": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "User",
-      "type": "object",
-      "description": "Represents a user (child) in the Deeds & Cheers platform.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the User entity."
-        },
-        "userName": {
-          "type": "string",
-          "description": "Username of the child."
-        },
-        "displayName": {
-          "type": "string",
-          "description": "Display name of the child."
-        },
-        "email": {
-          "type": "string",
-          "description": "Email address of the child's parent/guardian.",
-          "format": "email"
-        },
-        "totalPoints": {
-          "type": "number",
-          "description": "Total accumulated points of the user."
-        }
-      },
-      "required": [
-        "id",
-        "userName",
-        "displayName",
-        "email",
-        "totalPoints"
-      ]
-    },
-    "Approver": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "Approver",
-      "type": "object",
-      "description": "Represents an approver who can verify volunteer work submissions.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Approver entity."
-        },
-        "name": {
-          "type": "string",
-          "description": "Name of the approver."
-        },
-        "email": {
-          "type": "string",
-          "description": "Email address of the approver.",
-          "format": "email"
-        }
-      },
-      "required": [
-        "id",
-        "name",
-        "email"
-      ]
-    },
-    "LeaderboardEntry": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "LeaderboardEntry",
-      "type": "object",
-      "description": "Represents an entry in the leaderboard, linking a user to their score.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the LeaderboardEntry entity."
-        },
-        "userId": {
-          "type": "string",
-          "description": "Reference to User. (Relationship: User 1:N LeaderboardEntry)"
-        },
-        "score": {
-          "type": "number",
-          "description": "The score of the user for the leaderboard."
-        },
-        "rank": {
-          "type": "number",
-          "description": "The rank of the user on the leaderboard."
-        },
-        "lastUpdate": {
-          "type": "string",
-          "description": "Date and time when the leaderboard entry was last updated.",
-          "format": "date-time"
-        }
-      },
-      "required": [
-        "id",
-        "userId",
-        "score",
-        "rank"
+        "status"
       ]
     }
   },
   "auth": {
     "providers": [
       "password",
-      "google.com"
+      "anonymous"
     ]
   },
   "firestore": {
     "structure": [
       {
-        "path": "/users/{userId}",
+        "path": "/users/{userId}/profile",
         "definition": {
-          "entityName": "User",
+          "entityName": "UserProfile",
           "schema": {
-            "$ref": "#/backend/entities/User"
+            "$ref": "#/backend/entities/UserProfile"
           },
-          "description": "Stores user data. Path-based ownership ensures only the user can access their data.",
+          "description": "Stores user profile data.  The path `/users/{userId}/profile` enforces ownership; only the authenticated user with ID `userId` can access this document.",
           "params": [
             {
               "name": "userId",
-              "description": "The unique identifier of the user."
+              "description": "The unique identifier of the user, corresponding to their Firebase Authentication UID."
             }
           ]
         }
       },
       {
-        "path": "/users/{userId}/volunteerWork/{volunteerWorkId}",
+        "path": "/users/{userId}/volunteer_work/{workId}",
         "definition": {
           "entityName": "VolunteerWork",
           "schema": {
             "$ref": "#/backend/entities/VolunteerWork"
           },
-          "description": "Stores volunteer work submissions by users. Path-based ownership ensures only the user can access their submissions.",
+          "description": "Stores volunteer work submissions for each user.  The `userProfileId` field matches the `userId` path parameter.  This enforces ownership, ensuring only the authenticated user with ID `userId` can manage volunteer work documents under their path.",
           "params": [
             {
               "name": "userId",
-              "description": "The unique identifier of the user."
+              "description": "The unique identifier of the user, corresponding to their Firebase Authentication UID."
             },
             {
-              "name": "volunteerWorkId",
+              "name": "workId",
               "description": "The unique identifier of the volunteer work submission."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/roles_approver/{approverId}",
-        "definition": {
-          "entityName": "Approver",
-          "schema": {
-            "$ref": "#/backend/entities/Approver"
-          },
-          "description": "Stores approver roles. Existence in this collection grants approver privileges.",
-          "params": [
-            {
-              "name": "approverId",
-              "description": "The unique identifier of the approver."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/leaderboardEntries/{leaderboardEntryId}",
-        "definition": {
-          "entityName": "LeaderboardEntry",
-          "schema": {
-            "$ref": "#/backend/entities/LeaderboardEntry"
-          },
-          "description": "Stores leaderboard entries for users.",
-          "params": [
-            {
-              "name": "leaderboardEntryId",
-              "description": "The unique identifier of the leaderboard entry."
             }
           ]
         }
       }
     ],
-    "reasoning": "The Firestore data structure is designed to support Deeds & Cheers, a gamified volunteer platform for children. The structure prioritizes security, scalability, and ease of debugging, adhering to the core design principles of Authorization Independence, Clarity of Intent, DBAC (Database-Based Access Control), and QAPs (Rules Are Not Filters).\n\n**Authorization Independence:**  Authorization is achieved through path-based ownership for user-specific data (VolunteerWork). This eliminates the need for `get()` calls in security rules, ensuring atomic operations and easier debugging. The approver roles are managed via existence checks in a dedicated collection.\n\n**Structural Segregation:** Data with different access requirements are stored in separate collections. User data and volunteer work submissions are segregated, with VolunteerWork submissions being children of User documents.\n\n**Access Modeling:**\n*   **User Data:** `/users/{userId}` uses path-based ownership for private user data.\n*   **Volunteer Work:** `/users/{userId}/volunteerWork/{volunteerWorkId}` represents the 1:N relationship between users and their volunteer work.\n*   **Approvers:** `/roles_approver/{approverId}` uses existence-based global roles.\n*   **Leaderboard:** Leaderboard entries are stored in a separate collection.\n\n**QAPs Support:** The structure supports secure `list` operations. Access to volunteer work submissions is controlled by the user ID in the path, ensuring that users can only list their own submissions. Approvers can list and approve all submissions.\n\nThe structure also facilitates community gallery feature by providing clear references to user submissions, which can be analyzed to suggest relevant volunteer opportunities."
+    "reasoning": "The Firestore data structure is designed to support user profiles and volunteer work submissions for the Deeds & Cheers application, prioritizing security, scalability, and debuggability, especially regarding authorization. \n\n**Authorization Independence:** The structure avoids hierarchical authorization dependencies by storing all necessary authorization information directly within the documents, specifically within the `VolunteerWork` documents.  The `userProfileId` within the `VolunteerWork` collection enables secure lookups of submissions related to a specific user without needing complex `get()` calls in security rules.\n\n**Structural Segregation:** User profiles are stored in a dedicated collection (`/users/{userId}/profile`) to isolate their security requirements from other data. Volunteer work submissions are stored in a subcollection (`/users/{userId}/volunteer_work/{workId}`), ensuring all documents within this subcollection share similar access needs (owned by the user).\n\n**Access Modeling:** The structure employs path-based ownership for user profiles and volunteer work, granting the user full access to their own data. This approach simplifies security rules and makes ownership explicit. Each volunteer work submission is linked to its owner (the user) via the path.\n\n**QAPs (Rules are not Filters):** The segregation of data into user-specific subcollections enables efficient and secure `list` operations. Rules can easily filter by `request.auth.uid` to ensure a user can only access their own profiles and volunteer work submissions. The structure eliminates the need to filter based on document content, thus supporting the QAPs principle."
   }
 }
