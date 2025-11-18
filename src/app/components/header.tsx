@@ -10,13 +10,13 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { users } from '@/app/lib/mock-data';
 import { Award, LogOut, Settings, User as UserIcon, Coins, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useAuth, useUser } from '@/firebase';
+import { useAuth, useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
+import { doc } from 'firebase/firestore';
 
 
 const pageTitles: { [key: string]: string } = {
@@ -36,10 +36,16 @@ const pageTitles: { [key: string]: string } = {
 export function AppHeader() {
   const { user, isUserLoading } = useUser();
   const auth = useAuth();
+  const firestore = useFirestore();
   const router = useRouter();
   const { toast } = useToast();
-  // We'll use a mock user for display purposes until user profiles are implemented
-  const displayUser = users[0]; 
+
+  const userProfileRef = useMemoFirebase(() => {
+    if (!user) return null;
+    return doc(firestore, 'users', user.uid, 'profile');
+  }, [user, firestore]);
+
+  const { data: userProfile } = useDoc(userProfileRef);
 
   const pathname = usePathname();
   const title = pageTitles[pathname] || 'HeroQuest';
@@ -62,6 +68,8 @@ export function AppHeader() {
     }
   };
   
+  const displayName = userProfile?.firstName || user?.displayName || 'Adventurer';
+
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 md:px-6">
       <SidebarTrigger className="md:hidden" />
@@ -72,29 +80,29 @@ export function AppHeader() {
 
       {isUserLoading ? (
         <Loader2 className="h-6 w-6 animate-spin" />
-      ) : user ? (
+      ) : user && userProfile ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
               <Avatar className="h-10 w-10 border-2 border-primary/50">
-                <AvatarImage src={displayUser.avatar} alt={user.displayName || displayUser.name} data-ai-hint="child portrait" />
-                <AvatarFallback>{(user.displayName || displayUser.name).charAt(0)}</AvatarFallback>
+                <AvatarImage src={userProfile.profilePicture || user.photoURL} alt={displayName} data-ai-hint="child portrait" />
+                <AvatarFallback>{displayName.charAt(0)}</AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end">
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{user.displayName || displayUser.name}</p>
+                <p className="text-sm font-medium leading-none">{displayName}</p>
                 <p className="text-xs text-muted-foreground">{user.email}</p>
                 <div className="text-xs leading-none text-muted-foreground flex items-center justify-between pt-1">
                   <div className="flex items-center">
                       <Award className="w-3 h-3 mr-1 text-yellow-500"/>
-                      {displayUser.score.toLocaleString()} XP
+                      {(userProfile.totalPoints || 0).toLocaleString()} XP
                   </div>
                   <div className="flex items-center">
                       <Coins className="w-3 h-3 mr-1 text-amber-500"/>
-                      {displayUser.braveCoins.toLocaleString()}
+                      {0}
                   </div>
                 </div>
               </div>

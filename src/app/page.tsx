@@ -1,19 +1,43 @@
+'use client';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { currentUser, deeds } from "@/app/lib/mock-data";
-import { ArrowUpRight, Award, PlusCircle, Coins } from "lucide-react";
+import { deeds } from "@/app/lib/mock-data";
+import { ArrowUpRight, Award, PlusCircle, Coins, Loader2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import Mascot from "@/app/components/mascot";
+import { useDoc, useFirestore, useMemoFirebase, useUser } from "@/firebase";
+import { doc } from "firebase/firestore";
 
 export default function Home() {
-  const user = currentUser;
+  const { user, isUserLoading } = useUser();
+  const firestore = useFirestore();
+
+  const userProfileRef = useMemoFirebase(() => {
+    if (!user) return null;
+    return doc(firestore, 'users', user.uid, 'profile');
+  }, [user, firestore]);
+
+  const { data: userProfile, isLoading: isProfileLoading } = useDoc(userProfileRef);
+
   const userDeeds = deeds
-    .filter((deed) => deed.userId === user.id && deed.status === "approved")
+    .filter((deed) => deed.userId === user?.id && deed.status === "approved")
     .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
     .slice(0, 3);
+  
+  const isLoading = isUserLoading || isProfileLoading;
+
+  if (isLoading) {
+    return (
+        <div className="flex items-center justify-center min-h-[calc(100vh-10rem)]">
+            <Loader2 className="h-16 w-16 animate-spin text-primary" />
+        </div>
+    );
+  }
+  
+  const displayName = userProfile?.firstName || user?.displayName || 'Adventurer';
 
   return (
     <div className="space-y-8">
@@ -21,7 +45,7 @@ export default function Home() {
         <Mascot className="w-16 h-16 text-primary hidden sm:block" />
         <div className="space-y-1">
           <h1 className="text-3xl font-bold tracking-tight font-headline">
-            Greetings, Adventurer {user.name}!
+            Greetings, Adventurer {displayName}!
           </h1>
           <p className="text-muted-foreground">
             Ready to embark on a new quest and make a difference today?
@@ -37,7 +61,7 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <div className="text-5xl font-bold text-primary font-headline">
-              {user.score.toLocaleString()}
+              {(userProfile?.totalPoints || 0).toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
               Total experience earned
@@ -52,7 +76,7 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <div className="text-5xl font-bold text-amber-500 font-headline">
-              {user.braveCoins.toLocaleString()}
+              {0}
             </div>
             <p className="text-xs text-muted-foreground">
               Your treasure to spend
