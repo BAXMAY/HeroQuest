@@ -1,4 +1,4 @@
-import type { User, Deed } from './types';
+import type { User, Deed, Reward } from './types';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const getImage = (id: string) => PlaceHolderImages.find(img => img.id === id)?.imageUrl || `https://picsum.photos/seed/${id}/400/300`;
@@ -83,5 +83,50 @@ export const deeds: Deed[] = [
     status: 'approved',
     submittedAt: '2024-05-15T08:00:00Z',
     category: 'health',
+  },
+];
+
+export const rewards: Reward[] = [
+  {
+    id: 'reward-1',
+    name: 'Dragon\'s Hoard Sticker Pack',
+    description: 'A collection of shiny, holographic dragon stickers.',
+    cost: 50,
+    icon: 'Sparkles',
+  },
+  {
+    id: 'reward-2',
+    name: 'Enchanted Seed Pouch',
+    description: 'Plant a mystery seed and see what magical plant grows!',
+    cost: 100,
+    icon: 'Leaf',
+  },
+  {
+    id: 'reward-3',
+    name: 'Hero\'s Cape (Cosmetic)',
+    description: 'A cool digital cape for your online avatar.',
+    cost: 250,
+    icon: 'Shirt',
+  },
+  {
+    id: 'reward-4',
+    name: 'Scroll of Knowledge',
+    description: 'Unlock a fun fact about ancient heroes and their deeds.',
+    cost: 75,
+    icon: 'ScrollText',
+  },
+  {
+    id: 'reward-5',
+    name: 'Mascot\'s Blessing',
+    description: 'Get a personalized cheer from our very own mascot!',
+    cost: 150,
+    icon: 'Heart',
+  },
+  {
+    id: 'reward-6',
+    name: 'Legendary Title: "The Kind"',
+    description: 'Display this title next to your name on the leaderboard.',
+    cost: 500,
+    icon: 'ShieldCheck',
   },
 ];

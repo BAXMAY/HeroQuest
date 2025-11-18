@@ -22,3 +22,11 @@ export type VolunteerOpportunity = {
   description:string;
   category: string;
 };
+
+export type Reward = {
+  id: string;
+  name: string;
+  description: string;
+  cost: number;
+  icon: string;
+};

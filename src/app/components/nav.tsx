@@ -18,6 +18,7 @@ import {
   LifeBuoy,
   Settings,
   BookMarked,
+  ShoppingBag,
 } from 'lucide-react';
 import Mascot from './mascot';
 
@@ -27,6 +28,7 @@ const navItems = [
   { href: '/leaderboard', label: 'Hall of Heroes', icon: Trophy },
   { href: '/approvals', label: 'Quest Review', icon: CheckSquare },
   { href: '/gallery', label: 'Opportunity Board', icon: Sparkles },
+  { href: '/rewards', label: 'Reward Shop', icon: ShoppingBag },
 ];
 
 export default function Nav() {
