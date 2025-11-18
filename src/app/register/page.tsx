@@ -67,7 +67,7 @@ export default function RegisterPage() {
   const { user, isUserLoading } = useUser();
 
   useEffect(() => {
-    if (!isUserLoading && user) {
+    if (!isUserLoading && user && !user.isAnonymous) {
       router.push('/');
     }
   }, [user, isUserLoading, router]);
@@ -105,7 +105,7 @@ export default function RegisterPage() {
      setTimeout(() => setIsLoading(false), 3000);
   }
 
-  if (isUserLoading || user) {
+  if (isUserLoading || (user && !user.isAnonymous)) {
     return (
         <div className="flex items-center justify-center min-h-[calc(100vh-10rem)]">
             <Loader2 className="h-16 w-16 animate-spin text-primary" />

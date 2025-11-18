@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Award, LogOut, Settings, User as UserIcon, Coins, Loader2 } from 'lucide-react';
+import { Award, LogOut, Settings, User as UserIcon, Coins, Loader2, LogIn } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth, useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
@@ -60,7 +60,7 @@ export function AppHeader() {
         title: 'Logged Out',
         description: 'You have successfully logged out.',
       });
-      router.push('/login');
+      // The onAuthStateChanged listener in the provider will handle anonymous sign-in.
     } catch (error) {
       console.error("Logout Error: ", error);
       toast({
@@ -74,6 +74,8 @@ export function AppHeader() {
   const isLoading = isUserLoading || isProfileLoading;
   const displayName = userProfile?.firstName || user?.displayName || 'Adventurer';
   const currentLevel = getLevelFromXP(userProfile?.totalPoints);
+  const isAnonymous = user?.isAnonymous;
+
 
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 md:px-6">
@@ -98,8 +100,8 @@ export function AppHeader() {
           <DropdownMenuContent className="w-56" align="end">
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{displayName}</p>
-                <p className="text-xs text-muted-foreground">{user.email}</p>
+                <p className="text-sm font-medium leading-none">{displayName} {userProfile?.lastName}</p>
+                <p className="text-xs text-muted-foreground">{isAnonymous ? "Anonymous User" : user.email}</p>
                 {userProfile && (
                   <>
                     <p className="text-xs font-semibold text-primary pt-1">{currentLevel.title}</p>
@@ -118,22 +120,43 @@ export function AppHeader() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href="/profile">
-                <UserIcon className="mr-2 h-4 w-4" />
-                <span>Profile</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/settings">
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
-              </Link>
-            </DropdownMenuItem>
+            {isAnonymous ? (
+                 <DropdownMenuItem asChild>
+                    <Link href="/register">
+                        <UserIcon className="mr-2 h-4 w-4" />
+                        <span>Sign Up</span>
+                    </Link>
+                </DropdownMenuItem>
+            ) : (
+                <>
+                    <DropdownMenuItem asChild>
+                        <Link href="/profile">
+                            <UserIcon className="mr-2 h-4 w-4" />
+                            <span>Profile</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href="/settings">
+                            <Settings className="mr-2 h-4 w-4" />
+                            <span>Settings</span>
+                        </Link>
+                    </DropdownMenuItem>
+                </>
+            )}
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Log out</span>
+             <DropdownMenuItem onClick={handleLogout}>
+              {isAnonymous ? (
+                <>
+                  <LogIn className="mr-2 h-4 w-4" />
+                  <span>Login / Register</span>
+                </>
+              ) : (
+                <>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </>
+              )}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

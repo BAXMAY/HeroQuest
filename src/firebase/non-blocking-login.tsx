@@ -18,8 +18,8 @@ const createProfile = (user: User, firestore: Firestore) => {
     const profileData = {
         id: user.uid,
         email: user.email,
-        firstName: user.displayName?.split(' ')[0] || user.email?.split('@')[0] || '',
-        lastName: user.displayName?.split(' ')[1] || '',
+        firstName: user.displayName?.split(' ')[0] || (user.isAnonymous ? 'Anonymous' : (user.email?.split('@')[0] || '')),
+        lastName: user.displayName?.split(' ')[1] || (user.isAnonymous ? 'Adventurer' : ''),
         username: user.email?.split('@')[0] || '',
         profilePicture: user.photoURL || '',
         totalPoints: 0
@@ -40,7 +40,10 @@ const createProfile = (user: User, firestore: Firestore) => {
 
 /** Initiate anonymous sign-in (non-blocking). */
 export function initiateAnonymousSignIn(authInstance: Auth): void {
-  signInAnonymously(authInstance);
+  const { firestore } = getSdks(authInstance.app);
+  signInAnonymously(authInstance).then(credential => {
+    createProfile(credential.user, firestore);
+  });
 }
 
 /** Initiate email/password sign-up (non-blocking). */
