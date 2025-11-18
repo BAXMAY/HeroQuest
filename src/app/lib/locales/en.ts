@@ -1,0 +1,46 @@
+export const en = {
+  // Page Titles
+  pageTitles: {
+    dashboard: 'Dashboard',
+    submit: 'Start a New Quest',
+    leaderboard: 'Hall of Heroes',
+    achievements: 'Trophy Room',
+    approvals: 'Quest Review',
+    gallery: 'Opportunity Board',
+    rewards: 'Reward Shop',
+    profile: 'Your Profile',
+    settings: 'Settings',
+    lorebook: 'Lorebook',
+    login: 'Login',
+    register: 'Register',
+    roadmap: 'Level Roadmap',
+  },
+  // Navigation
+  nav: {
+    dashboard: 'Dashboard',
+    startQuest: 'Start Quest',
+    hallOfHeroes: 'Hall of Heroes',
+    trophyRoom: 'Trophy Room',
+    levelRoadmap: 'Level Roadmap',
+    questReview: 'Quest Review',
+    opportunityBoard: 'Opportunity Board',
+    rewardShop: 'Reward Shop',
+    lorebook: 'Lorebook',
+    settings: 'Settings',
+  },
+  // Header
+  adventurer: 'Adventurer',
+  anonymousUser: 'Anonymous User',
+  signUpToSave: 'Sign Up to Save Progress',
+  profile: 'Profile',
+  settings: 'Settings',
+  login: 'Login',
+  logout: 'Log out',
+  logoutToastTitle: 'Logged Out',
+  logoutToastDescription: 'You have successfully logged out.',
+  logoutFailedToastTitle: 'Logout Failed',
+  logoutFailedToastDescription: 'Something went wrong. Please try again.',
+  // General
+  xp: 'XP',
+  loading: 'Loading...',
+};

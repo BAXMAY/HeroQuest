@@ -22,21 +22,23 @@ import {
   Map,
 } from 'lucide-react';
 import Mascot from './mascot';
-
-const navItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/submit', label: 'Start Quest', icon: PlusCircle },
-  { href: '/leaderboard', label: 'Hall of Heroes', icon: Users },
-  { href: '/achievements', label: 'Trophy Room', icon: Trophy },
-  { href: '/roadmap', label: 'Level Roadmap', icon: Map },
-  { href: '/approvals', label: 'Quest Review', icon: CheckSquare },
-  { href: '/gallery', label: 'Opportunity Board', icon: Sparkles },
-  { href: '/rewards', label: 'Reward Shop', icon: ShoppingBag },
-  { href: '/lorebook', label: 'Lorebook', icon: BookMarked },
-];
+import { useLanguage } from '@/app/context/language-context';
 
 export default function Nav() {
   const pathname = usePathname();
+  const { t } = useLanguage();
+
+  const navItems = [
+    { href: '/', label: t('nav.dashboard'), icon: LayoutDashboard },
+    { href: '/submit', label: t('nav.startQuest'), icon: PlusCircle },
+    { href: '/leaderboard', label: t('nav.hallOfHeroes'), icon: Users },
+    { href: '/achievements', label: t('nav.trophyRoom'), icon: Trophy },
+    { href: '/roadmap', label: t('nav.levelRoadmap'), icon: Map },
+    { href: '/approvals', label: t('nav.questReview'), icon: CheckSquare },
+    { href: '/gallery', label: t('nav.opportunityBoard'), icon: Sparkles },
+    { href: '/rewards', label: t('nav.rewardShop'), icon: ShoppingBag },
+    { href: '/lorebook', label: t('nav.lorebook'), icon: BookMarked },
+  ];
 
   return (
     <>
@@ -69,10 +71,10 @@ export default function Nav() {
       <SidebarFooter>
         <SidebarMenu>
             <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Settings" isActive={pathname === '/settings'}>
+                <SidebarMenuButton asChild tooltip={t('nav.settings')} isActive={pathname === '/settings'}>
                     <Link href="/settings">
                         <Settings />
-                        <span>Settings</span>
+                        <span>{t('nav.settings')}</span>
                     </Link>
                 </SidebarMenuButton>
             </SidebarMenuItem>

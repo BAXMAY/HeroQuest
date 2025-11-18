@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Award, LogOut, Settings, User as UserIcon, Coins, Loader2, LogIn } from 'lucide-react';
+import { Award, LogOut, Settings, User as UserIcon, Coins, Loader2, LogIn, Languages, Check } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth, useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
@@ -18,23 +18,8 @@ import { signOut } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
 import { doc } from 'firebase/firestore';
 import { getLevelFromXP } from '@/app/lib/levels';
+import { useLanguage } from '@/app/context/language-context';
 
-
-const pageTitles: { [key: string]: string } = {
-  '/': 'Dashboard',
-  '/submit': 'Start a New Quest',
-  '/leaderboard': 'Hall of Heroes',
-  '/achievements': 'Trophy Room',
-  '/approvals': 'Quest Review',
-  '/gallery': 'Opportunity Board',
-  '/rewards': 'Reward Shop',
-  '/profile': 'Your Profile',
-  '/settings': 'Settings',
-  '/lorebook': 'Lorebook',
-  '/login': 'Login',
-  '/register': 'Register',
-  '/roadmap': 'Level Roadmap',
-};
 
 export function AppHeader() {
   const { user, isUserLoading } = useUser();
@@ -42,6 +27,7 @@ export function AppHeader() {
   const firestore = useFirestore();
   const router = useRouter();
   const { toast } = useToast();
+  const { language, setLanguage, t } = useLanguage();
 
   const userProfileRef = useMemoFirebase(() => {
     if (!user) return null;
@@ -51,30 +37,28 @@ export function AppHeader() {
   const { data: userProfile, isLoading: isProfileLoading } = useDoc(userProfileRef);
 
   const pathname = usePathname();
-  const title = pageTitles[pathname] || 'HeroQuest';
+  const title = t(`pageTitles.${pathname.replace('/', '') || 'dashboard'}`);
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
       toast({
-        title: 'Logged Out',
-        description: 'You have successfully logged out.',
+        title: t('logoutToastTitle'),
+        description: t('logoutToastDescription'),
       });
-      // The onAuthStateChanged listener in the provider will handle anonymous sign-in,
-      // or the user can navigate to login/register.
       router.push('/login');
     } catch (error) {
       console.error("Logout Error: ", error);
       toast({
-        title: 'Logout Failed',
-        description: 'Something went wrong. Please try again.',
+        title: t('logoutFailedToastTitle'),
+        description: t('logoutFailedToastDescription'),
         variant: 'destructive',
       });
     }
   };
   
   const isLoading = isUserLoading || isProfileLoading;
-  const displayName = userProfile?.firstName || user?.displayName || 'Adventurer';
+  const displayName = userProfile?.firstName || user?.displayName || t('adventurer');
   const currentLevel = getLevelFromXP(userProfile?.totalPoints);
   const isAnonymous = user?.isAnonymous;
 
@@ -86,6 +70,25 @@ export function AppHeader() {
       <div className="flex-1">
         <h1 className="text-lg font-semibold md:text-xl font-headline">{title}</h1>
       </div>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="icon">
+                <Languages className="h-[1.2rem] w-[1.2rem]" />
+                <span className="sr-only">Change language</span>
+            </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setLanguage('en')} className="flex justify-between">
+                <span>English</span>
+                {language === 'en' && <Check className="h-4 w-4" />}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setLanguage('th')} className="flex justify-between">
+                <span>ไทย</span>
+                {language === 'th' && <Check className="h-4 w-4" />}
+            </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       {isLoading ? (
         <Loader2 className="h-6 w-6 animate-spin" />
@@ -103,7 +106,7 @@ export function AppHeader() {
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">{displayName} {userProfile?.lastName}</p>
-                <p className="text-xs text-muted-foreground">{isAnonymous ? "Anonymous User" : user.email}</p>
+                <p className="text-xs text-muted-foreground">{isAnonymous ? t('anonymousUser') : user.email}</p>
                 {userProfile && (
                   <>
                     <p className="text-xs font-semibold text-primary pt-1">{currentLevel.title}</p>
@@ -126,7 +129,7 @@ export function AppHeader() {
                  <DropdownMenuItem asChild>
                     <Link href="/register">
                         <UserIcon className="mr-2 h-4 w-4" />
-                        <span>Sign Up to Save Progress</span>
+                        <span>{t('signUpToSave')}</span>
                     </Link>
                 </DropdownMenuItem>
             ) : (
@@ -134,13 +137,13 @@ export function AppHeader() {
                     <DropdownMenuItem asChild>
                         <Link href="/profile">
                             <UserIcon className="mr-2 h-4 w-4" />
-                            <span>Profile</span>
+                            <span>{t('profile')}</span>
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                         <Link href="/settings">
                             <Settings className="mr-2 h-4 w-4" />
-                            <span>Settings</span>
+                            <span>{t('settings')}</span>
                         </Link>
                     </DropdownMenuItem>
                 </>
@@ -151,12 +154,12 @@ export function AppHeader() {
               {isAnonymous ? (
                 <>
                   <LogIn className="mr-2 h-4 w-4" />
-                  <span>Login</span>
+                  <span>{t('login')}</span>
                 </>
               ) : (
                 <>
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
+                  <span>{t('logout')}</span>
                 </>
               )}
             </DropdownMenuItem>
@@ -164,7 +167,7 @@ export function AppHeader() {
         </DropdownMenu>
       ) : (
         <Button asChild variant="outline">
-          <Link href="/login">Login</Link>
+          <Link href="/login">{t('login')}</Link>
         </Button>
       )}
     </header>

@@ -5,6 +5,7 @@ import Nav from '@/app/components/nav';
 import { AppHeader } from '@/app/components/header';
 import { Toaster } from "@/components/ui/toaster";
 import { FirebaseClientProvider } from '@/firebase';
+import { LanguageProvider } from '@/app/context/language-context';
 
 export const metadata: Metadata = {
   title: 'HeroQuest',
@@ -25,17 +26,19 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased h-full">
         <FirebaseClientProvider>
-          <SidebarProvider>
-            <Sidebar>
-              <Nav />
-            </Sidebar>
-            <SidebarInset>
-              <AppHeader />
-              <main className="p-4 md:p-6">
-                {children}
-              </main>
-            </SidebarInset>
-          </SidebarProvider>
+          <LanguageProvider>
+            <SidebarProvider>
+              <Sidebar>
+                <Nav />
+              </Sidebar>
+              <SidebarInset>
+                <AppHeader />
+                <main className="p-4 md:p-6">
+                  {children}
+                </main>
+              </SidebarInset>
+            </SidebarProvider>
+          </LanguageProvider>
         </FirebaseClientProvider>
         <Toaster />
       </body>
