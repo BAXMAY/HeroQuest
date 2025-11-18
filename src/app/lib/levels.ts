@@ -5,14 +5,39 @@ export type Level = {
   minXP: number;
 };
 
-export const levels: Level[] = [
-  { level: 1, title: 'Novice Adventurer', minXP: 0 },
-  { level: 2, title: 'Apprentice Hero', minXP: 100 },
-  { level: 3, title: 'Brave Companion', minXP: 250 },
-  { level: 4, title: 'Valiant Knight', minXP: 500 },
-  { level: 5, title: 'Guardian of the Realm', minXP: 1000 },
-  { level: 6, title: 'Legend of Aerthos', minXP: 2000 },
+const levelTitles: string[] = [
+    'Novice Adventurer', 'Apprentice Hero', 'Brave Companion', 'Valiant Knight', 'Guardian of the Realm',
+    'Ranger of the Wilds', 'Mystic Seer', 'Shadow Striker', 'Dawnbringer', 'Champion of Light',
+    'Master of Elements', 'Dragon Tamer', 'Star Wanderer', 'Aegis Defender', 'Void Walker',
+    'Sunstone Templar', 'Moonshadow Rogue', 'Earthshaker Shaman', 'Stormcaller Mage', 'Ironclad Warlord',
+    'Celestial Guardian', 'Abyssal Hunter', 'Emberheart Alchemist', 'Frostwind Archer', 'Verdant Warden',
+    'Soulfire Sorcerer', 'Nightfall Sentinel', 'Skybreaker Paladin', 'Chrono Weaver', 'Rune Forger',
+    'Blade Master', 'Aetherial Sage', 'Apex Predator', 'Crimson Vanguard', 'Divine Herald',
+    'Echo of the Ancients', 'Flameheart Berserker', 'Glimmerwood Trickster', 'Highland Thane', 'Inferno Channeler',
+    'Jade Serpent Monk', 'Keystone Protector', 'Lunar Justicar', 'Mythic Carver', 'Nebula Nomad',
+    'Obsidian Sentinel', 'Phoenix Ascendant', 'Quasar Knight', 'Radiant Paragon', 'Solar Flare',
+    'Terraformer', 'Umbral Assassin', 'Vortex Vanquisher', 'Whispering Oracle', 'Xenith Pioneer',
+    'Yggdrasil Keeper', 'Zephyr Strider', 'Astral Drifter', 'Beacon of Hope', 'Cosmic Sentinel',
+    'Dimensional Ripper', 'Eternal Voyager', 'Fable Weaver', 'Galaxy Guardian', 'Harbinger of Dawn',
+    'Infinity Warden', 'Justice Bringer', 'Kismet Creator', 'Lore Keeper', 'Mirage Master',
+    'Nexus Guardian', 'Omega Knight', 'Paradox Pilgrim', 'Quantum Quester', 'Reality Shaper',
+    'Seraphic Judge', 'Timeless Watcher', 'Universal Emissary', 'Vanguard of Ages', 'Warden of Worlds',
+    'Zenith of Heroes', 'Alpha Protector', 'Beta Champion', 'Gamma Guardian', 'Delta Defender',
+    'Epsilon Enforcer', 'Zeta Zealot', 'Eta Elder', 'Theta Thaumaturge', 'Iota Illusionist',
+    'Kappa King', 'Lambda Legend', 'Mu Mystic', 'Nu Nomad', 'Xi Xiphos',
+    'Omicron Overlord', 'Pi Paladin', 'Rho Ranger', 'Sigma Sage', 'Tau Templar', 'The Unwritten'
 ];
+
+
+export const levels: Level[] = Array.from({ length: 100 }, (_, i) => {
+    const level = i + 1;
+    const minXP = Math.floor(100 * Math.pow(level - 1, 1.55));
+    return {
+        level: level,
+        title: levelTitles[i] || `Hero Level ${level}`,
+        minXP: minXP,
+    };
+});
 
 export const getLevelFromXP = (xp: number | undefined): Level => {
   if (xp === undefined) return levels[0];
