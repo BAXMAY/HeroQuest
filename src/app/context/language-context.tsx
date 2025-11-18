@@ -37,8 +37,8 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     }
     
     if (typeof result === 'string' && params) {
-        return Object.entries(params).reduce((acc, [key, value]) => {
-            return acc.replace(`{{${key}}}`, String(value));
+        return Object.entries(params).reduce((acc, [paramKey, value]) => {
+            return acc.replace(`{${paramKey}}`, String(value));
         }, result);
     }
 
