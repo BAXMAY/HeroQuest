@@ -43,10 +43,10 @@ export default function Home() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center gap-4">
-        <Mascot className="w-16 h-16 text-primary hidden sm:block" />
+       <div className="flex items-center gap-4 p-6 rounded-lg border-2 border-primary/30 bg-primary/5">
+        <Mascot className="w-16 h-16 text-primary flex-shrink-0 hidden sm:block" />
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight font-headline">
+          <h1 className="text-3xl font-bold tracking-tight font-headline text-primary/90">
             {t('greeting', { displayName })}
           </h1>
           <p className="text-muted-foreground">
