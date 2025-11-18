@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react';
 import { translations, TranslationKey } from '@/app/lib/locales/translations';
 
 type Language = 'en' | 'th';
@@ -14,7 +14,23 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguageState] = useState<Language>('en');
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    if (language === 'th') {
+      document.documentElement.style.setProperty('--font-body', 'Maitree');
+      document.documentElement.style.setProperty('--font-headline', 'Chonburi');
+    } else {
+      document.documentElement.style.setProperty('--font-body', '"IM Fell English"');
+      document.documentElement.style.setProperty('--font-headline', 'MedievalSharp');
+    }
+  }, [language]);
+
+
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+  };
 
   const t = useCallback((key: TranslationKey, params?: { [key: string]: string | number }): string => {
     const keys = key.split('.');

@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['"IM Fell English"', 'serif'],
-        headline: ['MedievalSharp', 'cursive'],
+        body: ['var(--font-body)', '"IM Fell English"', 'serif'],
+        headline: ['var(--font-headline)', 'MedievalSharp', 'cursive'],
         code: ['monospace'],
       },
       colors: {
