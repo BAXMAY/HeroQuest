@@ -14,12 +14,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import Mascot from "@/app/components/mascot";
+import { useAuth, useUser } from "@/firebase";
+import { initiateEmailSignUp } from "@/firebase/non-blocking-login";
 
 const formSchema = z.object({
   username: z.string().min(3, { message: "Username must be at least 3 characters." }),
@@ -31,6 +33,14 @@ export default function RegisterPage() {
   const { toast } = useToast();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const auth = useAuth();
+  const { user, isUserLoading } = useUser();
+
+  useEffect(() => {
+    if (!isUserLoading && user) {
+      router.push('/');
+    }
+  }, [user, isUserLoading, router]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,17 +53,24 @@ export default function RegisterPage() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    console.log("Register values:", values);
+    initiateEmailSignUp(auth, values.email, values.password);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: "Account Created!",
+    toast({
+        title: "Creating Account...",
         description: "Welcome to the guild! Your adventure starts now.",
-      });
-      router.push('/');
-    }, 1500);
+    });
+
+    // The onAuthStateChanged listener will handle redirection upon successful registration.
+    // We can disable the loading state after a short while.
+    setTimeout(() => setIsLoading(false), 2000);
+  }
+
+  if (isUserLoading || user) {
+    return (
+        <div className="flex items-center justify-center min-h-[calc(100vh-10rem)]">
+            <Loader2 className="h-16 w-16 animate-spin text-primary" />
+        </div>
+    );
   }
 
   return (

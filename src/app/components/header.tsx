@@ -10,10 +10,14 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { currentUser } from '@/app/lib/mock-data';
-import { Award, LogOut, Settings, User as UserIcon, Coins } from 'lucide-react';
+import { users } from '@/app/lib/mock-data';
+import { Award, LogOut, Settings, User as UserIcon, Coins, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useAuth, useUser } from '@/firebase';
+import { signOut } from 'firebase/auth';
+import { useToast } from '@/hooks/use-toast';
+
 
 const pageTitles: { [key: string]: string } = {
   '/': 'Dashboard',
@@ -30,10 +34,33 @@ const pageTitles: { [key: string]: string } = {
 };
 
 export function AppHeader() {
-  const user = currentUser;
+  const { user, isUserLoading } = useUser();
+  const auth = useAuth();
+  const router = useRouter();
+  const { toast } = useToast();
+  // We'll use a mock user for display purposes until user profiles are implemented
+  const displayUser = users[0]; 
+
   const pathname = usePathname();
   const title = pageTitles[pathname] || 'HeroQuest';
-  const showUserMenu = false; // We can change this once we have real auth
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      toast({
+        title: 'Logged Out',
+        description: 'You have successfully logged out.',
+      });
+      router.push('/login');
+    } catch (error) {
+      console.error("Logout Error: ", error);
+      toast({
+        title: 'Logout Failed',
+        description: 'Something went wrong. Please try again.',
+        variant: 'destructive',
+      });
+    }
+  };
   
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 md:px-6">
@@ -43,28 +70,31 @@ export function AppHeader() {
         <h1 className="text-lg font-semibold md:text-xl font-headline">{title}</h1>
       </div>
 
-      {showUserMenu ? (
+      {isUserLoading ? (
+        <Loader2 className="h-6 w-6 animate-spin" />
+      ) : user ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
               <Avatar className="h-10 w-10 border-2 border-primary/50">
-                <AvatarImage src={user.avatar} alt={user.name} data-ai-hint="child portrait" />
-                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                <AvatarImage src={displayUser.avatar} alt={user.displayName || displayUser.name} data-ai-hint="child portrait" />
+                <AvatarFallback>{(user.displayName || displayUser.name).charAt(0)}</AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end">
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{user.name}</p>
-                <div className="text-xs leading-none text-muted-foreground flex items-center justify-between">
+                <p className="text-sm font-medium leading-none">{user.displayName || displayUser.name}</p>
+                <p className="text-xs text-muted-foreground">{user.email}</p>
+                <div className="text-xs leading-none text-muted-foreground flex items-center justify-between pt-1">
                   <div className="flex items-center">
                       <Award className="w-3 h-3 mr-1 text-yellow-500"/>
-                      {user.score.toLocaleString()} XP
+                      {displayUser.score.toLocaleString()} XP
                   </div>
                   <div className="flex items-center">
                       <Coins className="w-3 h-3 mr-1 text-amber-500"/>
-                      {user.braveCoins.toLocaleString()}
+                      {displayUser.braveCoins.toLocaleString()}
                   </div>
                 </div>
               </div>
@@ -83,7 +113,7 @@ export function AppHeader() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>
