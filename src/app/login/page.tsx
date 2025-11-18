@@ -23,6 +23,7 @@ import Mascot from "@/app/components/mascot";
 import { useAuth, useUser } from "@/firebase";
 import { initiateEmailSignIn, initiateGoogleSignIn } from "@/firebase/non-blocking-login";
 import { Separator } from "@/components/ui/separator";
+import { useLanguage } from "../context/language-context";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email." }),
@@ -64,6 +65,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (!isUserLoading && user && !user.isAnonymous) {
@@ -84,14 +86,11 @@ export default function LoginPage() {
     setIsLoading(true);
     initiateEmailSignIn(auth, values.email, values.password);
     
-    // The onAuthStateChanged listener in FirebaseProvider will handle the redirect
-    // so we can give feedback to the user here.
     toast({
-        title: "Attempting Login...",
-        description: "You will be redirected upon success.",
+        title: t('attemptingLogin'),
+        description: t('redirectOnSuccess'),
     });
 
-    // We can remove the loading state after a short delay
     setTimeout(() => setIsLoading(false), 2000);
   }
 
@@ -99,8 +98,8 @@ export default function LoginPage() {
     setIsLoading(true);
     initiateGoogleSignIn(auth);
      toast({
-        title: "Signing in with Google...",
-        description: "Please follow the instructions in the popup.",
+        title: t('signingInWithGoogle'),
+        description: t('followPopup'),
     });
      setTimeout(() => setIsLoading(false), 3000);
   }
@@ -120,17 +119,17 @@ export default function LoginPage() {
                 <div className="flex justify-center mb-4">
                     <Mascot className="w-16 h-16 text-primary" />
                 </div>
-                <CardTitle className="text-3xl font-headline">Welcome Back!</CardTitle>
-                <CardDescription>Enter your credentials to continue your quest.</CardDescription>
+                <CardTitle className="text-3xl font-headline">{t('welcomeBack')}</CardTitle>
+                <CardDescription>{t('loginDescription')}</CardDescription>
             </CardHeader>
             <CardContent>
                 <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isLoading}>
                     <GoogleIcon className="mr-2 h-5 w-5"/>
-                    Sign in with Google
+                    {t('signInWithGoogle')}
                 </Button>
                 <div className="my-4 flex items-center">
                     <Separator className="flex-1" />
-                    <span className="mx-4 text-xs uppercase text-muted-foreground">OR</span>
+                    <span className="mx-4 text-xs uppercase text-muted-foreground">{t('or')}</span>
                     <Separator className="flex-1" />
                 </div>
                 <Form {...form}>
@@ -140,7 +139,7 @@ export default function LoginPage() {
                     name="email"
                     render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>{t('email')}</FormLabel>
                         <FormControl>
                             <Input placeholder="adventurer@heroquest.com" {...field} />
                         </FormControl>
@@ -153,7 +152,7 @@ export default function LoginPage() {
                     name="password"
                     render={({ field }) => (
                         <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel>{t('password')}</FormLabel>
                         <FormControl>
                             <Input type="password" placeholder="••••••••" {...field} />
                         </FormControl>
@@ -163,14 +162,14 @@ export default function LoginPage() {
                     />
                     <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Login
+                    {t('login')}
                     </Button>
                 </form>
                 </Form>
                 <p className="mt-6 text-center text-sm text-muted-foreground">
-                    New to the guild?{' '}
+                    {t('newToGuild')}{' '}
                     <Link href="/register" className="text-primary hover:underline font-semibold">
-                        Join the adventure!
+                        {t('joinAdventure')}
                     </Link>
                 </p>
             </CardContent>

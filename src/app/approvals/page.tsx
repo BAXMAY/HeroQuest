@@ -10,11 +10,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Check, X, Info, Coins } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useLanguage } from '../context/language-context';
 
 export default function ApprovalsPage() {
   const [deeds, setDeeds] = useState<Deed[]>(initialDeeds);
   const [users, setUsers] = useState<User[]>(initialUsers);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const pendingDeeds = deeds.filter((d) => d.status === 'pending');
 
@@ -38,8 +40,8 @@ export default function ApprovalsPage() {
     );
 
     toast({
-      title: `Quest ${newStatus}!`,
-      description: `The submission has been ${newStatus}.`,
+      title: t('questStatusTitle', { status: newStatus }),
+      description: t('questStatusDescription', { status: newStatus }),
       variant: newStatus === 'rejected' ? 'destructive' : 'default',
     });
   };
@@ -47,8 +49,8 @@ export default function ApprovalsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight font-headline">Quest Review</h1>
-        <p className="text-muted-foreground">Review heroic deeds and award experience points!</p>
+        <h1 className="text-3xl font-bold tracking-tight font-headline">{t('pageTitles.approvals')}</h1>
+        <p className="text-muted-foreground">{t('approvalsDescription')}</p>
       </div>
 
       {pendingDeeds.length > 0 ? (
@@ -66,7 +68,7 @@ export default function ApprovalsPage() {
                     <div>
                       <CardTitle className="text-base">{user?.name}</CardTitle>
                       <p className="text-xs text-muted-foreground">
-                        Submitted: {new Date(deed.submittedAt).toLocaleDateString()}
+                        {t('submittedOn', { date: new Date(deed.submittedAt).toLocaleDateString() })}
                       </p>
                     </div>
                   </div>
@@ -83,7 +85,7 @@ export default function ApprovalsPage() {
                   </div>
                   <CardDescription>{deed.description}</CardDescription>
                   <div className="flex justify-between items-center text-sm font-semibold">
-                    <span className="text-primary">Potential XP: {deed.points}</span>
+                    <span className="text-primary">{t('potentialXP')}: {deed.points}</span>
                      <div className="flex items-center gap-1 text-amber-500">
                         <Coins className="w-4 h-4" />
                         <span>{Math.floor(deed.points / 10)}</span>
@@ -95,14 +97,14 @@ export default function ApprovalsPage() {
                     onClick={() => handleApproval(deed.id, 'approved')}
                     className="w-full bg-green-500 hover:bg-green-600 text-white"
                   >
-                    <Check className="w-4 h-4 mr-2" /> Approve
+                    <Check className="w-4 h-4 mr-2" /> {t('approve')}
                   </Button>
                   <Button
                     onClick={() => handleApproval(deed.id, 'rejected')}
                     variant="destructive"
                     className="w-full"
                   >
-                    <X className="w-4 h-4 mr-2" /> Reject
+                    <X className="w-4 h-4 mr-2" /> {t('reject')}
                   </Button>
                 </CardFooter>
               </Card>
@@ -112,9 +114,9 @@ export default function ApprovalsPage() {
       ) : (
          <Alert>
           <Info className="h-4 w-4" />
-          <AlertTitle>All Clear!</AlertTitle>
+          <AlertTitle>{t('allClear')}</AlertTitle>
           <AlertDescription>
-            There are no pending quests to review. Great job!
+            {t('noPendingQuests')}
           </AlertDescription>
         </Alert>
       )}

@@ -8,10 +8,12 @@ import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { useLanguage } from '../context/language-context';
 
 export default function RoadmapPage() {
     const { user } = useUser();
     const firestore = useFirestore();
+    const { t } = useLanguage();
 
     const userProfileRef = useMemoFirebase(() => {
         if (!user) return null;
@@ -27,24 +29,24 @@ export default function RoadmapPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
           <Map className="w-8 h-8 text-primary" />
-          Level Roadmap
+          {t('pageTitles.roadmap')}
         </h1>
-        <p className="text-muted-foreground">Your journey to becoming a Legendary Hero starts here.</p>
+        <p className="text-muted-foreground">{t('roadmapDescription')}</p>
       </div>
 
       <Card>
         <CardHeader>
-            <CardTitle>All Levels & Titles</CardTitle>
-            <CardDescription>Review all the ranks you can achieve on your adventure.</CardDescription>
+            <CardTitle>{t('allLevelsAndTitles')}</CardTitle>
+            <CardDescription>{t('allLevelsDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
             <div className="border rounded-lg max-h-[60vh] overflow-y-auto">
                 <Table>
                 <TableHeader className="sticky top-0 bg-secondary z-10">
                     <TableRow>
-                    <TableHead className="w-[100px]">Level</TableHead>
-                    <TableHead>Title</TableHead>
-                    <TableHead className="text-right">XP Required</TableHead>
+                    <TableHead className="w-[100px]">{t('levelColumn')}</TableHead>
+                    <TableHead>{t('titleColumn')}</TableHead>
+                    <TableHead className="text-right">{t('xpRequired')}</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -59,7 +61,7 @@ export default function RoadmapPage() {
                     >
                         <TableCell>
                            <div className="flex items-center gap-2">
-                             {currentLevel?.level === level.level && <Badge>Current</Badge>}
+                             {currentLevel?.level === level.level && <Badge>{t('current')}</Badge>}
                              <span>{level.level}</span>
                            </div>
                         </TableCell>

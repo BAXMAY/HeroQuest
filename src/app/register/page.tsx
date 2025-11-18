@@ -23,6 +23,7 @@ import Mascot from "@/app/components/mascot";
 import { useAuth, useUser } from "@/firebase";
 import { initiateEmailSignUp, initiateGoogleSignIn } from "@/firebase/non-blocking-login";
 import { Separator } from "@/components/ui/separator";
+import { useLanguage } from "../context/language-context";
 
 const formSchema = z.object({
   username: z.string().min(3, { message: "Username must be at least 3 characters." }),
@@ -65,6 +66,7 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const auth = useAuth();
   const { user, isUserLoading } = useUser();
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (!isUserLoading && user && !user.isAnonymous) {
@@ -86,12 +88,10 @@ export default function RegisterPage() {
     initiateEmailSignUp(auth, values.email, values.password);
 
     toast({
-        title: "Creating Account...",
-        description: "Welcome to the guild! Your adventure starts now.",
+        title: t('creatingAccount'),
+        description: t('welcomeToGuild'),
     });
 
-    // The onAuthStateChanged listener will handle redirection upon successful registration.
-    // We can disable the loading state after a short while.
     setTimeout(() => setIsLoading(false), 2000);
   }
 
@@ -99,8 +99,8 @@ export default function RegisterPage() {
     setIsLoading(true);
     initiateGoogleSignIn(auth);
      toast({
-        title: "Signing up with Google...",
-        description: "Please follow the instructions in the popup.",
+        title: t('signingUpWithGoogle'),
+        description: t('followPopup'),
     });
      setTimeout(() => setIsLoading(false), 3000);
   }
@@ -120,17 +120,17 @@ export default function RegisterPage() {
                  <div className="flex justify-center mb-4">
                     <Mascot className="w-16 h-16 text-primary" />
                 </div>
-                <CardTitle className="text-3xl font-headline">Join the Guild!</CardTitle>
-                <CardDescription>Create your hero profile and start your adventure.</CardDescription>
+                <CardTitle className="text-3xl font-headline">{t('joinTheGuild')}</CardTitle>
+                <CardDescription>{t('createHeroProfile')}</CardDescription>
             </CardHeader>
             <CardContent>
                 <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isLoading}>
                     <GoogleIcon className="mr-2 h-5 w-5"/>
-                    Sign up with Google
+                    {t('signUpWithGoogle')}
                 </Button>
                 <div className="my-4 flex items-center">
                     <Separator className="flex-1" />
-                    <span className="mx-4 text-xs uppercase text-muted-foreground">OR</span>
+                    <span className="mx-4 text-xs uppercase text-muted-foreground">{t('or')}</span>
                     <Separator className="flex-1" />
                 </div>
                 <Form {...form}>
@@ -140,7 +140,7 @@ export default function RegisterPage() {
                       name="username"
                       render={({ field }) => (
                           <FormItem>
-                          <FormLabel>Username</FormLabel>
+                          <FormLabel>{t('username')}</FormLabel>
                           <FormControl>
                               <Input placeholder="BraveHero" {...field} />
                           </FormControl>
@@ -153,7 +153,7 @@ export default function RegisterPage() {
                       name="email"
                       render={({ field }) => (
                           <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel>{t('email')}</FormLabel>
                           <FormControl>
                               <Input placeholder="adventurer@heroquest.com" {...field} />
                           </FormControl>
@@ -166,7 +166,7 @@ export default function RegisterPage() {
                       name="password"
                       render={({ field }) => (
                           <FormItem>
-                          <FormLabel>Password</FormLabel>
+                          <FormLabel>{t('password')}</FormLabel>
                           <FormControl>
                               <Input type="password" placeholder="••••••••" {...field} />
                           </FormControl>
@@ -176,14 +176,14 @@ export default function RegisterPage() {
                     />
                     <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Create Account
+                    {t('createAccount')}
                     </Button>
                 </form>
                 </Form>
                  <p className="mt-6 text-center text-sm text-muted-foreground">
-                    Already a member?{' '}
+                    {t('alreadyMember')}{' '}
                     <Link href="/login" className="text-primary hover:underline font-semibold">
-                        Login to your account
+                        {t('loginToAccount')}
                     </Link>
                 </p>
             </CardContent>

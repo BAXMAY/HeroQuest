@@ -20,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Loader2, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "../context/language-context";
 
 
 const formSchema = z.object({
@@ -39,6 +40,7 @@ export default function SubmissionForm() {
     const { toast } = useToast();
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const { t } = useLanguage();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,8 +57,8 @@ export default function SubmissionForm() {
     setTimeout(() => {
         setIsLoading(false);
         toast({
-            title: "🎉 Quest Submitted!",
-            description: "Your heroic deed is now pending review. Well done, adventurer!",
+            title: t('questSubmitted'),
+            description: t('questSubmittedDescription'),
         });
         form.reset();
         router.push('/');
@@ -71,15 +73,15 @@ export default function SubmissionForm() {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Describe your quest</FormLabel>
+              <FormLabel>{t('describeYourQuest')}</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="e.g., I rescued a cat from a tall tree..."
+                  placeholder={t('describePlaceholder')}
                   {...field}
                 />
               </FormControl>
               <FormDescription>
-                Recount your tale of heroism.
+                {t('describeHint')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -90,11 +92,11 @@ export default function SubmissionForm() {
           name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Category</FormLabel>
+              <FormLabel>{t('category')}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a quest category" />
+                    <SelectValue placeholder={t('selectCategory')} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -106,7 +108,7 @@ export default function SubmissionForm() {
                 </SelectContent>
               </Select>
               <FormDescription>
-                This helps the scribes categorize your adventure!
+                {t('categoryHint')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -117,12 +119,12 @@ export default function SubmissionForm() {
           name="photo"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Upload Proof</FormLabel>
+              <FormLabel>{t('uploadProof')}</FormLabel>
               <FormControl>
                 <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
               </FormControl>
               <FormDescription>
-                A picture of your legendary accomplishment.
+                {t('uploadProofHint')}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -134,7 +136,7 @@ export default function SubmissionForm() {
             ) : (
               <Send className="mr-2 h-4 w-4" />
             )}
-          Submit for Review
+          {t('submitForReview')}
         </Button>
       </form>
     </Form>

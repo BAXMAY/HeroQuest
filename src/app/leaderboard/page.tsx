@@ -1,11 +1,15 @@
+'use client';
+
 import { users } from '@/app/lib/mock-data';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Crown, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useLanguage } from '../context/language-context';
 
 export default function LeaderboardPage() {
   const sortedUsers = [...users].sort((a, b) => b.score - a.score);
+  const { t } = useLanguage();
 
   const getRankBadge = (rank: number) => {
     switch (rank) {
@@ -34,18 +38,18 @@ export default function LeaderboardPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
             <Users className="w-8 h-8 text-primary" />
-            Hall of Heroes
+            {t('pageTitles.leaderboard')}
         </h1>
-        <p className="text-muted-foreground">See which adventurers are leading the charge!</p>
+        <p className="text-muted-foreground">{t('leaderboardDescription')}</p>
       </div>
 
       <div className="border rounded-lg">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px] text-center">Rank</TableHead>
-              <TableHead>Adventurer</TableHead>
-              <TableHead className="text-right">XP</TableHead>
+              <TableHead className="w-[100px] text-center">{t('rank')}</TableHead>
+              <TableHead>{t('adventurerColumn')}</TableHead>
+              <TableHead className="text-right">{t('xp')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

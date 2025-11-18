@@ -8,6 +8,7 @@ import { collection } from 'firebase/firestore';
 import type { Achievement } from '@/app/lib/types';
 import { cn } from '@/lib/utils';
 import { Loader2, Trophy, CheckCircle2, Shield } from 'lucide-react';
+import { useLanguage } from '../context/language-context';
 
 const Icon = ({ name, className }: { name: string; className: string }) => {
   const LucideIcon = (LucideIcons as any)[name];
@@ -21,6 +22,7 @@ const Icon = ({ name, className }: { name: string; className: string }) => {
 export default function AchievementsPage() {
     const { user } = useUser();
     const firestore = useFirestore();
+    const { t } = useLanguage();
 
     const userAchievementsRef = useMemoFirebase(() => {
         if (!user) return null;
@@ -44,9 +46,9 @@ export default function AchievementsPage() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
           <Trophy className="w-8 h-8 text-yellow-500" />
-          Trophy Room
+          {t('pageTitles.achievements')}
         </h1>
-        <p className="text-muted-foreground">A hall showcasing all the heroic achievements waiting to be earned.</p>
+        <p className="text-muted-foreground">{t('trophyRoomDescription')}</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -66,7 +68,7 @@ export default function AchievementsPage() {
                     {isUnlocked && (
                          <div className="flex items-center gap-1.5 text-green-600 font-semibold text-sm pb-4">
                             <CheckCircle2 className="w-4 h-4"/>
-                            <span>Unlocked</span>
+                            <span>{t('unlocked')}</span>
                         </div>
                     )}
                 </Card>

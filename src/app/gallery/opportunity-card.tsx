@@ -1,9 +1,11 @@
+'use client';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { VolunteerOpportunity } from '@/app/lib/types';
 import { HandsHelpingIcon, PawPrintIcon } from '../components/icons';
 import { Recycle, BookOpen, HeartPulse } from 'lucide-react';
+import { useLanguage } from '../context/language-context';
 
 interface OpportunityCardProps {
   opportunity: VolunteerOpportunity;
@@ -19,6 +21,7 @@ const categoryIcons: { [key: string]: React.ElementType } = {
 
 export default function OpportunityCard({ opportunity }: OpportunityCardProps) {
   const Icon = categoryIcons[opportunity.category.toLowerCase()] || HandsHelpingIcon;
+  const { t } = useLanguage();
 
   return (
     <Card className="flex flex-col bg-card hover:shadow-lg transition-shadow">
@@ -36,7 +39,7 @@ export default function OpportunityCard({ opportunity }: OpportunityCardProps) {
       </CardContent>
       <CardFooter>
         <Button variant="outline" className="w-full">
-          Learn More
+          {t('learnMore')}
         </Button>
       </CardFooter>
     </Card>

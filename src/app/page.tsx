@@ -10,10 +10,12 @@ import { Badge } from "@/components/ui/badge";
 import Mascot from "@/app/components/mascot";
 import { useDoc, useFirestore, useMemoFirebase, useUser } from "@/firebase";
 import { doc } from "firebase/firestore";
+import { useLanguage } from "@/app/context/language-context";
 
 export default function Home() {
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
+  const { t } = useLanguage();
 
   const userProfileRef = useMemoFirebase(() => {
     if (!user) return null;
@@ -37,7 +39,7 @@ export default function Home() {
     );
   }
   
-  const displayName = userProfile?.firstName || user?.displayName || 'Adventurer';
+  const displayName = userProfile?.firstName || user?.displayName || t('adventurer');
 
   return (
     <div className="space-y-8">
@@ -45,10 +47,10 @@ export default function Home() {
         <Mascot className="w-16 h-16 text-primary hidden sm:block" />
         <div className="space-y-1">
           <h1 className="text-3xl font-bold tracking-tight font-headline">
-            Greetings, Adventurer {displayName}!
+            {t('greeting', { displayName })}
           </h1>
           <p className="text-muted-foreground">
-            Ready to embark on a new quest and make a difference today?
+            {t('readyForQuest')}
           </p>
         </div>
       </div>
@@ -56,7 +58,7 @@ export default function Home() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card className="bg-gradient-to-br from-card to-secondary">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Experience Points (XP)</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('experiencePoints')}</CardTitle>
             <Award className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -64,14 +66,14 @@ export default function Home() {
               {(userProfile?.totalPoints || 0).toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              Total experience earned
+              {t('totalExperience')}
             </p>
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Brave Coins</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('braveCoins')}</CardTitle>
             <Coins className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -79,21 +81,21 @@ export default function Home() {
               {(userProfile?.braveCoins || 0).toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              Your treasure to spend
+              {t('yourTreasure')}
             </p>
           </CardContent>
         </Card>
 
         <Card className="flex flex-col items-center justify-center text-center bg-accent/20 border-accent/50 border-dashed">
           <CardHeader>
-            <CardTitle>Log a New Quest!</CardTitle>
-            <CardDescription>Every heroic deed makes the world a better place.</CardDescription>
+            <CardTitle>{t('logNewQuest')}</CardTitle>
+            <CardDescription>{t('everyDeedBetter')}</CardDescription>
           </CardHeader>
           <CardContent>
             <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
               <Link href="/submit">
                 <PlusCircle className="w-5 h-5 mr-2" />
-                Start a Quest
+                {t('startAQuest')}
               </Link>
             </Button>
           </CardContent>
@@ -102,7 +104,7 @@ export default function Home() {
 
       <div>
         <h2 className="text-2xl font-bold tracking-tight font-headline mb-4">
-          Your Completed Quests
+          {t('yourCompletedQuests')}
         </h2>
         {userDeeds.length > 0 ? (
           <div className="space-y-4">
@@ -122,12 +124,12 @@ export default function Home() {
                     <div className="flex justify-between items-start">
                       <Badge variant="secondary" className="mb-2 capitalize">{deed.category}</Badge>
                       <p className="text-sm text-muted-foreground font-medium">
-                        +{deed.points} XP
+                        +{deed.points} {t('xp')}
                       </p>
                     </div>
                     <p className="font-semibold">{deed.description}</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Completed on {new Date(deed.submittedAt).toLocaleDateString()}
+                      {t('completedOn', { date: new Date(deed.submittedAt).toLocaleDateString() })}
                     </p>
                   </div>
                 </div>
@@ -135,12 +137,12 @@ export default function Home() {
             ))}
              <Button variant="link" asChild className="p-0 h-auto">
               <Link href="#" className="text-sm font-semibold">
-                View Quest Log <ArrowUpRight className="w-4 h-4 ml-1" />
+                {t('viewQuestLog')} <ArrowUpRight className="w-4 h-4 ml-1" />
               </Link>
             </Button>
           </div>
         ) : (
-          <p className="text-muted-foreground">You haven't completed any quests yet. <Link href="/submit" className="text-primary underline">Start your first one!</Link></p>
+          <p className="text-muted-foreground">{t('noQuestsYet')} <Link href="/submit" className="text-primary underline">{t('startYourFirst')}</Link></p>
         )}
       </div>
     </div>

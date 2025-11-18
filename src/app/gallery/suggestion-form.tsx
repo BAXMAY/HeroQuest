@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Loader2, Wand2 } from 'lucide-react';
 import OpportunityCard from './opportunity-card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useLanguage } from '../context/language-context';
 
 const interestOptions = ["Animals", "Environment", "Community", "Education", "Health"];
 
@@ -23,6 +24,7 @@ export default function SuggestionForm({ trendingDeeds }: SuggestionFormProps) {
   const [suggestions, setSuggestions] = useState<SuggestVolunteerOpportunitiesOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   const handleInterestChange = (interest: string) => {
     setInterests((prev) =>
@@ -41,7 +43,7 @@ export default function SuggestionForm({ trendingDeeds }: SuggestionFormProps) {
       });
       setSuggestions(result);
     } catch (e) {
-      setError('Sorry, the Oracle is meditating. Please try again in a moment.');
+      setError(t('oracleMeditating'));
       console.error(e);
     } finally {
       setIsLoading(false);
@@ -52,12 +54,12 @@ export default function SuggestionForm({ trendingDeeds }: SuggestionFormProps) {
     <div className="space-y-8">
       <Card>
         <CardHeader>
-          <CardTitle>Find Your Next Quest</CardTitle>
-          <CardDescription>Tell us what you care about, and the Oracle will find new adventures for you!</CardDescription>
+          <CardTitle>{t('findNextQuest')}</CardTitle>
+          <CardDescription>{t('tellUsInterests')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label className="font-semibold">What are your interests?</Label>
+            <Label className="font-semibold">{t('whatAreYourInterests')}</Label>
             <div className="flex flex-wrap gap-4">
               {interestOptions.map((interest) => (
                 <div key={interest} className="flex items-center space-x-2">
@@ -79,7 +81,7 @@ export default function SuggestionForm({ trendingDeeds }: SuggestionFormProps) {
             ) : (
               <Wand2 className="mr-2 h-4 w-4" />
             )}
-            Consult the Oracle
+            {t('consultOracle')}
           </Button>
         </CardContent>
       </Card>
@@ -87,20 +89,20 @@ export default function SuggestionForm({ trendingDeeds }: SuggestionFormProps) {
       {isLoading && (
          <div className="flex items-center justify-center space-x-2 text-muted-foreground">
             <Loader2 className="h-5 w-5 animate-spin"/>
-            <span>The Oracle is scrying the future...</span>
+            <span>{t('oracleScrying')}</span>
         </div>
       )}
 
       {error && (
         <Alert variant="destructive">
-            <AlertTitle>Oops!</AlertTitle>
+            <AlertTitle>{t('oops')}</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
 
       {suggestions && (
         <div>
-            <h2 className="text-2xl font-bold tracking-tight font-headline mb-4">The Oracle has spoken!</h2>
+            <h2 className="text-2xl font-bold tracking-tight font-headline mb-4">{t('oracleHasSpoken')}</h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {suggestions.opportunities.map((opp, index) => (
               <OpportunityCard key={index} opportunity={opp} />

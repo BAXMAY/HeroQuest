@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,11 +11,13 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useDoc, useFirestore, useMemoFirebase, useUser, updateDocumentNonBlocking } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { increment } from 'firebase/firestore';
+import { useLanguage } from '../context/language-context';
 
 export default function RewardsPage() {
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const userProfileRef = useMemoFirebase(() => {
     if (!user) return null;
@@ -34,13 +35,13 @@ export default function RewardsPage() {
       });
 
       toast({
-        title: 'Reward Redeemed!',
-        description: `You've successfully claimed the "${reward.name}".`,
+        title: t('rewardRedeemed'),
+        description: t('rewardRedeemedDescription', { rewardName: reward.name }),
       });
     } else {
       toast({
-        title: 'Not enough coins!',
-        description: 'Complete more quests to earn enough Brave Coins.',
+        title: t('notEnoughCoinsToast'),
+        description: t('notEnoughCoinsDescription'),
         variant: 'destructive',
       });
     }
@@ -54,16 +55,16 @@ export default function RewardsPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
             <ShoppingBag className="w-8 h-8 text-accent" />
-            Reward Shop
+            {t('pageTitles.rewards')}
           </h1>
-          <p className="text-muted-foreground">Spend your Brave Coins on legendary loot!</p>
+          <p className="text-muted-foreground">{t('rewardsDescription')}</p>
         </div>
         {isLoading ? (
             <Loader2 className="h-6 w-6 animate-spin" />
         ) : (
             <Card className="w-full sm:w-auto">
                 <CardHeader className="flex flex-row items-center justify-between p-4 space-y-0">
-                    <CardTitle className="text-sm font-medium">Your Balance</CardTitle>
+                    <CardTitle className="text-sm font-medium">{t('yourBalance')}</CardTitle>
                     <Coins className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent className="p-4 pt-0">
@@ -101,7 +102,7 @@ export default function RewardsPage() {
                         <span>{reward.cost}</span>
                     </div>
                   <Button onClick={() => handleRedeem(reward)} disabled={!canAfford || isLoading}>
-                    {canAfford ? 'Redeem' : 'Not Enough Coins'}
+                    {canAfford ? t('redeem') : t('notEnoughCoins')}
                   </Button>
                 </CardFooter>
               </Card>
@@ -111,9 +112,9 @@ export default function RewardsPage() {
       ) : (
         <Alert>
           <Sparkles className="h-4 w-4" />
-          <AlertTitle>No Rewards Yet!</AlertTitle>
+          <AlertTitle>{t('noRewardsYet')}</AlertTitle>
           <AlertDescription>
-            The quartermaster is still stocking the shop. Check back soon for new rewards!
+            {t('noRewardsDescription')}
           </AlertDescription>
         </Alert>
       )}

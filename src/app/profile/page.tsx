@@ -18,6 +18,7 @@ import { Progress } from '@/components/ui/progress';
 import { Label } from '@/components/ui/label';
 import { Achievement, UserProfile } from '../lib/types';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useLanguage } from '../context/language-context';
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, 'First name is too short').max(50, 'First name is too long'),
@@ -31,6 +32,7 @@ export default function ProfilePage() {
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const userProfileRef = useMemoFirebase(() => {
     if (!user) return null;
@@ -69,8 +71,8 @@ export default function ProfilePage() {
     if (!userProfileRef) return;
     updateDocumentNonBlocking(userProfileRef, data);
     toast({
-      title: 'Profile Updated',
-      description: 'Your profile has been successfully saved.',
+      title: t('profileUpdated'),
+      description: t('profileUpdatedDescription'),
     });
   };
   
@@ -111,7 +113,7 @@ export default function ProfilePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Your Progress</CardTitle>
+          <CardTitle>{t('yourProgress')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
@@ -120,35 +122,35 @@ export default function ProfilePage() {
                     <Award className="w-6 h-6 text-yellow-500"/>
                     <p className="text-2xl font-bold font-headline">{(userProfile.totalPoints || 0).toLocaleString()}</p>
                 </div>
-              <p className="text-sm text-muted-foreground">Experience Points</p>
+              <p className="text-sm text-muted-foreground">{t('experiencePoints')}</p>
             </div>
             <div className="p-4 bg-secondary/50 rounded-lg">
                 <div className="flex items-center justify-center gap-2">
                     <Coins className="w-6 h-6 text-amber-500"/>
                     <p className="text-2xl font-bold font-headline">{(userProfile.braveCoins || 0).toLocaleString()}</p>
                 </div>
-              <p className="text-sm text-muted-foreground">Brave Coins</p>
+              <p className="text-sm text-muted-foreground">{t('braveCoins')}</p>
             </div>
             <div className="p-4 bg-secondary/50 rounded-lg">
                 <div className="flex items-center justify-center gap-2">
                     <Star className="w-6 h-6 text-green-500"/>
                     <p className="text-2xl font-bold font-headline">{(userProfile.questsCompleted || 0).toLocaleString()}</p>
                 </div>
-              <p className="text-sm text-muted-foreground">Quests Completed</p>
+              <p className="text-sm text-muted-foreground">{t('questsCompleted')}</p>
             </div>
           </div>
           <div>
-            <Label>Level Progress</Label>
+            <Label>{t('levelProgress')}</Label>
             <Progress value={(userProfile.totalPoints / 2000) * 100} className="h-2 mt-1" />
-             <p className="text-xs text-muted-foreground mt-1 text-right">Level {currentLevel.level}</p>
+             <p className="text-xs text-muted-foreground mt-1 text-right">{t('level', { level: currentLevel.level })}</p>
           </div>
         </CardContent>
       </Card>
 
        <Card>
         <CardHeader>
-          <CardTitle>Achievements</CardTitle>
-          <CardDescription>Trophies from your heroic journey.</CardDescription>
+          <CardTitle>{t('achievements')}</CardTitle>
+          <CardDescription>{t('achievementsDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
           {achievements && achievements.length > 0 ? (
@@ -165,14 +167,14 @@ export default function ProfilePage() {
                     <TooltipContent>
                       <p className="font-bold">{ach.name}</p>
                       <p className="text-sm text-muted-foreground">{ach.description}</p>
-                      {ach.unlockedAt && <p className="text-xs text-muted-foreground/80 mt-1">Unlocked: {new Date(ach.unlockedAt).toLocaleDateString()}</p>}
+                      {ach.unlockedAt && <p className="text-xs text-muted-foreground/80 mt-1">{t('unlocked')}: {new Date(ach.unlockedAt).toLocaleDateString()}</p>}
                     </TooltipContent>
                   </Tooltip>
                 ))}
               </div>
             </TooltipProvider>
           ) : (
-            <p className="text-muted-foreground text-sm">Your trophy case is empty. Complete quests to earn achievements!</p>
+            <p className="text-muted-foreground text-sm">{t('noAchievements')}</p>
           )}
         </CardContent>
       </Card>
@@ -180,8 +182,8 @@ export default function ProfilePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Edit Profile</CardTitle>
-          <CardDescription>Update your personal information here.</CardDescription>
+          <CardTitle>{t('editProfile')}</CardTitle>
+          <CardDescription>{t('editProfileDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -192,9 +194,9 @@ export default function ProfilePage() {
                   name="firstName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>First Name</FormLabel>
+                      <FormLabel>{t('firstName')}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Your first name" {...field} />
+                        <Input placeholder={t('firstName')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -205,9 +207,9 @@ export default function ProfilePage() {
                   name="lastName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Last Name</FormLabel>
+                      <FormLabel>{t('lastName')}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Your last name" {...field} />
+                        <Input placeholder={t('lastName')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -219,9 +221,9 @@ export default function ProfilePage() {
                   name="username"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Username</FormLabel>
+                      <FormLabel>{t('username')}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Your public username" {...field} />
+                        <Input placeholder={t('username')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -233,7 +235,7 @@ export default function ProfilePage() {
                 ) : (
                   <Save className="mr-2 h-4 w-4" />
                 )}
-                Save Changes
+                {t('saveChanges')}
               </Button>
             </form>
           </Form>
