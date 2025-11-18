@@ -15,7 +15,6 @@ import {
   Trophy,
   CheckSquare,
   Sparkles,
-  LifeBuoy,
   Settings,
   BookMarked,
   ShoppingBag,
@@ -29,6 +28,7 @@ const navItems = [
   { href: '/approvals', label: 'Quest Review', icon: CheckSquare },
   { href: '/gallery', label: 'Opportunity Board', icon: Sparkles },
   { href: '/rewards', label: 'Reward Shop', icon: ShoppingBag },
+  { href: '/lorebook', label: 'Lorebook', icon: BookMarked },
 ];
 
 export default function Nav() {
@@ -64,14 +64,6 @@ export default function Nav() {
 
       <SidebarFooter>
         <SidebarMenu>
-            <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Lorebook" isActive={pathname === '/lorebook'}>
-                    <Link href="/lorebook">
-                        <BookMarked />
-                        <span>Lorebook</span>
-                    </Link>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
             <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Settings" isActive={pathname === '/settings'}>
                     <Link href="/settings">
