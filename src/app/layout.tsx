@@ -6,7 +6,7 @@ import { AppHeader } from '@/app/components/header';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'DeedQuest',
+  title: 'HeroQuest',
   description: 'A gamified volunteer platform for children to track their good deeds.',
 };
 

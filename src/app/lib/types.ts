@@ -3,6 +3,7 @@ export type User = {
   name: string;
   avatar: string;
   score: number;
+  braveCoins: number;
 };
 
 export type Deed = {

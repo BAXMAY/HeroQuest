@@ -4,15 +4,16 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { deeds as initialDeeds, users } from '@/app/lib/mock-data';
-import type { Deed } from '@/app/lib/types';
+import { deeds as initialDeeds, users as initialUsers } from '@/app/lib/mock-data';
+import type { Deed, User } from '@/app/lib/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Check, X, Info } from 'lucide-react';
+import { Check, X, Info, Coins } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function ApprovalsPage() {
   const [deeds, setDeeds] = useState<Deed[]>(initialDeeds);
+  const [users, setUsers] = useState<User[]>(initialUsers);
   const { toast } = useToast();
 
   const pendingDeeds = deeds.filter((d) => d.status === 'pending');
@@ -21,9 +22,21 @@ export default function ApprovalsPage() {
     const deed = deeds.find(d => d.id === deedId);
     if (!deed) return;
 
+    if (newStatus === 'approved') {
+      const coinsAwarded = Math.floor(deed.points / 10);
+      setUsers((prevUsers) =>
+        prevUsers.map((u) =>
+          u.id === deed.userId
+            ? { ...u, score: u.score + deed.points, braveCoins: u.braveCoins + coinsAwarded }
+            : u
+        )
+      );
+    }
+
     setDeeds((prevDeeds) =>
       prevDeeds.map((d) => (d.id === deedId ? { ...d, status: newStatus } : d))
     );
+
     toast({
       title: `Quest ${newStatus}!`,
       description: `The submission has been ${newStatus}.`,
@@ -69,7 +82,13 @@ export default function ApprovalsPage() {
                     />
                   </div>
                   <CardDescription>{deed.description}</CardDescription>
-                  <div className="text-sm font-semibold text-primary">Potential XP: {deed.points}</div>
+                  <div className="flex justify-between items-center text-sm font-semibold">
+                    <span className="text-primary">Potential XP: {deed.points}</span>
+                     <div className="flex items-center gap-1 text-amber-500">
+                        <Coins className="w-4 h-4" />
+                        <span>{Math.floor(deed.points / 10)}</span>
+                      </div>
+                  </div>
                 </CardContent>
                 <CardFooter className="flex gap-2">
                   <Button

@@ -37,7 +37,7 @@ export default function Nav() {
       <SidebarHeader>
         <div className="flex items-center gap-2 p-2">
             <Mascot className="w-8 h-8 text-primary" />
-            <h2 className="text-2xl font-bold font-headline">DeedQuest</h2>
+            <h2 className="text-2xl font-bold font-headline">HeroQuest</h2>
         </div>
       </SidebarHeader>
 

@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { currentUser } from '@/app/lib/mock-data';
-import { Award, LogOut, Settings, User as UserIcon } from 'lucide-react';
+import { Award, LogOut, Settings, User as UserIcon, Coins } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -26,7 +26,7 @@ const pageTitles: { [key: string]: string } = {
 export function AppHeader() {
   const user = currentUser;
   const pathname = usePathname();
-  const title = pageTitles[pathname] || 'DeedQuest';
+  const title = pageTitles[pathname] || 'HeroQuest';
   
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 md:px-6">
@@ -49,10 +49,16 @@ export function AppHeader() {
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
               <p className="text-sm font-medium leading-none">{user.name}</p>
-              <p className="text-xs leading-none text-muted-foreground flex items-center">
-                <Award className="w-3 h-3 mr-1 text-yellow-500"/>
-                {user.score.toLocaleString()} XP
-              </p>
+              <div className="text-xs leading-none text-muted-foreground flex items-center justify-between">
+                <div className="flex items-center">
+                    <Award className="w-3 h-3 mr-1 text-yellow-500"/>
+                    {user.score.toLocaleString()} XP
+                </div>
+                <div className="flex items-center">
+                    <Coins className="w-3 h-3 mr-1 text-amber-500"/>
+                    {user.braveCoins.toLocaleString()}
+                </div>
+              </div>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />

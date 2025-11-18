@@ -4,11 +4,11 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 const getImage = (id: string) => PlaceHolderImages.find(img => img.id === id)?.imageUrl || `https://picsum.photos/seed/${id}/400/300`;
 
 export const users: User[] = [
-  { id: 'user-1', name: 'Alex', avatar: getImage('avatar1'), score: 1250 },
-  { id: 'user-2', name: 'Mia', avatar: getImage('avatar2'), score: 1100 },
-  { id: 'user-3', name: 'Ben', avatar: getImage('avatar3'), score: 950 },
-  { id: 'user-4', name: 'Chloe', avatar: getImage('avatar4'), score: 875 },
-  { id: 'user-5', name: 'Sam', avatar: getImage('avatar5'), score: 700 },
+  { id: 'user-1', name: 'Alex', avatar: getImage('avatar1'), score: 1250, braveCoins: 125 },
+  { id: 'user-2', name: 'Mia', avatar: getImage('avatar2'), score: 1100, braveCoins: 110 },
+  { id: 'user-3', name: 'Ben', avatar: getImage('avatar3'), score: 950, braveCoins: 95 },
+  { id: 'user-4', name: 'Chloe', avatar: getImage('avatar4'), score: 875, braveCoins: 87 },
+  { id: 'user-5', name: 'Sam', avatar: getImage('avatar5'), score: 700, braveCoins: 70 },
 ];
 
 export const currentUser = users[0];
