@@ -45,7 +45,7 @@ export function AppHeader() {
     return doc(firestore, 'users', user.uid);
   }, [user, firestore]);
 
-  const { data: userProfile } = useDoc(userProfileRef);
+  const { data: userProfile, isLoading: isProfileLoading } = useDoc(userProfileRef);
 
   const pathname = usePathname();
   const title = pageTitles[pathname] || 'HeroQuest';
@@ -68,6 +68,7 @@ export function AppHeader() {
     }
   };
   
+  const isLoading = isUserLoading || isProfileLoading;
   const displayName = userProfile?.firstName || user?.displayName || 'Adventurer';
 
   return (
@@ -78,14 +79,14 @@ export function AppHeader() {
         <h1 className="text-lg font-semibold md:text-xl font-headline">{title}</h1>
       </div>
 
-      {isUserLoading ? (
+      {isLoading ? (
         <Loader2 className="h-6 w-6 animate-spin" />
-      ) : user && userProfile ? (
+      ) : user ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
               <Avatar className="h-10 w-10 border-2 border-primary/50">
-                <AvatarImage src={userProfile.profilePicture || user.photoURL} alt={displayName} data-ai-hint="child portrait" />
+                <AvatarImage src={userProfile?.profilePicture || user.photoURL} alt={displayName} data-ai-hint="child portrait" />
                 <AvatarFallback>{displayName.charAt(0)}</AvatarFallback>
               </Avatar>
             </Button>
@@ -95,16 +96,18 @@ export function AppHeader() {
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none">{displayName}</p>
                 <p className="text-xs text-muted-foreground">{user.email}</p>
-                <div className="text-xs leading-none text-muted-foreground flex items-center justify-between pt-1">
-                  <div className="flex items-center">
-                      <Award className="w-3 h-3 mr-1 text-yellow-500"/>
-                      {(userProfile.totalPoints || 0).toLocaleString()} XP
+                {userProfile && (
+                  <div className="text-xs leading-none text-muted-foreground flex items-center justify-between pt-1">
+                    <div className="flex items-center">
+                        <Award className="w-3 h-3 mr-1 text-yellow-500"/>
+                        {(userProfile.totalPoints || 0).toLocaleString()} XP
+                    </div>
+                    <div className="flex items-center">
+                        <Coins className="w-3 h-3 mr-1 text-amber-500"/>
+                        {0}
+                    </div>
                   </div>
-                  <div className="flex items-center">
-                      <Coins className="w-3 h-3 mr-1 text-amber-500"/>
-                      {0}
-                  </div>
-                </div>
+                )}
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
