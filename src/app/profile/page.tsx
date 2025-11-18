@@ -13,6 +13,8 @@ import { Award, Coins, Loader2, Save } from 'lucide-react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { getLevelFromXP } from '../lib/levels';
+import { Progress } from '@/components/ui/progress';
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, 'First name is too short').max(50, 'First name is too long'),
@@ -81,6 +83,7 @@ export default function ProfilePage() {
   }
 
   const displayName = userProfile.firstName || user.displayName || 'Adventurer';
+  const currentLevel = getLevelFromXP(userProfile.totalPoints);
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
@@ -92,32 +95,46 @@ export default function ProfilePage() {
         <div className="text-center md:text-left">
             <h1 className="text-3xl font-bold tracking-tight font-headline">{displayName} {userProfile.lastName}</h1>
             <p className="text-muted-foreground">{user?.email}</p>
+            <p className="text-lg font-semibold text-primary">{currentLevel.title}</p>
         </div>
       </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-        <div className="p-4 bg-secondary/50 rounded-lg">
-            <div className="flex items-center justify-center gap-2">
-                <Award className="w-6 h-6 text-yellow-500"/>
-                <p className="text-2xl font-bold font-headline">{(userProfile.totalPoints || 0).toLocaleString()}</p>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Your Progress</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+            <div className="p-4 bg-secondary/50 rounded-lg">
+                <div className="flex items-center justify-center gap-2">
+                    <Award className="w-6 h-6 text-yellow-500"/>
+                    <p className="text-2xl font-bold font-headline">{(userProfile.totalPoints || 0).toLocaleString()}</p>
+                </div>
+              <p className="text-sm text-muted-foreground">Experience Points</p>
             </div>
-          <p className="text-sm text-muted-foreground">Experience Points</p>
-        </div>
-        <div className="p-4 bg-secondary/50 rounded-lg">
-            <div className="flex items-center justify-center gap-2">
-                <Coins className="w-6 h-6 text-amber-500"/>
-                <p className="text-2xl font-bold font-headline">{0}</p>
+            <div className="p-4 bg-secondary/50 rounded-lg">
+                <div className="flex items-center justify-center gap-2">
+                    <Coins className="w-6 h-6 text-amber-500"/>
+                    <p className="text-2xl font-bold font-headline">{0}</p>
+                </div>
+              <p className="text-sm text-muted-foreground">Brave Coins</p>
             </div>
-          <p className="text-sm text-muted-foreground">Brave Coins</p>
-        </div>
-        <div className="p-4 bg-secondary/50 rounded-lg">
-            <div className="flex items-center justify-center gap-2">
-                <Award className="w-6 h-6 text-green-500"/>
-                <p className="text-2xl font-bold font-headline">{0}</p>
+            <div className="p-4 bg-secondary/50 rounded-lg">
+                <div className="flex items-center justify-center gap-2">
+                    <Award className="w-6 h-6 text-green-500"/>
+                    <p className="text-2xl font-bold font-headline">{0}</p>
+                </div>
+              <p className="text-sm text-muted-foreground">Quests Completed</p>
             </div>
-          <p className="text-sm text-muted-foreground">Quests Completed</p>
-        </div>
-      </div>
+          </div>
+          <div>
+            <Label>Level Progress</Label>
+            <Progress value={(userProfile.totalPoints / 2000) * 100} className="h-2 mt-1" />
+             <p className="text-xs text-muted-foreground mt-1 text-right">Level {currentLevel.level}</p>
+          </div>
+        </CardContent>
+      </Card>
+
 
       <Card>
         <CardHeader>

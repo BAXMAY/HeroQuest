@@ -17,6 +17,7 @@ import { useAuth, useUser, useFirestore, useDoc, useMemoFirebase } from '@/fireb
 import { signOut } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
 import { doc } from 'firebase/firestore';
+import { getLevelFromXP } from '@/app/lib/levels';
 
 
 const pageTitles: { [key: string]: string } = {
@@ -70,6 +71,7 @@ export function AppHeader() {
   
   const isLoading = isUserLoading || isProfileLoading;
   const displayName = userProfile?.firstName || user?.displayName || 'Adventurer';
+  const currentLevel = getLevelFromXP(userProfile?.totalPoints);
 
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 md:px-6">
@@ -97,16 +99,19 @@ export function AppHeader() {
                 <p className="text-sm font-medium leading-none">{displayName}</p>
                 <p className="text-xs text-muted-foreground">{user.email}</p>
                 {userProfile && (
-                  <div className="text-xs leading-none text-muted-foreground flex items-center justify-between pt-1">
-                    <div className="flex items-center">
-                        <Award className="w-3 h-3 mr-1 text-yellow-500"/>
-                        {(userProfile.totalPoints || 0).toLocaleString()} XP
+                  <>
+                    <p className="text-xs font-semibold text-primary pt-1">{currentLevel.title}</p>
+                    <div className="text-xs leading-none text-muted-foreground flex items-center justify-between">
+                      <div className="flex items-center">
+                          <Award className="w-3 h-3 mr-1 text-yellow-500"/>
+                          {(userProfile.totalPoints || 0).toLocaleString()} XP
+                      </div>
+                      <div className="flex items-center">
+                          <Coins className="w-3 h-3 mr-1 text-amber-500"/>
+                          {0}
+                      </div>
                     </div>
-                    <div className="flex items-center">
-                        <Coins className="w-3 h-3 mr-1 text-amber-500"/>
-                        {0}
-                    </div>
-                  </div>
+                  </>
                 )}
               </div>
             </DropdownMenuLabel>
