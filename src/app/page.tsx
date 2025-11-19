@@ -20,16 +20,18 @@ export default function LandingPage() {
   return (
     <div className="space-y-16 md:space-y-24 pb-16">
       {/* Hero Section */}
-      <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center text-center text-white bg-black">
-        <Image
-          src={heroImage}
-          alt="Children volunteering"
-          fill
-          className="object-cover opacity-50"
-          priority
-          data-ai-hint="children volunteering"
-        />
-        <div className="relative z-10 p-4 space-y-4">
+      <section className="relative flex items-center justify-center text-center text-white bg-black">
+        <div className="absolute inset-0">
+          <Image
+            src={heroImage}
+            alt="Children volunteering"
+            fill
+            className="object-cover opacity-50"
+            priority
+            data-ai-hint="children volunteering"
+          />
+        </div>
+        <div className="relative z-10 p-4 py-24 md:py-32 space-y-4">
           <div className="flex justify-center">
             <Mascot className="w-24 h-24 text-primary" />
           </div>
