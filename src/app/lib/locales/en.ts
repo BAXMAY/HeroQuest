@@ -2,6 +2,7 @@
 export const en = {
   // Page Titles
   pageTitles: {
+    home: 'Home',
     dashboard: 'Dashboard',
     submit: 'Start a New Quest',
     leaderboard: 'Hall of Heroes',

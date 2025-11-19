@@ -29,7 +29,7 @@ export default function Nav() {
   const { t } = useLanguage();
 
   const navItems = [
-    { href: '/', label: t('nav.dashboard'), icon: LayoutDashboard },
+    { href: '/dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
     { href: '/submit', label: t('nav.startQuest'), icon: PlusCircle },
     { href: '/leaderboard', label: t('nav.hallOfHeroes'), icon: Users },
     { href: '/achievements', label: t('nav.trophyRoom'), icon: Trophy },
@@ -44,8 +44,10 @@ export default function Nav() {
     <>
       <SidebarHeader>
         <div className="flex items-center gap-2 p-2">
-            <Mascot className="w-8 h-8 text-primary" />
-            <h2 className="text-2xl font-bold font-headline">HeroQuest</h2>
+            <Link href="/" className="flex items-center gap-2">
+              <Mascot className="w-8 h-8 text-primary" />
+              <h2 className="text-2xl font-bold font-headline">HeroQuest</h2>
+            </Link>
         </div>
       </SidebarHeader>
 

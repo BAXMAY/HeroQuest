@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Award, LogOut, Settings, User as UserIcon, Coins, Loader2, LogIn } from 'lucide-react';
+import { Award, LogOut, Settings, User as UserIcon, Coins, Loader2, LogIn, Home } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth, useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
@@ -37,7 +37,7 @@ export function AppHeader() {
   const { data: userProfile, isLoading: isProfileLoading } = useDoc(userProfileRef);
 
   const pathname = usePathname();
-  const title = t(`pageTitles.${pathname.replace('/', '') || 'dashboard'}`);
+  const title = t(`pageTitles.${pathname.replace('/', '') || 'home'}`);
 
   const handleLogout = async () => {
     try {
@@ -72,7 +72,9 @@ export function AppHeader() {
       <SidebarTrigger className="md:hidden" />
       
       <div className="flex-1">
-        <h1 className="text-lg font-semibold md:text-xl font-headline">{title}</h1>
+         {pathname !== '/' && (
+            <h1 className="text-lg font-semibold md:text-xl font-headline">{title}</h1>
+        )}
       </div>
 
       <Button variant="outline" onClick={handleLanguageToggle} className="w-16">
@@ -114,6 +116,12 @@ export function AppHeader() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+                <Link href="/">
+                    <Home className="mr-2 h-4 w-4" />
+                    <span>Home</span>
+                </Link>
+            </DropdownMenuItem>
             {isAnonymous ? (
                  <DropdownMenuItem asChild>
                     <Link href="/register">

@@ -2,6 +2,7 @@
 export const th = {
     // Page Titles
     pageTitles: {
+      home: 'หน้าแรก',
       dashboard: 'แดชบอร์ด',
       submit: 'เริ่มเควสใหม่',
       leaderboard: 'หอเกียรติยศ',

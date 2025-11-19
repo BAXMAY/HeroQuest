@@ -69,7 +69,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!isUserLoading && user && !user.isAnonymous) {
-      router.push('/');
+      router.push('/dashboard');
     }
   }, [user, isUserLoading, router]);
 

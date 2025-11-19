@@ -24,7 +24,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Chonburi&family=IM+Fell+English:ital@0;1&family=Maitree&family=MedievalSharp&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased h-full">
+      <body className="font-body antialiased h-full bg-background text-foreground">
         <FirebaseClientProvider>
           <LanguageProvider>
             <SidebarProvider>
