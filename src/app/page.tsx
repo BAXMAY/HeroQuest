@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { ArrowRight, Award, Shield, Star, Users } from 'lucide-react';
+import { ArrowRight, Award, Shield, Users } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Mascot from '@/app/components/mascot';
@@ -18,7 +18,7 @@ export default function LandingPage() {
 
 
   return (
-    <div className="space-y-16 md:space-y-24 pb-16 -mt-4 md:-mt-6 -mx-4 md:-mx-6">
+    <div className="space-y-16 md:space-y-24 pb-16">
       {/* Hero Section */}
       <section className="relative h-[60vh] md:h-[70vh] flex items-center justify-center text-center text-white bg-black">
         <Image
@@ -50,33 +50,33 @@ export default function LandingPage() {
       {/* Features Section */}
       <section className="container mx-auto px-4 md:px-6">
         <h2 className="text-3xl md:text-4xl font-bold text-center font-headline mb-12">
-          An Adventure in Every Good Deed
+          {t('anAdventureInEveryGoodDeed')}
         </h2>
         <div className="grid md:grid-cols-3 gap-8">
           <Card className="text-center">
             <CardContent className="p-6">
               <Award className="w-12 h-12 mx-auto text-primary mb-4" />
-              <h3 className="text-xl font-bold font-headline mb-2">Earn XP &amp; Coins</h3>
+              <h3 className="text-xl font-bold font-headline mb-2">{t('earnXPAndCoins')}</h3>
               <p className="text-muted-foreground">
-                Complete real-world quests, from helping neighbors to cleaning parks, and earn experience points (XP) and Brave Coins.
+                {t('earnXPAndCoinsDescription')}
               </p>
             </CardContent>
           </Card>
           <Card className="text-center">
             <CardContent className="p-6">
               <Users className="w-12 h-12 mx-auto text-primary mb-4" />
-              <h3 className="text-xl font-bold font-headline mb-2">Climb the Ranks</h3>
+              <h3 className="text-xl font-bold font-headline mb-2">{t('climbTheRanks')}</h3>
               <p className="text-muted-foreground">
-                Rise through the Hall of Heroes! Compete with friends and see who can make the biggest impact in your community.
+                {t('climbTheRanksDescription')}
               </p>
             </CardContent>
           </Card>
           <Card className="text-center">
             <CardContent className="p-6">
               <Shield className="w-12 h-12 mx-auto text-primary mb-4" />
-              <h3 className="text-xl font-bold font-headline mb-2">Unlock Achievements</h3>
+              <h3 className="text-xl font-bold font-headline mb-2">{t('unlockAchievements')}</h3>
               <p className="text-muted-foreground">
-                Earn unique badges and trophies for your heroic accomplishments and build your legend.
+                {t('unlockAchievementsDescription')}
               </p>
             </CardContent>
           </Card>
@@ -87,10 +87,10 @@ export default function LandingPage() {
        <section className="container mx-auto px-4 md:px-6 space-y-16">
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div className="order-2 md:order-1">
-             <h3 className="text-2xl font-bold font-headline mb-4">Log Your Quests</h3>
-             <p className="text-muted-foreground mb-4">Easily document your good deeds with photos and descriptions. Watch your XP grow with every approved quest and feel the pride of your accomplishments.</p>
+             <h3 className="text-2xl font-bold font-headline mb-4">{t('logYourQuests')}</h3>
+             <p className="text-muted-foreground mb-4">{t('logYourQuestsDescription')}</p>
              <Button asChild variant="outline">
-                <Link href="/submit">Start a Quest</Link>
+                <Link href="/submit">{t('startAQuest')}</Link>
              </Button>
           </div>
           <div className="order-1 md:order-2">
@@ -102,19 +102,19 @@ export default function LandingPage() {
             <Image src={featureImage2} alt="Leaderboard" width={600} height={400} className="rounded-lg shadow-xl" data-ai-hint="kids teamwork"/>
           </div>
           <div>
-            <h3 className="text-2xl font-bold font-headline mb-4">Become a Legend</h3>
-            <p className="text-muted-foreground mb-4">See how you stack up against other heroes in the Hall of Heroes. Friendly competition inspires everyone to do more good!</p>
+            <h3 className="text-2xl font-bold font-headline mb-4">{t('becomeALegend')}</h3>
+            <p className="text-muted-foreground mb-4">{t('becomeALegendDescription')}</p>
              <Button asChild variant="outline">
-                <Link href="/leaderboard">View Hall of Heroes</Link>
+                <Link href="/leaderboard">{t('viewHallOfHeroes')}</Link>
              </Button>
           </div>
         </div>
          <div className="grid md:grid-cols-2 gap-8 items-center">
           <div className="order-2 md:order-1">
-             <h3 className="text-2xl font-bold font-headline mb-4">Claim Your Rewards</h3>
-             <p className="text-muted-foreground mb-4">Spend your hard-earned Brave Coins in the Reward Shop on fun and exciting treasures. Your good deeds deserve great rewards!</p>
+             <h3 className="text-2xl font-bold font-headline mb-4">{t('claimYourRewards')}</h3>
+             <p className="text-muted-foreground mb-4">{t('claimYourRewardsDescription')}</p>
              <Button asChild variant="outline">
-                <Link href="/rewards">Visit the Shop</Link>
+                <Link href="/rewards">{t('visitTheShop')}</Link>
              </Button>
           </div>
           <div className="order-1 md:order-2">
@@ -126,11 +126,11 @@ export default function LandingPage() {
       {/* Final CTA */}
       <section className="container mx-auto px-4 md:px-6 text-center">
         <Card className="bg-primary/10 border-primary/20 p-8">
-            <h2 className="text-3xl font-bold font-headline mb-4">Ready to Become a Hero?</h2>
-            <p className="text-muted-foreground max-w-xl mx-auto mb-6">Your adventure awaits. Join a community of young heroes making a real difference in the world, one quest at a time.</p>
+            <h2 className="text-3xl font-bold font-headline mb-4">{t('readyToBeAHerp')}</h2>
+            <p className="text-muted-foreground max-w-xl mx-auto mb-6">{t('readyToBecomeAHeroDescription')}</p>
             <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg">
                 <Link href="/register">
-                Join the Guild Now
+                {t('joinTheGuildNow')}
                 </Link>
             </Button>
         </Card>

@@ -1,11 +1,9 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
-import Nav from '@/app/components/nav';
-import { AppHeader } from '@/app/components/header';
 import { Toaster } from "@/components/ui/toaster";
 import { FirebaseClientProvider } from '@/firebase';
 import { LanguageProvider } from '@/app/context/language-context';
+import AppShell from './components/app-shell';
 
 export const metadata: Metadata = {
   title: 'HeroQuest',
@@ -27,17 +25,9 @@ export default function RootLayout({
       <body className="font-body antialiased h-full bg-background text-foreground">
         <FirebaseClientProvider>
           <LanguageProvider>
-            <SidebarProvider>
-              <Sidebar>
-                <Nav />
-              </Sidebar>
-              <SidebarInset>
-                <AppHeader />
-                <main className="p-4 md:p-6">
-                  {children}
-                </main>
-              </SidebarInset>
-            </SidebarProvider>
+              <AppShell>
+                {children}
+              </AppShell>
           </LanguageProvider>
         </FirebaseClientProvider>
         <Toaster />
