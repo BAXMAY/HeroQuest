@@ -11,16 +11,16 @@ import { useLanguage } from './context/language-context';
 
 export default function LandingPage() {
   const { t } = useLanguage();
-  const heroImage = PlaceHolderImages.find(img => img.id === 'deed4')?.imageUrl || 'https://picsum.photos/seed/deed4/1200/800';
+  const heroImage = PlaceHolderImages.find(img => img.id === 'deed2')?.imageUrl || 'https://picsum.photos/seed/deed2/1200/800';
   const featureImage1 = PlaceHolderImages.find(img => img.id === 'deed1')?.imageUrl || 'https://picsum.photos/seed/deed1/600/400';
-  const featureImage2 = PlaceHolderImages.find(img => img.id === 'deed2')?.imageUrl || 'https://picsum.photos/seed/deed2/600/400';
+  const featureImage2 = PlaceHolderImages.find(img => img.id === 'deed7')?.imageUrl || 'https://picsum.photos/seed/deed7/600/400';
   const featureImage3 = PlaceHolderImages.find(img => img.id === 'reward1')?.imageUrl || 'https://picsum.photos/seed/reward1/600/400';
 
 
   return (
     <div className="space-y-16 md:space-y-24 pb-16">
       {/* Hero Section */}
-      <section className="relative flex items-center justify-center text-center text-white bg-black">
+      <section className="relative flex items-center justify-center text-center text-white bg-black h-[60vh] md:h-[75vh]">
         <div className="absolute inset-0">
           <Image
             src={heroImage}
@@ -31,7 +31,7 @@ export default function LandingPage() {
             data-ai-hint="children volunteering"
           />
         </div>
-        <div className="relative z-10 p-4 py-24 md:py-32 space-y-4">
+        <div className="relative z-10 p-4 space-y-4">
           <div className="flex justify-center">
             <Mascot className="w-24 h-24 text-primary" />
           </div>
