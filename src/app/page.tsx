@@ -6,12 +6,11 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { ArrowRight, Award, Shield, Users } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Mascot from '@/app/components/mascot';
 import { useLanguage } from './context/language-context';
 
 export default function LandingPage() {
   const { t } = useLanguage();
-  const heroImage = PlaceHolderImages.find(img => img.id === 'deed2')?.imageUrl || 'https://picsum.photos/seed/deed2/1200/800';
+  const heroImage = PlaceHolderImages.find(img => img.id === 'deed7')?.imageUrl || 'https://picsum.photos/seed/deed7/1200/800';
   const featureImage1 = PlaceHolderImages.find(img => img.id === 'deed1')?.imageUrl || 'https://picsum.photos/seed/deed1/600/400';
   const featureImage2 = PlaceHolderImages.find(img => img.id === 'deed7')?.imageUrl || 'https://picsum.photos/seed/deed7/600/400';
   const featureImage3 = PlaceHolderImages.find(img => img.id === 'reward1')?.imageUrl || 'https://picsum.photos/seed/reward1/600/400';
@@ -32,9 +31,6 @@ export default function LandingPage() {
           />
         </div>
         <div className="relative z-10 p-4 space-y-4">
-          <div className="flex justify-center">
-            <Mascot className="w-24 h-24 text-primary" />
-          </div>
           <h1 className="text-5xl md:text-7xl font-bold font-headline tracking-wider text-shadow-lg">
             HeroQuest
           </h1>
