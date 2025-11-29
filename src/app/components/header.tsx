@@ -10,10 +10,10 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Award, LogOut, Settings, User as UserIcon, Coins, Loader2, LogIn, Home } from 'lucide-react';
+import { Award, LogOut, Settings, User as UserIcon, Coins, Loader2, LogIn, Home, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useAuth, useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { useAuth, useUser, useFirestore, useDoc, useMemoFirebase, useAdmin } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
 import { doc } from 'firebase/firestore';
@@ -23,6 +23,7 @@ import { useLanguage } from '@/app/context/language-context';
 
 export function AppHeader() {
   const { user, isUserLoading } = useUser();
+  const { isAdmin } = useAdmin();
   const auth = useAuth();
   const firestore = useFirestore();
   const router = useRouter();
@@ -96,7 +97,10 @@ export function AppHeader() {
           <DropdownMenuContent className="w-56" align="end">
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{displayName} {userProfile?.lastName}</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium leading-none">{displayName} {userProfile?.lastName}</p>
+                  {isAdmin && <ShieldCheck className="w-4 h-4 text-primary" />}
+                </div>
                 <p className="text-xs text-muted-foreground">{isAnonymous ? t('anonymousUser') : user.email}</p>
                 {userProfile && (
                   <>

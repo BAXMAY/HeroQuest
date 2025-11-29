@@ -1,16 +1,40 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarInset } from '@/components/ui/sidebar';
 import Nav from '@/app/components/nav';
 import { AppHeader } from '@/app/components/header';
+import { useAdmin } from '@/firebase';
+import { useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
+
+const adminRoutes = ['/approvals', '/leaderboard'];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { isAdmin, isLoading: isAdminLoading } = useAdmin();
+  
   const isLandingPage = pathname === '/';
+  const isAuthPage = pathname === '/login' || pathname === '/register';
+  const isPotentiallyAdminRoute = adminRoutes.some(route => pathname.startsWith(route));
 
-  if (isLandingPage) {
+  useEffect(() => {
+    if (!isAdminLoading && isPotentiallyAdminRoute && !isAdmin) {
+      router.replace('/dashboard');
+    }
+  }, [pathname, isAdmin, isAdminLoading, isPotentiallyAdminRoute, router]);
+
+  if (isLandingPage || isAuthPage) {
     return <main>{children}</main>;
+  }
+  
+  if (isPotentiallyAdminRoute && !isAdmin) {
+    return (
+        <div className="flex items-center justify-center min-h-screen">
+            <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+    );
   }
 
   return (

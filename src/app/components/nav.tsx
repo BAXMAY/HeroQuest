@@ -23,18 +23,21 @@ import {
 } from 'lucide-react';
 import Mascot from './mascot';
 import { useLanguage } from '@/app/context/language-context';
+import { useAdmin } from '@/firebase';
+
 
 export default function Nav() {
   const pathname = usePathname();
   const { t } = useLanguage();
+  const { isAdmin } = useAdmin();
 
   const navItems = [
     { href: '/dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
     { href: '/submit', label: t('nav.startQuest'), icon: PlusCircle },
-    { href: '/leaderboard', label: t('nav.hallOfHeroes'), icon: Users },
+    { href: '/leaderboard', label: t('nav.hallOfHeroes'), icon: Users, admin: true },
     { href: '/achievements', label: t('nav.trophyRoom'), icon: Trophy },
     { href: '/roadmap', label: t('nav.levelRoadmap'), icon: Map },
-    { href: '/approvals', label: t('nav.questReview'), icon: CheckSquare },
+    { href: '/approvals', label: t('nav.questReview'), icon: CheckSquare, admin: true },
     { href: '/gallery', label: t('nav.opportunityBoard'), icon: Sparkles },
     { href: '/rewards', label: t('nav.rewardShop'), icon: ShoppingBag },
     { href: '/lorebook', label: t('nav.lorebook'), icon: BookMarked },
@@ -53,7 +56,7 @@ export default function Nav() {
 
       <SidebarContent>
         <SidebarMenu>
-          {navItems.map((item) => (
+          {navItems.filter(item => !item.admin || isAdmin).map((item) => (
             <SidebarMenuItem key={item.href}>
               <SidebarMenuButton
                 asChild
