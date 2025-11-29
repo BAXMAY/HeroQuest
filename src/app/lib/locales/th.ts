@@ -108,7 +108,7 @@ export const th = {
     level: 'เลเวล {level}',
     achievements: 'ความสำเร็จ',
     achievementsDescription: 'ถ้วยรางวัลจากการเดินทางที่กล้าหาญของคุณ',
-    noAchievements: 'ตู้ถ้วyรางวัลของคุณว่างเปล่า ทำเควสให้สำเร็จเพื่อรับความสำเร็จ!',
+    noAchievements: 'ตู้ถ้วยรางวัลของคุณว่างเปล่า ทำเควสให้สำเร็จเพื่อรับความสำเร็จ!',
     editProfile: 'แก้ไขโปรไฟล์',
     editProfileDescription: 'อัปเดตข้อมูลส่วนตัวของคุณที่นี่',
     firstName: 'ชื่อจริง',
