@@ -22,9 +22,9 @@ import { Loader2, Send, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "../context/language-context";
 import Image from "next/image";
-import { useAuth, useFirebase, useUser } from "@/firebase";
-import { addDocumentNonBlocking, setDocumentNonBlocking } from "@/firebase/non-blocking-updates";
-import { collection, serverTimestamp, doc } from "firebase/firestore";
+import { useFirebase, useUser } from "@/firebase";
+import { addDocumentNonBlocking } from "@/firebase/non-blocking-updates";
+import { collection, serverTimestamp } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 
@@ -91,7 +91,7 @@ export default function SubmissionForm() {
     }
 
     const questData = {
-      userId: user.uid,
+      userProfileId: user.uid,
       description: values.description,
       category: values.category,
       photo: photoUrl,
