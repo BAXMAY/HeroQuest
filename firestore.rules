@@ -2,7 +2,7 @@
  * @file Firebase Security Rules for Deeds & Cheers application.
  *
  * Core Philosophy:
- * This ruleset enforces a strict user-ownership model for all user-related data. Users can only access and modify data associated with their own user ID.
+ * This ruleset enforces a strict user-ownership model for all user-related data. Users can only access and modify data associated with their own user ID. Admins have elevated privileges to review submissions.
  *
  * Data Structure:
  * - User profiles are stored under `/users/{userId}`.
@@ -10,8 +10,9 @@
  * - Achievements are under `/users/{userId}/achievements/{achievementId}`.
  *
  * Key Security Decisions:
- * - Listing all users is disallowed.
+ * - Listing all users is disallowed for non-admins.
  * - Data validation is relaxed for rapid prototyping, but ownership and relational integrity are strictly enforced.
+ * - Admins can read all volunteer work submissions for approval purposes.
  *
  * Denormalization for Authorization:
  * - The `VolunteerWork` documents have a `userProfileId` that MUST match the `userId` in the path. This enforces ownership without requiring additional `get()` calls.
@@ -30,15 +31,15 @@ service cloud.firestore {
      */
     match /users/{userId} {
       // Allow reads: get
-      allow get: if isSignedIn() && isOwner(userId);
+      allow get: if isSignedIn() && (isOwner(userId) || isAdmin());
 
       // Allow writes: create, update, delete
       allow create: if isSignedIn() && isOwner(userId) && request.resource.data.id == userId;
-      allow update: if isSignedIn() && isExistingOwner(userId) && request.resource.data.id == resource.data.id;
-      allow delete: if isSignedIn() && isExistingOwner(userId);
+      allow update: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow delete: if isSignedIn() && isOwner(userId);
 
-      // Allow list:
-      allow list: if false;
+      // Allow list for admins
+      allow list: if isSignedIn() && isAdmin();
 
       /**
        * @description Controls access to volunteer work submissions.
@@ -50,13 +51,13 @@ service cloud.firestore {
        */
       match /volunteer_work/{workId} {
         // Allow reads: get, list
-        allow get: if isSignedIn() && isOwner(userId);
+        allow get: if isSignedIn() && (isOwner(userId) || isAdmin());
         allow list: if isSignedIn() && isOwner(userId);
 
         // Allow writes: create, update, delete
         allow create: if isSignedIn() && isOwner(userId) && request.resource.data.userProfileId == userId;
-        allow update: if isSignedIn() && isExistingOwner(userId) && request.resource.data.userProfileId == resource.data.userProfileId;
-        allow delete: if isSignedIn() && isExistingOwner(userId);
+        allow update: if isSignedIn() && (isOwner(userId) || isAdmin()) && request.resource.data.userProfileId == resource.data.userProfileId;
+        allow delete: if isSignedIn() && isOwner(userId);
       }
 
       /**
@@ -72,6 +73,11 @@ service cloud.firestore {
           allow write: if false;
       }
     }
+    
+    // Rule for the 'volunteer_work' collection group query
+    match /{path=**}/volunteer_work/{workId} {
+      allow list: if isSignedIn() && isAdmin();
+    }
 
     // ---- Helper functions ----
 
@@ -81,6 +87,14 @@ service cloud.firestore {
      */
     function isSignedIn() {
       return request.auth != null;
+    }
+    
+    /**
+     * @description Checks if the signed-in user is an admin.
+     * @return {boolean} True if the user has the 'admin' custom claim.
+     */
+    function isAdmin() {
+      return request.auth.token.admin == true;
     }
 
     /**

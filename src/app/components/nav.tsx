@@ -34,10 +34,10 @@ export default function Nav() {
   const navItems = [
     { href: '/dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
     { href: '/submit', label: t('nav.startQuest'), icon: PlusCircle },
-    { href: '/leaderboard', label: t('nav.hallOfHeroes'), icon: Users, admin: true },
+    { href: '/leaderboard', label: t('nav.hallOfHeroes'), icon: Users },
     { href: '/achievements', label: t('nav.trophyRoom'), icon: Trophy },
     { href: '/roadmap', label: t('nav.levelRoadmap'), icon: Map },
-    { href: '/approvals', label: t('nav.questReview'), icon: CheckSquare, admin: true },
+    { href: '/approvals', label: t('nav.questReview'), icon: CheckSquare, admin: false },
     { href: '/gallery', label: t('nav.opportunityBoard'), icon: Sparkles },
     { href: '/rewards', label: t('nav.rewardShop'), icon: ShoppingBag },
     { href: '/lorebook', label: t('nav.lorebook'), icon: BookMarked },

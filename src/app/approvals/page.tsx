@@ -1,43 +1,54 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { deeds as initialDeeds, users as initialUsers } from '@/app/lib/mock-data';
-import type { Deed, User } from '@/app/lib/types';
+import type { UserProfile } from '@/app/lib/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Check, X, Info, Coins } from 'lucide-react';
+import { Check, X, Info, Coins, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useLanguage } from '../context/language-context';
+import { useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking } from '@/firebase';
+import { collection, collectionGroup, doc, increment, query, where } from 'firebase/firestore';
+import type { Deed } from '@/app/lib/types';
+
 
 export default function ApprovalsPage() {
-  const [deeds, setDeeds] = useState<Deed[]>(initialDeeds);
-  const [users, setUsers] = useState<User[]>(initialUsers);
   const { toast } = useToast();
   const { t } = useLanguage();
+  const firestore = useFirestore();
 
-  const pendingDeeds = deeds.filter((d) => d.status === 'pending');
+  const pendingDeedsQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collectionGroup(firestore, 'volunteer_work'), where('status', '==', 'pending'));
+  }, [firestore]);
 
-  const handleApproval = (deedId: string, newStatus: 'approved' | 'rejected') => {
-    const deed = deeds.find(d => d.id === deedId);
-    if (!deed) return;
+  const { data: pendingDeeds, isLoading: isLoadingDeeds } = useCollection<Deed>(pendingDeedsQuery);
+  
+  const usersQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return collection(firestore, 'users');
+  }, [firestore]);
+  
+  const { data: users, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
+
+  const handleApproval = (deed: Deed, newStatus: 'approved' | 'rejected') => {
+    if (!firestore) return;
+    
+    const deedRef = doc(firestore, 'users', deed.userProfileId, 'volunteer_work', deed.id);
+    updateDocumentNonBlocking(deedRef, { status: newStatus });
 
     if (newStatus === 'approved') {
+      const userRef = doc(firestore, 'users', deed.userProfileId);
       const coinsAwarded = Math.floor(deed.points / 10);
-      setUsers((prevUsers) =>
-        prevUsers.map((u) =>
-          u.id === deed.userId
-            ? { ...u, score: u.score + deed.points, braveCoins: u.braveCoins + coinsAwarded }
-            : u
-        )
-      );
+      updateDocumentNonBlocking(userRef, {
+        totalPoints: increment(deed.points),
+        braveCoins: increment(coinsAwarded),
+        questsCompleted: increment(1)
+      });
     }
-
-    setDeeds((prevDeeds) =>
-      prevDeeds.map((d) => (d.id === deedId ? { ...d, status: newStatus } : d))
-    );
 
     toast({
       title: t('questStatusTitle', { status: newStatus }),
@@ -46,6 +57,16 @@ export default function ApprovalsPage() {
     });
   };
 
+  const isLoading = isLoadingDeeds || isLoadingUsers;
+
+  if (isLoading) {
+    return (
+        <div className="flex items-center justify-center min-h-[calc(100vh-10rem)]">
+            <Loader2 className="h-16 w-16 animate-spin text-primary" />
+        </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       <div>
@@ -53,22 +74,22 @@ export default function ApprovalsPage() {
         <p className="text-muted-foreground">{t('approvalsDescription')}</p>
       </div>
 
-      {pendingDeeds.length > 0 ? (
+      {pendingDeeds && pendingDeeds.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {pendingDeeds.map((deed) => {
-            const user = users.find((u) => u.id === deed.userId);
+            const user = users?.find((u) => u.id === deed.userProfileId);
             return (
               <Card key={deed.id} className="flex flex-col">
                 <CardHeader>
                   <div className="flex items-center gap-3">
                     <Avatar>
-                      <AvatarImage src={user?.avatar} alt={user?.name} data-ai-hint="child portrait"/>
-                      <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
+                      <AvatarImage src={user?.profilePicture} alt={user?.firstName} data-ai-hint="child portrait"/>
+                      <AvatarFallback>{user?.firstName?.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <CardTitle className="text-base">{user?.name}</CardTitle>
+                      <CardTitle className="text-base">{user?.firstName} {user?.lastName}</CardTitle>
                       <p className="text-xs text-muted-foreground">
-                        {t('submittedOn', { date: new Date(deed.submittedAt).toLocaleDateString() })}
+                        {t('submittedOn', { date: deed.submittedAt ? new Date(deed.submittedAt.toDate()).toLocaleDateString() : 'N/A' })}
                       </p>
                     </div>
                   </div>
@@ -94,13 +115,13 @@ export default function ApprovalsPage() {
                 </CardContent>
                 <CardFooter className="flex gap-2">
                   <Button
-                    onClick={() => handleApproval(deed.id, 'approved')}
+                    onClick={() => handleApproval(deed, 'approved')}
                     className="w-full bg-green-500 hover:bg-green-600 text-white"
                   >
                     <Check className="w-4 h-4 mr-2" /> {t('approve')}
                   </Button>
                   <Button
-                    onClick={() => handleApproval(deed.id, 'rejected')}
+                    onClick={() => handleApproval(deed, 'rejected')}
                     variant="destructive"
                     className="w-full"
                   >

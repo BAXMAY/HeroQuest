@@ -8,7 +8,8 @@ import { useAdmin } from '@/firebase';
 import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 
-const adminRoutes = ['/approvals', '/leaderboard'];
+// const adminRoutes = ['/approvals', '/leaderboard'];
+const adminRoutes = [];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

@@ -1,3 +1,5 @@
+import type { Timestamp } from 'firebase/firestore';
+
 // This represents the user profile document stored in Firestore
 export type UserProfile = {
   id: string;
@@ -14,12 +16,12 @@ export type UserProfile = {
 // This represents a "deed" or "quest" submission document in Firestore
 export type Deed = {
   id: string;
-  userId: string;
+  userProfileId: string;
   description: string;
   photo: string;
   points: number;
   status: 'draft' | 'pending' | 'approved' | 'rejected';
-  submittedAt: string; // Should be ISO8601 string
+  submittedAt: Timestamp;
   category: string;
 };
 
