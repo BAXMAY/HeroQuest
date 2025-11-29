@@ -166,6 +166,7 @@ export const en = {
   uploadProof: 'Upload Proof',
   uploadProofHint: 'A picture of your legendary accomplishment.',
   submitForReview: 'Submit for Review',
+  saveAsDraft: 'Save as Draft',
   questSubmitted: '🎉 Quest Submitted!',
   questSubmittedDescription: 'Your heroic deed is now awaiting review. Well done, adventurer!',
   // Login/Register

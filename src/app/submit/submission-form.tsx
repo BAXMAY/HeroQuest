@@ -214,7 +214,7 @@ export default function SubmissionForm() {
                 ) : (
                 <Save className="mr-2 h-4 w-4" />
                 )}
-            Save as Draft
+            {t('saveAsDraft')}
             </Button>
         </div>
       </form>
