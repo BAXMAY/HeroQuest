@@ -10,7 +10,7 @@ import { Check, X, Info, Coins, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useLanguage } from '../context/language-context';
-import { useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking } from '@/firebase';
+import { useAdmin, useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking } from '@/firebase';
 import { collection, collectionGroup, doc, increment, query, where } from 'firebase/firestore';
 import type { Deed } from '@/app/lib/types';
 
@@ -19,18 +19,19 @@ export default function ApprovalsPage() {
   const { toast } = useToast();
   const { t } = useLanguage();
   const firestore = useFirestore();
+  const { isAdmin } = useAdmin();
 
   const pendingDeedsQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
+    if (!firestore || !isAdmin) return null;
     return query(collectionGroup(firestore, 'volunteer_work'), where('status', '==', 'pending'));
-  }, [firestore]);
+  }, [firestore, isAdmin]);
 
   const { data: pendingDeeds, isLoading: isLoadingDeeds } = useCollection<Deed>(pendingDeedsQuery);
   
   const usersQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
+    if (!firestore || !isAdmin) return null;
     return collection(firestore, 'users');
-  }, [firestore]);
+  }, [firestore, isAdmin]);
   
   const { data: users, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
 
