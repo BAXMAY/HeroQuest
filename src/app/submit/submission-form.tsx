@@ -119,11 +119,11 @@ export default function SubmissionForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="environment">Environment</SelectItem>
-                  <SelectItem value="animals">Animals</SelectItem>
-                  <SelectItem value="community">Community</SelectItem>
-                  <SelectItem value="education">Education</SelectItem>
-                  <SelectItem value="health">Health</SelectItem>
+                  <SelectItem value="environment">สิ่งแวดล้อม</SelectItem>
+                  <SelectItem value="animals">สัตว์</SelectItem>
+                  <SelectItem value="community">ชุมชน</SelectItem>
+                  <SelectItem value="education">การศึกษา</SelectItem>
+                  <SelectItem value="health">สุขภาพ</SelectItem>
                 </SelectContent>
               </Select>
               <FormDescription>
