@@ -18,7 +18,7 @@ export type Deed = {
   description: string;
   photo: string;
   points: number;
-  status: 'pending' | 'approved' | 'rejected';
+  status: 'draft' | 'pending' | 'approved' | 'rejected';
   submittedAt: string; // Should be ISO8601 string
   category: string;
 };

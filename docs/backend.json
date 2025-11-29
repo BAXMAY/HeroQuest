@@ -85,7 +85,8 @@
         },
         "status": {
           "type": "string",
-          "description": "The status of submission, such as pending, approved, or rejected."
+          "description": "The status of submission, such as pending, approved, or rejected.",
+          "enum": ["draft", "pending", "approved", "rejected"]
         },
         "pointsAwarded": {
           "type": "number",

@@ -18,10 +18,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { Loader2, Send } from "lucide-react";
+import { Loader2, Send, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "../context/language-context";
 import Image from "next/image";
+import { useAuth, useFirebase, useUser } from "@/firebase";
+import { addDocumentNonBlocking, setDocumentNonBlocking } from "@/firebase/non-blocking-updates";
+import { collection, serverTimestamp, doc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 
 const formSchema = z.object({
@@ -37,12 +41,17 @@ const formSchema = z.object({
     .refine(files => files?.length == 1, 'Proof of your deed is required.')
 });
 
+type SubmissionStatus = 'draft' | 'pending';
+
+
 export default function SubmissionForm() {
     const { toast } = useToast();
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState<SubmissionStatus | false>(false);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const { t } = useLanguage();
+    const { firestore } = useFirebase();
+    const { user } = useUser();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -67,26 +76,57 @@ export default function SubmissionForm() {
   };
 
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof formSchema>, status: SubmissionStatus) => {
+    if (!user || !firestore) return;
+    setIsLoading(status);
 
-    // Simulate API call
-    setTimeout(() => {
+    let photoUrl = '';
+    const file = values.photo[0] as File;
+
+    if(file) {
+      const storage = getStorage();
+      const storageRef = ref(storage, `quests/${user.uid}/${Date.now()}_${file.name}`);
+      const uploadResult = await uploadBytes(storageRef, file);
+      photoUrl = await getDownloadURL(uploadResult.ref);
+    }
+
+    const questData = {
+      userId: user.uid,
+      description: values.description,
+      category: values.category,
+      photo: photoUrl,
+      status: status,
+      points: 50, // Default points, can be adjusted in approval
+      submittedAt: serverTimestamp(),
+      createdAt: serverTimestamp(),
+    };
+
+    try {
+      const questsCollection = collection(firestore, 'users', user.uid, 'volunteer_work');
+      await addDocumentNonBlocking(questsCollection, questData);
+      
+      toast({
+          title: t('questSubmitted'),
+          description: status === 'pending' ? t('questSubmittedDescription') : 'Your quest has been saved as a draft.',
+      });
+      form.reset();
+      setImagePreview(null);
+      router.push('/dashboard');
+    } catch(error) {
+      console.error("Error submitting quest: ", error);
+      toast({
+        title: "Error",
+        description: "There was an error submitting your quest.",
+        variant: "destructive"
+      });
+    } finally {
         setIsLoading(false);
-        toast({
-            title: t('questSubmitted'),
-            description: t('questSubmittedDescription'),
-        });
-        form.reset();
-        setImagePreview(null);
-        router.push('/');
-    }, 1500);
+    }
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form className="space-y-8">
         <FormField
           control={form.control}
           name="description"
@@ -159,14 +199,24 @@ export default function SubmissionForm() {
             </div>
         )}
 
-        <Button type="submit" disabled={isLoading}>
-           {isLoading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Send className="mr-2 h-4 w-4" />
-            )}
-          {t('submitForReview')}
-        </Button>
+        <div className="flex gap-2">
+            <Button type="button" onClick={form.handleSubmit(data => onSubmit(data, 'pending'))} disabled={!!isLoading}>
+            {isLoading === 'pending' ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                <Send className="mr-2 h-4 w-4" />
+                )}
+            {t('submitForReview')}
+            </Button>
+             <Button type="button" variant="outline" onClick={form.handleSubmit(data => onSubmit(data, 'draft'))} disabled={!!isLoading}>
+            {isLoading === 'draft' ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                <Save className="mr-2 h-4 w-4" />
+                )}
+            Save as Draft
+            </Button>
+        </div>
       </form>
     </Form>
   );
