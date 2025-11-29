@@ -21,6 +21,7 @@ import { useState } from "react";
 import { Loader2, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "../context/language-context";
+import Image from "next/image";
 
 
 const formSchema = z.object({
@@ -40,6 +41,7 @@ export default function SubmissionForm() {
     const { toast } = useToast();
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
     const { t } = useLanguage();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,6 +50,22 @@ export default function SubmissionForm() {
       description: "",
     },
   });
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>, fieldChange: (files: FileList | null) => void) => {
+    const files = e.target.files;
+    if (imagePreview) {
+      URL.revokeObjectURL(imagePreview);
+    }
+    if (files && files.length > 0) {
+      const file = files[0];
+      setImagePreview(URL.createObjectURL(file));
+      fieldChange(files);
+    } else {
+      setImagePreview(null);
+      fieldChange(null);
+    }
+  };
+
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -61,6 +79,7 @@ export default function SubmissionForm() {
             description: t('questSubmittedDescription'),
         });
         form.reset();
+        setImagePreview(null);
         router.push('/');
     }, 1500);
   }
@@ -121,7 +140,7 @@ export default function SubmissionForm() {
             <FormItem>
               <FormLabel>{t('uploadProof')}</FormLabel>
               <FormControl>
-                <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                <Input type="file" accept="image/*" onChange={(e) => handlePhotoChange(e, field.onChange)} />
               </FormControl>
               <FormDescription>
                 {t('uploadProofHint')}
@@ -130,6 +149,16 @@ export default function SubmissionForm() {
             </FormItem>
           )}
         />
+
+        {imagePreview && (
+            <div className="mt-4">
+                <p className="text-sm font-medium text-muted-foreground mb-2">Image Preview:</p>
+                <div className="relative aspect-video w-full max-w-sm mx-auto overflow-hidden rounded-lg border">
+                    <Image src={imagePreview} alt="Image preview" fill className="object-cover"/>
+                </div>
+            </div>
+        )}
+
         <Button type="submit" disabled={isLoading}>
            {isLoading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
