@@ -16,6 +16,7 @@ export const th = {
       login: 'เข้าสู่ระบบ',
       register: 'สมัครสมาชิก',
       roadmap: 'แผนที่เลเวล',
+      admin: 'จัดการระบบ',
     },
     // Navigation
     nav: {
@@ -29,6 +30,7 @@ export const th = {
       rewardShop: 'ร้านค้ารางวัล',
       lorebook: 'หนังสือตำนาน',
       settings: 'การตั้งค่า',
+      admin: 'แอดมิน',
     },
     // Header
     adventurer: 'นักผจญภัย',

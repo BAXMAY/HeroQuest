@@ -20,6 +20,7 @@ import {
   ShoppingBag,
   Users,
   Map,
+  Shield,
 } from 'lucide-react';
 import Mascot from './mascot';
 import { useLanguage } from '@/app/context/language-context';
@@ -37,7 +38,8 @@ export default function Nav() {
     { href: '/leaderboard', label: t('nav.hallOfHeroes'), icon: Users },
     { href: '/achievements', label: t('nav.trophyRoom'), icon: Trophy },
     { href: '/roadmap', label: t('nav.levelRoadmap'), icon: Map },
-    { href: '/approvals', label: t('nav.questReview'), icon: CheckSquare, admin: false },
+    { href: '/approvals', label: t('nav.questReview'), icon: CheckSquare, admin: true },
+    { href: '/admin', label: 'Admin', icon: Shield, admin: true },
     { href: '/gallery', label: t('nav.opportunityBoard'), icon: Sparkles },
     { href: '/rewards', label: t('nav.rewardShop'), icon: ShoppingBag },
     { href: '/lorebook', label: t('nav.lorebook'), icon: BookMarked },
@@ -60,7 +62,7 @@ export default function Nav() {
             <SidebarMenuItem key={item.href}>
               <SidebarMenuButton
                 asChild
-                isActive={pathname === item.href}
+                isActive={pathname.startsWith(item.href)}
                 tooltip={item.label}
               >
                 <Link href={item.href}>

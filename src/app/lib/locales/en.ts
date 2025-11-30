@@ -16,6 +16,7 @@ export const en = {
     login: 'Login',
     register: 'Register',
     roadmap: 'Level Roadmap',
+    admin: 'Admin Management',
   },
   // Navigation
   nav: {
@@ -29,6 +30,7 @@ export const en = {
     rewardShop: 'Reward Shop',
     lorebook: 'Lorebook',
     settings: 'Settings',
+    admin: 'Admin',
   },
   // Header
   adventurer: 'Adventurer',
