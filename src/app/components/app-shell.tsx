@@ -12,29 +12,12 @@ const adminRoutes = ['/approvals', '/leaderboard', '/admin'];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
-  const { isAdmin, isLoading: isAdminLoading } = useAdmin();
   
   const isLandingPage = pathname === '/';
   const isAuthPage = pathname === '/login' || pathname === '/register';
-  const isPotentiallyAdminRoute = adminRoutes.some(route => pathname.startsWith(route));
-
-  useEffect(() => {
-    if (!isAdminLoading && isPotentiallyAdminRoute && !isAdmin) {
-      router.replace('/dashboard');
-    }
-  }, [pathname, isAdmin, isAdminLoading, isPotentiallyAdminRoute, router]);
 
   if (isLandingPage || isAuthPage) {
     return <main>{children}</main>;
-  }
-  
-  if (isPotentiallyAdminRoute && !isAdmin) {
-    return (
-        <div className="flex items-center justify-center min-h-screen">
-            <Loader2 className="w-8 h-8 animate-spin" />
-        </div>
-    );
   }
 
   return (

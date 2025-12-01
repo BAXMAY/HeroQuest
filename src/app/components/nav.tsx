@@ -58,7 +58,7 @@ export default function Nav() {
 
       <SidebarContent>
         <SidebarMenu>
-          {navItems.filter(item => !item.admin || isAdmin).map((item) => (
+          {navItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <SidebarMenuButton
                 asChild
