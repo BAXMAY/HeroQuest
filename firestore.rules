@@ -78,6 +78,24 @@ service cloud.firestore {
     match /{path=**}/volunteer_work/{workId} {
       allow list: if isSignedIn() && isAdmin();
     }
+    
+    /**
+     * @description Controls access to the global achievements collection.
+     * @path /achievements/{achievementId}
+     * @principle For development, allows any signed-in user to manage achievements. In production, this should be restricted to admins.
+     */
+    match /achievements/{achievementId} {
+      allow read, write: if isSignedIn();
+    }
+
+    /**
+     * @description Controls access to the global rewards collection.
+     * @path /rewards/{rewardId}
+     * @principle For development, allows any signed-in user to manage rewards. In production, this should be restricted to admins.
+     */
+    match /rewards/{rewardId} {
+      allow read, write: if isSignedIn();
+    }
 
     // ---- Helper functions ----
 
