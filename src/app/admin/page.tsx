@@ -13,6 +13,7 @@ import { Loader2, PlusCircle, Save, Shield, Trash2 } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 import type { Achievement, Reward } from "../lib/types";
+import { useLanguage } from "../context/language-context";
 
 const achievementSchema = z.object({
   id: z.string().optional(),
@@ -39,6 +40,7 @@ type AdminFormValues = z.infer<typeof adminFormSchema>;
 export default function AdminPage() {
   const { firestore } = useFirebase();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const achievementsCollectionRef = useMemoFirebase(() => collection(firestore, 'achievements'), [firestore]);
   const rewardsCollectionRef = useMemoFirebase(() => collection(firestore, 'rewards'), [firestore]);
@@ -85,15 +87,15 @@ export default function AdminPage() {
         }
       }
        toast({
-        title: "Success!",
-        description: "Achievements and rewards have been saved.",
+        title: t('saveSuccessTitle'),
+        description: t('saveSuccessDescription'),
       });
       // In a real app you might want to refresh the data after saving
     } catch (error) {
       console.error(error);
       toast({
-        title: "Error",
-        description: "Something went wrong.",
+        title: t('saveErrorTitle'),
+        description: t('saveErrorDescription'),
         variant: "destructive",
       });
     }
@@ -106,23 +108,23 @@ export default function AdminPage() {
        <div>
         <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
             <Shield className="w-8 h-8 text-primary"/>
-            Admin Management
+            {t('pageTitles.admin')}
         </h1>
-        <p className="text-muted-foreground">Manage achievements and rewards for the entire application.</p>
+        <p className="text-muted-foreground">{t('adminDescription')}</p>
       </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Tabs defaultValue="achievements">
             <TabsList>
-              <TabsTrigger value="achievements">Achievements ({achievementFields.length})</TabsTrigger>
-              <TabsTrigger value="rewards">Rewards ({rewardFields.length})</TabsTrigger>
+              <TabsTrigger value="achievements">{t('achievements')} ({achievementFields.length})</TabsTrigger>
+              <TabsTrigger value="rewards">{t('rewards')} ({rewardFields.length})</TabsTrigger>
             </TabsList>
             <TabsContent value="achievements">
                 <Card>
                     <CardHeader>
-                        <CardTitle>Manage Achievements</CardTitle>
-                        <CardDescription>Add, edit, or remove achievements.</CardDescription>
+                        <CardTitle>{t('manageAchievements')}</CardTitle>
+                        <CardDescription>{t('manageAchievementsDescription')}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {isLoading ? <Loader2 className="animate-spin" /> : achievementFields.map((field, index) => (
@@ -133,7 +135,7 @@ export default function AdminPage() {
                                         name={`achievements.${index}.name`}
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Name</FormLabel>
+                                                <FormLabel>{t('name')}</FormLabel>
                                                 <FormControl><Input {...field} /></FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -144,7 +146,7 @@ export default function AdminPage() {
                                         name={`achievements.${index}.description`}
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Description</FormLabel>
+                                                <FormLabel>{t('description')}</FormLabel>
                                                 <FormControl><Input {...field} /></FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -155,8 +157,8 @@ export default function AdminPage() {
                                         name={`achievements.${index}.icon`}
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Icon</FormLabel>
-                                                <FormControl><Input placeholder="e.g. Shield" {...field} /></FormControl>
+                                                <FormLabel>{t('icon')}</FormLabel>
+                                                <FormControl><Input placeholder={t('iconPlaceholder')} {...field} /></FormControl>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
@@ -164,13 +166,13 @@ export default function AdminPage() {
                                 </div>
                                  <Button type="button" variant="destructive" size="sm" className="mt-4" onClick={() => removeAchievement(index)}>
                                     <Trash2 className="w-4 h-4 mr-2"/>
-                                    Remove
+                                    {t('remove')}
                                 </Button>
                            </Card>
                         ))}
                          <Button type="button" variant="outline" onClick={() => appendAchievement({ name: '', description: '', icon: '' })}>
                             <PlusCircle className="w-4 h-4 mr-2"/>
-                            Add Achievement
+                            {t('addAchievement')}
                         </Button>
                     </CardContent>
                 </Card>
@@ -178,8 +180,8 @@ export default function AdminPage() {
             <TabsContent value="rewards">
                <Card>
                     <CardHeader>
-                        <CardTitle>Manage Rewards</CardTitle>
-                        <CardDescription>Add, edit, or remove rewards from the shop.</CardDescription>
+                        <CardTitle>{t('manageRewards')}</CardTitle>
+                        <CardDescription>{t('manageRewardsDescription')}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {isLoading ? <Loader2 className="animate-spin" /> : rewardFields.map((field, index) => (
@@ -191,7 +193,7 @@ export default function AdminPage() {
                                             name={`rewards.${index}.name`}
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Name</FormLabel>
+                                                    <FormLabel>{t('name')}</FormLabel>
                                                     <FormControl><Input {...field} /></FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -202,7 +204,7 @@ export default function AdminPage() {
                                             name={`rewards.${index}.description`}
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Description</FormLabel>
+                                                    <FormLabel>{t('description')}</FormLabel>
                                                     <FormControl><Input {...field} /></FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -215,7 +217,7 @@ export default function AdminPage() {
                                             name={`rewards.${index}.cost`}
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Cost (Brave Coins)</FormLabel>
+                                                    <FormLabel>{t('costInBraveCoins')}</FormLabel>
                                                     <FormControl><Input type="number" {...field} /></FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -226,8 +228,8 @@ export default function AdminPage() {
                                             name={`rewards.${index}.image`}
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Image URL</FormLabel>
-                                                    <FormControl><Input placeholder="https://..." {...field} /></FormControl>
+                                                    <FormLabel>{t('imageUrl')}</FormLabel>
+                                                    <FormControl><Input placeholder={t('imageUrlPlaceholder')} {...field} /></FormControl>
                                                     <FormMessage />
                                                 </FormItem>
                                             )}
@@ -236,13 +238,13 @@ export default function AdminPage() {
                                 </div>
                                  <Button type="button" variant="destructive" size="sm" className="mt-4" onClick={() => removeReward(index)}>
                                     <Trash2 className="w-4 h-4 mr-2"/>
-                                    Remove
+                                    {t('remove')}
                                 </Button>
                            </Card>
                         ))}
                          <Button type="button" variant="outline" onClick={() => appendReward({ name: '', description: '', cost: 100, image: '' })}>
                             <PlusCircle className="w-4 h-4 mr-2"/>
-                            Add Reward
+                            {t('addReward')}
                         </Button>
                     </CardContent>
                 </Card>
@@ -256,7 +258,7 @@ export default function AdminPage() {
               ) : (
                 <Save className="mr-2 h-4 w-4" />
               )}
-              Save All Changes
+              {t('saveAllChanges')}
             </Button>
           </div>
         </form>
