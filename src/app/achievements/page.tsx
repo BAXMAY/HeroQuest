@@ -1,7 +1,6 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { allAchievements } from '@/app/lib/mock-data';
 import * as LucideIcons from 'lucide-react';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection } from 'firebase/firestore';
@@ -11,11 +10,11 @@ import { Loader2, Trophy, CheckCircle2, Shield } from 'lucide-react';
 import { useLanguage } from '../context/language-context';
 
 const Icon = ({ name, className }: { name: string; className: string }) => {
-  const LucideIcon = (LucideIcons as any)[name];
-  if (!LucideIcon) {
+  const LucidedIcon = (LucideIcons as any)[name];
+  if (!LucidedIcon) {
     return <Shield className={className} />; // Fallback icon
   }
-  return <LucideIcon className={className} />;
+  return <LucidedIcon className={className} />;
 };
 
 
@@ -24,14 +23,22 @@ export default function AchievementsPage() {
     const firestore = useFirestore();
     const { t } = useLanguage();
 
+    const allAchievementsRef = useMemoFirebase(() => {
+        if (!firestore) return null;
+        return collection(firestore, 'achievements');
+    }, [firestore]);
+
     const userAchievementsRef = useMemoFirebase(() => {
         if (!user) return null;
         return collection(firestore, 'users', user.uid, 'achievements');
     }, [user, firestore]);
 
-    const { data: unlockedAchievements, isLoading } = useCollection<Achievement>(userAchievementsRef);
+    const { data: allAchievements, isLoading: loadingAll } = useCollection<Achievement>(allAchievementsRef);
+    const { data: unlockedAchievements, isLoading: loadingUnlocked } = useCollection<Achievement>(userAchievementsRef);
 
     const unlockedAchievementIds = new Set(unlockedAchievements?.map(a => a.id));
+
+    const isLoading = loadingAll || loadingUnlocked;
 
     if (isLoading) {
         return (
@@ -52,7 +59,7 @@ export default function AchievementsPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {allAchievements.map((ach) => {
+        {allAchievements?.map((ach) => {
             const isUnlocked = unlockedAchievementIds.has(ach.id);
             return (
                 <Card key={ach.id} className={cn("flex flex-col text-center items-center transition-all", isUnlocked ? 'border-primary bg-primary/5' : 'bg-card opacity-70')}>
