@@ -14,14 +14,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { isAdmin, isLoading: isAdminLoading } = useAdmin();
-  
+
   const isLandingPage = pathname === '/';
   const isAuthPage = pathname === '/login' || pathname === '/register' || pathname === '/onboarding';
-
-  if (isLandingPage || isAuthPage) {
-    return <main>{children}</main>;
-  }
-  
   const isProtectedAdminRoute = adminRoutes.includes(pathname);
 
   useEffect(() => {
@@ -30,6 +25,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     }
   }, [isAdmin, isAdminLoading, isProtectedAdminRoute, router]);
 
+  if (isLandingPage || isAuthPage) {
+    return <main>{children}</main>;
+  }
+  
   if (isAdminLoading && isProtectedAdminRoute) {
     return (
         <div className="flex items-center justify-center h-screen">
