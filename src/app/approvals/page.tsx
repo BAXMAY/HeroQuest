@@ -10,11 +10,12 @@ import { Check, X, Info, Coins, Loader2, CheckCircle, XCircle } from 'lucide-rea
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useLanguage } from '../context/language-context';
-import { useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking, useAdmin } from '@/firebase';
-import { collection, collectionGroup, doc, increment, query } from 'firebase/firestore';
+import { useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking } from '@/firebase';
+import { collection, collectionGroup, doc, increment } from 'firebase/firestore';
 import type { Deed } from '@/app/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { useAdmin } from '@/firebase';
 
 
 const QuestCard = ({ deed, user, onApproval }: { deed: Deed; user?: UserProfile; onApproval: (deed: Deed, status: 'approved' | 'rejected') => void; }) => {
@@ -89,6 +90,7 @@ export default function ApprovalsPage() {
   const { toast } = useToast();
   const { t } = useLanguage();
   const firestore = useFirestore();
+  const { isAdmin, isLoading: isAdminLoading } = useAdmin();
 
   const allDeedsQuery = useMemoFirebase(() => {
     if (!firestore) return null;
@@ -127,7 +129,7 @@ export default function ApprovalsPage() {
     });
   };
 
-  const isLoading = isLoadingDeeds || isLoadingUsers;
+  const isLoading = isLoadingDeeds || isLoadingUsers || isAdminLoading;
   
   const pendingDeeds = allDeeds?.filter(d => d.status === 'pending');
   const approvedDeeds = allDeeds?.filter(d => d.status === 'approved');
