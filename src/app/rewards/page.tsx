@@ -3,13 +3,12 @@
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { rewards as initialRewards } from '@/app/lib/mock-data';
 import { useToast } from '@/hooks/use-toast';
 import { Coins, ShoppingBag, Sparkles, Loader2 } from 'lucide-react';
 import type { Reward, UserProfile } from '@/app/lib/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { useDoc, useFirestore, useMemoFirebase, useUser, updateDocumentNonBlocking } from '@/firebase';
-import { doc } from 'firebase/firestore';
+import { useDoc, useFirestore, useMemoFirebase, useUser, updateDocumentNonBlocking, useCollection } from '@/firebase';
+import { collection, doc } from 'firebase/firestore';
 import { increment } from 'firebase/firestore';
 import { useLanguage } from '../context/language-context';
 
@@ -23,8 +22,11 @@ export default function RewardsPage() {
     if (!user) return null;
     return doc(firestore, 'users', user.uid);
   }, [user, firestore]);
+  
+  const rewardsCollectionRef = useMemoFirebase(() => collection(firestore, 'rewards'), [firestore]);
 
   const { data: userProfile, isLoading: isProfileLoading } = useDoc<UserProfile>(userProfileRef);
+  const { data: rewards, isLoading: isLoadingRewards } = useCollection<Reward>(rewardsCollectionRef);
 
   const handleRedeem = (reward: Reward) => {
     if (!userProfile || !userProfileRef) return;
@@ -47,7 +49,7 @@ export default function RewardsPage() {
     }
   };
   
-  const isLoading = isUserLoading || isProfileLoading;
+  const isLoading = isUserLoading || isProfileLoading || isLoadingRewards;
 
   return (
     <div className="space-y-8">
@@ -74,9 +76,9 @@ export default function RewardsPage() {
         )}
       </div>
 
-      {initialRewards.length > 0 ? (
+      {rewards && rewards.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {initialRewards.map((reward) => {
+          {rewards.map((reward) => {
             const canAfford = (userProfile?.braveCoins || 0) >= reward.cost;
 
             return (
