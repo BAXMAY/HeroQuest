@@ -128,7 +128,7 @@ export const th = {
     xpRequired: 'XP ที่ต้องการ',
     current: 'ปัจจุบัน',
     // Rewards Page
-    rewardsDescription: 'ใช้เหรียญกล้าหาญของคุณกับของในตำนาน!',
+    rewardsDescription: 'ใช้เหรียญกล้าหาญที่หามาได้อย่างยากลำบากกับของรางวัลในตำนาน!',
     yourBalance: 'ยอดคงเหลือของคุณ',
     redeem: 'แลกรางวัล',
     notEnoughCoins: 'เหรียญไม่เพียงพอ',

@@ -80,39 +80,39 @@
     },
     {
       "id": "reward1",
-      "description": "Superhero action figure",
-      "imageUrl": "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBhY3Rpb24lMjBmaWd1cmV8ZW58MHx8fHwxNzY1MzAwMjU0fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "superhero figure"
+      "description": "A board game",
+      "imageUrl": "https://images.unsplash.com/photo-1585848925345-393e15774e89?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxib2FyZCUyMGdhbWUlMjBuaWdodHxlbnwwfHx8fDE3NjU0MTQ5NDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "boardgame night"
     },
     {
       "id": "reward2",
-      "description": "A bag of gummy snacks",
-      "imageUrl": "https://images.unsplash.com/photo-1599384236319-a0a6538e4118?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxndW1teSUyMHNuYWNrc3xlbnwwfHx8fDE3NjUzMDAyNzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "gummy snacks"
+      "description": "A DIY pizza kit",
+      "imageUrl": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMG1ha2luZ3xlbnwwfHx8fDE3NjU0MTQ5NzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "pizza making"
     },
     {
       "id": "reward3",
-      "description": "A bottle of fruit juice",
-      "imageUrl": "https://images.unsplash.com/photo-1600271886743-f59c58ea3636?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxib3R0bGUlMjBvZiUyMGp1aWNlfGVufDB8fHx8fDE3NjUzMDAzMDN8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "juice bottle"
+      "description": "Movie night popcorn",
+      "imageUrl": "https://images.unsplash.com/photo-1627888639994-f86c3599e125?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtb3ZpZSUyMG5pZ2h0JTIwcG9wY29ybnxlbnwwfHx8fDE3NjU0MTQ5OTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "movie popcorn"
     },
     {
       "id": "reward4",
-      "description": "A cute teddy bear",
-      "imageUrl": "https://images.unsplash.com/photo-1532053523171-8c4391a42a4a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx0ZWRkeSUyMGJlYXJ8ZW58MHx8fHwxNzY1MzAwMzMxfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "teddy bear"
+      "description": "Ice cream sundae",
+      "imageUrl": "https://images.unsplash.com/photo-1570197825525-6380a3c20275?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxpY2UlMjBjcmVhbSUyMHN1bmRhZXxlbnwwfHx8fDE3NjU0MTUwMjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "icecream sundae"
     },
     {
       "id": "reward5",
-      "description": "A classic princess doll",
-      "imageUrl": "https://images.unsplash.com/photo-1619688463426-3d23b3337318?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwcm9jZWxhaW4lMjBkb2xsfGVufDB8fHx8fDE3NjUzMDAzNTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "porcelain doll"
+      "description": "Arts and crafts supplies",
+      "imageUrl": "https://images.unsplash.com/photo-1513364776144-60967b0f800f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhcnRzJTIwY3JhZnRzfGVufDB8fHx8fDE3NjU0MTUwNDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "arts crafts"
     },
     {
       "id": "reward6",
-      "description": "A box of assorted chocolate",
-      "imageUrl": "https://images.unsplash.com/photo-1579582199589-53b503d5225d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxib3glMjBvZiUyMGNob2NvbGF0ZXxlbnwwfHx8fDE3NjUzMDAzODZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "chocolate box"
+      "description": "A picnic basket",
+      "imageUrl": "https://images.unsplash.com/photo-1605302257918-0955986968f4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwaWNuaWMlMjBiYXNrZXR8ZW58MHx8fHwxNzY1NDE1MDY1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "picnic basket"
     }
   ]
 }
