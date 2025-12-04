@@ -8,16 +8,39 @@ import { useAdmin } from '@/firebase';
 import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 
-const adminRoutes = ['/approvals', '/leaderboard', '/admin'];
+const adminRoutes = ['/approvals', '/admin'];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { isAdmin, isLoading: isAdminLoading } = useAdmin();
   
   const isLandingPage = pathname === '/';
   const isAuthPage = pathname === '/login' || pathname === '/register' || pathname === '/onboarding';
 
   if (isLandingPage || isAuthPage) {
     return <main>{children}</main>;
+  }
+  
+  const isProtectedAdminRoute = adminRoutes.includes(pathname);
+
+  useEffect(() => {
+    if (!isAdminLoading && isProtectedAdminRoute && !isAdmin) {
+      router.push('/dashboard');
+    }
+  }, [isAdmin, isAdminLoading, isProtectedAdminRoute, router]);
+
+  if (isAdminLoading && isProtectedAdminRoute) {
+    return (
+        <div className="flex items-center justify-center h-screen">
+            <Loader2 className="h-16 w-16 animate-spin text-primary" />
+        </div>
+    );
+  }
+  
+  // Render nothing if user is not admin and trying to access admin page, before redirect happens
+  if (isProtectedAdminRoute && !isAdmin) {
+    return null;
   }
 
   return (
