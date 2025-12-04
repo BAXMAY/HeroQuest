@@ -10,16 +10,20 @@ import { Check, X, Info, Coins, Loader2, CheckCircle, XCircle } from 'lucide-rea
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useLanguage } from '../context/language-context';
-import { useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking } from '@/firebase';
+import { useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking, useAdmin } from '@/firebase';
 import { collection, collectionGroup, doc, increment } from 'firebase/firestore';
 import type { Deed } from '@/app/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { useAdmin } from '@/firebase';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 
-const QuestCard = ({ deed, user, onApproval }: { deed: Deed; user?: UserProfile; onApproval: (deed: Deed, status: 'approved' | 'rejected') => void; }) => {
+const QuestCard = ({ deed, user, onApproval }: { deed: Deed; user?: UserProfile; onApproval: (deed: Deed, status: 'approved' | 'rejected', points?: number, coins?: number) => void; }) => {
     const { t } = useLanguage();
+    const [points, setPoints] = useState(deed.points || 50);
+    const [coins, setCoins] = useState(Math.floor((deed.points || 50) / 10));
+
     return (
         <Card key={deed.id} className="flex flex-col">
             <CardHeader>
@@ -56,18 +60,31 @@ const QuestCard = ({ deed, user, onApproval }: { deed: Deed; user?: UserProfile;
                 />
             </div>
             <CardDescription>{deed.description}</CardDescription>
-            <div className="flex justify-between items-center text-sm font-semibold">
-                <span className="text-primary">{t('potentialXP')}: {deed.points}</span>
-                <div className="flex items-center gap-1 text-amber-500">
-                    <Coins className="w-4 h-4" />
-                    <span>{Math.floor(deed.points / 10)}</span>
+            {deed.status === 'pending' ? (
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                        <Label htmlFor={`points-${deed.id}`}>XP</Label>
+                        <Input id={`points-${deed.id}`} type="number" value={points} onChange={(e) => setPoints(Number(e.target.value))} />
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor={`coins-${deed.id}`}>Brave Coins</Label>
+                        <Input id={`coins-${deed.id}`} type="number" value={coins} onChange={(e) => setCoins(Number(e.target.value))} />
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div className="flex justify-between items-center text-sm font-semibold">
+                    <span className="text-primary">{t('potentialXP')}: {deed.points}</span>
+                    <div className="flex items-center gap-1 text-amber-500">
+                        <Coins className="w-4 h-4" />
+                        <span>{Math.floor(deed.points / 10)}</span>
+                    </div>
+                </div>
+            )}
             </CardContent>
             {deed.status === 'pending' && (
                 <CardFooter className="flex gap-2">
                 <Button
-                    onClick={() => onApproval(deed, 'approved')}
+                    onClick={() => onApproval(deed, 'approved', points, coins)}
                     className="w-full bg-green-500 hover:bg-green-600 text-white"
                 >
                     <Check className="w-4 h-4 mr-2" /> {t('approve')}
@@ -93,30 +110,34 @@ export default function ApprovalsPage() {
   const { isAdmin, isLoading: isAdminLoading } = useAdmin();
 
   const allDeedsQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
+    if (!firestore || !isAdmin) return null;
     return collectionGroup(firestore, 'volunteer_work');
-  }, [firestore]);
+  }, [firestore, isAdmin]);
 
   const { data: allDeeds, isLoading: isLoadingDeeds } = useCollection<Deed>(allDeedsQuery);
   
   const usersQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
+    if (!firestore || !isAdmin) return null;
     return collection(firestore, 'users');
-  }, [firestore]);
+  }, [firestore, isAdmin]);
   
   const { data: users, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
 
-  const handleApproval = (deed: Deed, newStatus: 'approved' | 'rejected') => {
+  const handleApproval = (deed: Deed, newStatus: 'approved' | 'rejected', points?: number, coins?: number) => {
     if (!firestore) return;
     
     const deedRef = doc(firestore, 'users', deed.userProfileId, 'volunteer_work', deed.id);
-    updateDocumentNonBlocking(deedRef, { status: newStatus });
+    updateDocumentNonBlocking(deedRef, { 
+        status: newStatus,
+        points: newStatus === 'approved' ? points : deed.points 
+    });
 
     if (newStatus === 'approved') {
       const userRef = doc(firestore, 'users', deed.userProfileId);
-      const coinsAwarded = Math.floor(deed.points / 10);
+      const pointsAwarded = points || deed.points;
+      const coinsAwarded = coins || Math.floor(pointsAwarded / 10);
       updateDocumentNonBlocking(userRef, {
-        totalPoints: increment(deed.points),
+        totalPoints: increment(pointsAwarded),
         braveCoins: increment(coinsAwarded),
         questsCompleted: increment(1)
       });
@@ -207,3 +228,5 @@ export default function ApprovalsPage() {
     </div>
   );
 }
+
+    
