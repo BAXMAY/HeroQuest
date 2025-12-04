@@ -57,7 +57,7 @@ service cloud.firestore {
       allow delete: if isSignedIn() && isOwner(userId);
 
       // Allow list for admins
-      allow list: if isSignedIn() && isAdmin();
+      allow list: if isSignedIn();
 
       /**
        * @description Controls access to volunteer work submissions.
