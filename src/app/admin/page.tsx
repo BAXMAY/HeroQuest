@@ -8,13 +8,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { addDocumentNonBlocking, useCollection, useFirebase, useMemoFirebase, updateDocumentNonBlocking } from "@/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { collection, doc, writeBatch } from "firebase/firestore";
+import { collection, doc, writeBatch, serverTimestamp } from "firebase/firestore";
 import { Loader2, PlusCircle, Save, Shield, Trash2, Database } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
-import type { Achievement, Reward } from "../lib/types";
+import type { Achievement, Reward, Deed } from "../lib/types";
 import { useLanguage } from "../context/language-context";
-import { rewards as mockRewards } from '@/app/lib/mock-data';
+import { rewards as mockRewards, deeds as mockDeeds } from '@/app/lib/mock-data';
 
 
 const achievementSchema = z.object({
@@ -88,6 +88,36 @@ export default function AdminPage() {
       toast({
         title: "Seeding Failed",
         description: "Could not seed the rewards.",
+        variant: "destructive",
+      });
+    }
+  };
+  
+  const handleSeedQuests = async () => {
+    if (!firestore) return;
+    const batch = writeBatch(firestore);
+    // Note: This assumes users with IDs like 'user-1', 'user-2' exist.
+    // In a real scenario, you would fetch real user IDs.
+    mockDeeds.forEach((deed) => {
+      const deedRef = doc(firestore, "users", deed.userId, "volunteer_work", deed.id);
+      const deedData = {
+        ...deed,
+        submittedAt: serverTimestamp(),
+      }
+      batch.set(deedRef, deedData);
+    });
+
+    try {
+      await batch.commit();
+      toast({
+        title: "Quests Seeded!",
+        description: "The mock quests have been added to various users.",
+      });
+    } catch (error) {
+      console.error("Error seeding quests: ", error);
+      toast({
+        title: "Seeding Failed",
+        description: "Could not seed the quests. Ensure mock users exist.",
         variant: "destructive",
       });
     }
@@ -207,15 +237,21 @@ export default function AdminPage() {
             </TabsContent>
             <TabsContent value="rewards">
                <Card>
-                    <CardHeader className="flex flex-row justify-between items-center">
+                    <CardHeader className="flex flex-row flex-wrap justify-between items-center gap-4">
                       <div>
                         <CardTitle>{t('manageRewards')}</CardTitle>
                         <CardDescription>{t('manageRewardsDescription')}</CardDescription>
                       </div>
-                      <Button type="button" variant="secondary" onClick={handleSeedRewards}>
-                          <Database className="w-4 h-4 mr-2"/>
-                          Seed Rewards
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button type="button" variant="secondary" onClick={handleSeedRewards}>
+                            <Database className="w-4 h-4 mr-2"/>
+                            Seed Rewards
+                        </Button>
+                         <Button type="button" variant="secondary" onClick={handleSeedQuests}>
+                            <Database className="w-4 h-4 mr-2"/>
+                            สร้างเควสจำลอง
+                        </Button>
+                      </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {isLoading ? <Loader2 className="animate-spin" /> : rewardFields.map((field, index) => (
