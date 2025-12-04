@@ -10,8 +10,8 @@ import { Check, X, Info, Coins, Loader2, CheckCircle, XCircle } from 'lucide-rea
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useLanguage } from '../context/language-context';
-import { useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking } from '@/firebase';
-import { collection, collectionGroup, doc, increment } from 'firebase/firestore';
+import { useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking, useAdmin } from '@/firebase';
+import { collection, collectionGroup, doc, increment, query } from 'firebase/firestore';
 import type { Deed } from '@/app/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
