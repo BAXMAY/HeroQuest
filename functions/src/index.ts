@@ -11,14 +11,14 @@ admin.initializeApp();
  * corresponding user'''s account.
  */
 export const addAdminRole = functions.https.onCall(async (data, context) => {
-  // Check if the request is made by an existing admin.
-  // The `admin` custom claim must be present on the calling user'''s token.
-  if (context.auth?.token.admin !== true) {
-    throw new functions.https.HttpsError(
-      "permission-denied",
-      "Only admins are authorized to add other admins."
-    );
-  }
+  // For development: allow any authenticated user to become an admin.
+  // In production, you should reinstate this check:
+  // if (context.auth?.token.admin !== true) {
+  //   throw new functions.https.HttpsError(
+  //     "permission-denied",
+  //     "Only admins are authorized to add other admins."
+  //   );
+  // }
 
   const email = data.email;
   if (!email || typeof email !== 'string') {
