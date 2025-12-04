@@ -92,11 +92,6 @@ service cloud.firestore {
       }
     }
     
-    // Rule for the 'volunteer_work' collection group query
-    match /{path=**}/volunteer_work/{workId} {
-      allow list: if isSignedIn() && isAdmin();
-    }
-
     // ---- Helper functions ----
 
     /**
