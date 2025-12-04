@@ -110,16 +110,16 @@ export default function ApprovalsPage() {
   const { isAdmin, isLoading: isAdminLoading } = useAdmin();
 
   const allDeedsQuery = useMemoFirebase(() => {
-    if (!firestore || !isAdmin) return null;
+    if (!firestore) return null;
     return collectionGroup(firestore, 'volunteer_work');
-  }, [firestore, isAdmin]);
+  }, [firestore]);
 
   const { data: allDeeds, isLoading: isLoadingDeeds } = useCollection<Deed>(allDeedsQuery);
   
   const usersQuery = useMemoFirebase(() => {
-    if (!firestore || !isAdmin) return null;
+    if (!firestore) return null;
     return collection(firestore, 'users');
-  }, [firestore, isAdmin]);
+  }, [firestore]);
   
   const { data: users, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
 

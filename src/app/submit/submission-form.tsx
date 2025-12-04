@@ -159,11 +159,14 @@ export default function SubmissionForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="environment">สิ่งแวดล้อม</SelectItem>
-                  <SelectItem value="animals">สัตว์</SelectItem>
-                  <SelectItem value="community">ชุมชน</SelectItem>
-                  <SelectItem value="education">การศึกษา</SelectItem>
-                  <SelectItem value="health">สุขภาพ</SelectItem>
+                  <SelectItem value="environment">สิ่งแวดล้อม (Environment)</SelectItem>
+                  <SelectItem value="animals">สัตว์ (Animals)</SelectItem>
+                  <SelectItem value="community">ชุมชน (Community)</SelectItem>
+                  <SelectItem value="education">การศึกษา (Education)</SelectItem>
+                  <SelectItem value="health">สุขภาพ (Health)</SelectItem>
+                  <SelectItem value="charity">การให้ทาน (Charity)</SelectItem>
+                  <SelectItem value="family">ครอบครัวและความเคารพ (Family & Respect)</SelectItem>
+                  <SelectItem value="quran">การอ่านอัลกุรอาน (Quran Reading)</SelectItem>
                 </SelectContent>
               </Select>
               <FormDescription>
