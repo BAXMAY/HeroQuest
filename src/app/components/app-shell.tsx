@@ -14,7 +14,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   
   const isLandingPage = pathname === '/';
-  const isAuthPage = pathname === '/login' || pathname === '/register';
+  const isAuthPage = pathname === '/login' || pathname === '/register' || pathname === '/onboarding';
 
   if (isLandingPage || isAuthPage) {
     return <main>{children}</main>;

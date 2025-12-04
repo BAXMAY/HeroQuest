@@ -43,6 +43,16 @@
         "questsCompleted": {
           "type": "number",
           "description": "The total number of quests completed by the user."
+        },
+        "gender": {
+            "type": "string",
+            "description": "The gender of the user.",
+            "enum": ["male", "female", "other"]
+        },
+        "birthday": {
+            "type": "string",
+            "description": "The user's birthday.",
+            "format": "date"
         }
       },
       "required": [

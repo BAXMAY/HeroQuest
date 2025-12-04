@@ -76,7 +76,8 @@ export function initiateGoogleSignIn(authInstance: Auth): void {
         const docSnap = await getDoc(userProfileRef);
 
         if (!docSnap.exists()) {
-            createProfile(credential.user, firestore);
+            // New user, redirect to onboarding
+            window.location.href = '/onboarding';
         }
     });
 }

@@ -1,3 +1,4 @@
+'use client';
 import type { Timestamp } from 'firebase/firestore';
 
 // This represents the user profile document stored in Firestore
@@ -11,6 +12,8 @@ export type UserProfile = {
   totalPoints: number;
   braveCoins: number;
   questsCompleted: number;
+  gender?: 'male' | 'female' | 'other';
+  birthday?: string;
 };
 
 // This represents a "deed" or "quest" submission document in Firestore
