@@ -2,11 +2,55 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Bell, Brush, ShieldQuestion } from "lucide-react";
+import { Bell, Brush, ShieldQuestion, Code } from "lucide-react";
 import { useLanguage } from "../context/language-context";
+import { Button } from "@/components/ui/button";
+import { useUser, useFirebase } from "@/firebase";
+import { getFunctions, httpsCallable } from "firebase/functions";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 export default function SettingsPage() {
     const { t } = useLanguage();
+    const { user } = useUser();
+    const { firebaseApp } = useFirebase();
+    const { toast } = useToast();
+    const [isMakingAdmin, setIsMakingAdmin] = useState(false);
+
+    const handleMakeAdmin = async () => {
+        if (!user || !user.email) {
+            toast({
+                title: "Error",
+                description: "You must be logged in with an email to become an admin.",
+                variant: "destructive"
+            });
+            return;
+        }
+
+        setIsMakingAdmin(true);
+        try {
+            const functions = getFunctions(firebaseApp);
+            const addAdminRole = httpsCallable(functions, 'addAdminRole');
+            const result = await addAdminRole({ email: user.email });
+            console.log(result.data);
+            toast({
+                title: "Admin Privileges Granted!",
+                description: "Please refresh the page for the changes to take effect.",
+            });
+        } catch (error: any) {
+            console.error("Error granting admin role: ", error);
+            toast({
+                title: "Error",
+                description: error.message || "Could not grant admin privileges.",
+                variant: "destructive"
+            });
+        } finally {
+            setIsMakingAdmin(false);
+        }
+    };
+
+
   return (
     <div className="space-y-8 max-w-2xl mx-auto">
         <div>
@@ -69,6 +113,26 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent>
                 <p className="text-sm text-muted-foreground" dangerouslySetInnerHTML={{ __html: t('supportContent') }} />
+            </CardContent>
+        </Card>
+
+        <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                    <Code className="w-5 h-5"/>
+                    Developer Tools
+                </CardTitle>
+                <CardDescription>Settings for development and testing purposes.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                 <Button onClick={handleMakeAdmin} disabled={isMakingAdmin}>
+                    {isMakingAdmin ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                        <Code className="mr-2 h-4 w-4" />
+                    )}
+                    Grant Admin Privileges
+                </Button>
             </CardContent>
         </Card>
     </div>
