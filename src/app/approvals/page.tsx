@@ -110,16 +110,16 @@ export default function ApprovalsPage() {
   const { isAdmin, isLoading: isAdminLoading } = useAdmin();
 
   const allDeedsQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
+    if (!firestore || !isAdmin) return null;
     return collectionGroup(firestore, 'volunteer_work');
-  }, [firestore]);
+  }, [firestore, isAdmin]);
 
   const { data: allDeeds, isLoading: isLoadingDeeds } = useCollection<Deed>(allDeedsQuery);
   
   const usersQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
+    if (!firestore || !isAdmin) return null;
     return collection(firestore, 'users');
-  }, [firestore]);
+  }, [firestore, isAdmin]);
   
   const { data: users, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
 
@@ -228,5 +228,3 @@ export default function ApprovalsPage() {
     </div>
   );
 }
-
-    
