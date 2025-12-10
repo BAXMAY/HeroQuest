@@ -14,7 +14,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 import type { Achievement, Reward, Deed } from "../lib/types";
 import { useLanguage } from "../context/language-context";
-import { rewards as mockRewards, deeds as mockDeeds } from '@/app/lib/mock-data';
+import { rewards as mockRewards, deeds as mockDeeds, allAchievements as mockAchievements } from '@/app/lib/mock-data';
 
 
 const achievementSchema = z.object({
@@ -123,6 +123,30 @@ export default function AdminPage() {
     }
   };
 
+  const handleSeedAchievements = async () => {
+    if (!firestore) return;
+    const batch = writeBatch(firestore);
+    mockAchievements.forEach((achievement) => {
+      const docRef = doc(firestore, "achievements", achievement.id);
+      batch.set(docRef, achievement);
+    });
+
+    try {
+      await batch.commit();
+      toast({
+        title: "Achievements Seeded!",
+        description: "The mock achievements have been added to the database.",
+      });
+    } catch (error) {
+      console.error("Error seeding achievements: ", error);
+      toast({
+        title: "Seeding Failed",
+        description: "Could not seed the achievements.",
+        variant: "destructive",
+      });
+    }
+  };
+
 
   const onSubmit = async (data: AdminFormValues) => {
     try {
@@ -180,9 +204,15 @@ export default function AdminPage() {
             </TabsList>
             <TabsContent value="achievements">
                 <Card>
-                    <CardHeader>
-                        <CardTitle>{t('manageAchievements')}</CardTitle>
-                        <CardDescription>{t('manageAchievementsDescription')}</CardDescription>
+                    <CardHeader className="flex flex-row flex-wrap justify-between items-center gap-4">
+                        <div>
+                            <CardTitle>{t('manageAchievements')}</CardTitle>
+                            <CardDescription>{t('manageAchievementsDescription')}</CardDescription>
+                        </div>
+                        <Button type="button" variant="secondary" onClick={handleSeedAchievements}>
+                            <Database className="w-4 h-4 mr-2"/>
+                            Seed Achievements
+                        </Button>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {isLoading ? <Loader2 className="animate-spin" /> : achievementFields.map((field, index) => (
