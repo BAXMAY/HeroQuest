@@ -3,15 +3,16 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { levels, getLevelFromXP } from '@/app/lib/levels';
-import { Map, Award } from 'lucide-react';
+import { Map, Award, Loader2 } from 'lucide-react';
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '../context/language-context';
+import type { UserProfile } from '../lib/types';
 
 export default function RoadmapPage() {
-    const { user } = useUser();
+    const { user, isUserLoading } = useUser();
     const firestore = useFirestore();
     const { t } = useLanguage();
 
@@ -20,9 +21,18 @@ export default function RoadmapPage() {
         return doc(firestore, 'users', user.uid);
     }, [user, firestore]);
 
-    const { data: userProfile } = useDoc(userProfileRef);
+    const { data: userProfile, isLoading: isProfileLoading } = useDoc<UserProfile>(userProfileRef);
     
     const currentLevel = getLevelFromXP(userProfile?.totalPoints);
+    const isLoading = isUserLoading || isProfileLoading;
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[calc(100vh-10rem)]">
+                <Loader2 className="h-16 w-16 animate-spin text-primary" />
+            </div>
+        );
+    }
 
   return (
     <div className="space-y-8">
