@@ -86,7 +86,7 @@ export default function LandingPage() {
             HeroQuest
           </h1>
           <p className="text-lg md:text-xl max-w-2xl mx-auto text-shadow">
-            {t('submitDescription')}
+            {t('anAdventureInEveryGoodDeed')}
           </p>
           <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg">
             <Link href="/register">
