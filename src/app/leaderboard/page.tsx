@@ -6,7 +6,7 @@ import { Crown, Users, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '../context/language-context';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy } from 'firebase/firestore';
+import { collection, query, orderBy, where } from 'firebase/firestore';
 import type { UserProfile } from '@/app/lib/types';
 
 export default function LeaderboardPage() {
@@ -15,6 +15,9 @@ export default function LeaderboardPage() {
 
   const usersQuery = useMemoFirebase(() => {
     if (!firestore) return null;
+    // We filter out users named 'Anonymous' on the client-side for simplicity,
+    // but for larger datasets, a where clause like below would be more efficient.
+    // return query(collection(firestore, 'users'), where('firstName', '!=', 'Anonymous'), orderBy('totalPoints', 'desc'));
     return query(collection(firestore, 'users'), orderBy('totalPoints', 'desc'));
   }, [firestore]);
 
@@ -42,6 +45,8 @@ export default function LeaderboardPage() {
     }
   };
   
+  const displayedUsers = sortedUsers?.filter(user => user.firstName !== 'Anonymous');
+
   if (isLoading) {
     return (
         <div className="flex items-center justify-center min-h-[calc(100vh-10rem)]">
@@ -70,7 +75,7 @@ export default function LeaderboardPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sortedUsers?.map((user, index) => (
+            {displayedUsers?.map((user, index) => (
               <TableRow key={user.id} className={index < 3 ? 'bg-card' : ''}>
                 <TableCell className="text-center font-medium">
                   {getRankBadge(index + 1)}
