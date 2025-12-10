@@ -3,116 +3,116 @@
     {
       "id": "avatar1",
       "description": "Avatar for Alex",
-      "imageUrl": "https://images.unsplash.com/photo-1676617081201-b922453dcd48?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2hpbGQlMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjM0MzEzNjF8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "child portrait"
+      "imageUrl": "https://images.unsplash.com/photo-1639741633359-2983574b1e5f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYXJ0b29uJTIwYm95fGVufDB8fHx8MTc2NTQ5NTQ4MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon boy"
     },
     {
       "id": "avatar2",
       "description": "Avatar for Mia",
-      "imageUrl": "https://images.unsplash.com/photo-1602204127613-88710168e528?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxraWQlMjBzbWlsaW5nfGVufDB8fHx8fDE3NjM0NzMxNTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "kid smiling"
+      "imageUrl": "https://images.unsplash.com/photo-1640960543409-dbe56ccc30e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwZ2lybHxlbnwwfHx8fDE3NjU0OTU1MDV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon girl"
     },
     {
       "id": "avatar3",
       "description": "Avatar for Ben",
-      "imageUrl": "https://images.unsplash.com/photo-1588376483402-acc965d4ac21?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxib3klMjBnbGFzc2VzfGVufDB8fHx8MTc2MzQ3MzE1MHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "boy glasses"
+      "imageUrl": "https://images.unsplash.com/photo-1639741633309-644a3e2e8b8c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjYXJ0b29uJTIwYm95fGVufDB8fHx8MTc2NTQ5NTQ4MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon boy"
     },
     {
       "id": "avatar4",
       "description": "Avatar for Chloe",
-      "imageUrl": "https://images.unsplash.com/photo-1614436201459-156d322d38c6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxnaXJsJTIwc21pbGluZ3xlbnwwfHx8fDE3NjMzOTkwMDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "girl smiling"
+      "imageUrl": "https://images.unsplash.com/photo-1639741633422-b58f8b6c4b26?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjYXJ0b29uJTIwZ2lybHxlbnwwfHx8fDE3NjU0OTU1MDV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon girl"
     },
     {
       "id": "avatar5",
       "description": "Avatar for Sam",
-      "imageUrl": "https://images.unsplash.com/photo-1516683345437-ba658903a76a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjaGlsZCUyMG5hdHVyZXxlbnwwfHx8fDE3NjM0NzMxNTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "child nature"
+      "imageUrl": "https://images.unsplash.com/photo-1640960543419-334a17933669?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjYXJ0b29uJTIwY2hpbGR8ZW58MHx8fHwxNzY1NDk1NTMwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon child"
     },
     {
       "id": "deed1",
       "description": "Park cleanup photo",
-      "imageUrl": "https://images.unsplash.com/photo-1624971035769-42ac9244e837?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwYXJrJTIwY2xlYW51cHxlbnwwfHx8fDE3NjM0NzMxNTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "park cleanup"
+      "imageUrl": "https://images.unsplash.com/photo-1601633939023-e6a242858b1a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwY2xlYW5pbmclMjBwYXJrfGVufDB8fHx8MTc2NTQ5NTU1NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon cleaning"
     },
     {
       "id": "deed2",
       "description": "Animal shelter volunteering photo",
-      "imageUrl": "https://images.unsplash.com/photo-1542715234-4bafcfc68bd9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8YW5pbWFsJTIwc2hlbHRlcnxlbnwwfHx8fDE3NjM0NzMxNTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "animal shelter"
+      "imageUrl": "https://images.unsplash.com/photo-1614926120018-09fb13904592?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwZG9nfGVufDB8fHx8MTc2NTQ5NTU3OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon dog"
     },
     {
       "id": "deed3",
       "description": "Community garden photo",
-      "imageUrl": "https://images.unsplash.com/photo-1631195414013-85b70ff2c180?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb21tdW5pdHklMjBnYXJkZW58ZW58MHx8fHwxNzYzNDAzMDk3fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "community garden"
+      "imageUrl": "https://images.unsplash.com/photo-1599849576408-791724a9a087?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwZ2FyZGVuaW5nfGVufDB8fHx8MTc2NTQ5NTYwMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon gardening"
     },
     {
       "id": "deed4",
       "description": "Book drive photo",
-      "imageUrl": "https://images.unsplash.com/photo-1622784036568-85e0c9f0e6f0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxib29rJTIwZHJpdmV8ZW58MHx8fHwxNzYzNDczMTUwfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "book drive"
+      "imageUrl": "https://images.unsplash.com/photo-1620503374956-c942862c045b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwYm9va3N8ZW58MHx8fHwxNzY1NDk1NjIwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon books"
     },
     {
       "id": "deed5",
       "description": "Food bank volunteering photo",
-      "imageUrl": "https://images.unsplash.com/photo-1643321613219-6d50e1372c0a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxmb29kJTIwYmFua3xlbnwwfHx8fDE3NjM0Mjk3Njd8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "food bank"
+      "imageUrl": "https://images.unsplash.com/photo-1617392434522-f418b37f4044?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwZm9vZHxlbnwwfHx8fDE3NjU0OTU2NDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon food"
     },
     {
       "id": "deed6",
       "description": "Elderly home visit photo",
-      "imageUrl": "https://images.unsplash.com/photo-1638526970908-b18e32b0bc42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxlbGRlcmx5JTIwaGVscHxlbnwwfHx8fDE3NjM0NzMxNTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "elderly help"
+      "imageUrl": "https://images.unsplash.com/photo-1617066367520-41a9f45e7510?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwaGVscGluZ3xlbnwwfHx8fDE3NjU0OTU2NjF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon helping"
     },
     {
       "id": "deed7",
       "description": "Charity run photo",
-      "imageUrl": "https://images.unsplash.com/photo-1648544373826-8ac225f98062?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjaGFyaXR5JTIwcnVufGVufDB8fHx8MTc2MzQ3MzE1MHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "charity run"
+      "imageUrl": "https://images.unsplash.com/photo-1625907499982-19e487a55225?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwcnVubmluZ3xlbnwwfHx8fDE3NjU0OTU2ODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon running"
     },
     {
       "id": "hero1",
       "description": "Hero Background",
-      "imageUrl": "https://images.unsplash.com/photo-1590874023110-f82d4c63b599?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBhY3Rpb24lMjBmaWd1cmV8ZW58MHx8fHwxNzY1MzAwMjU0fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "hero background"
+      "imageUrl": "https://images.unsplash.com/photo-1617469165786-8007eda335c7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwc3VwZXJoZXJvfGVufDB8fHx8MTc2NTQ5NTcwNXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon superhero"
     },
     {
       "id": "reward1",
       "description": "A board game",
-      "imageUrl": "https://images.unsplash.com/photo-1585848925345-393e15774e89?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxib2FyZCUyMGdhbWUlMjBuaWdodHxlbnwwfHx8fDE3NjU0MTQ5NDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "boardgame night"
+      "imageUrl": "https://images.unsplash.com/photo-1633520625934-118a8b1a5e12?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwYm9hcmQlMjBnYW1lfGVufDB8fHx8fDE3NjU0OTU3MjZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon boardgame"
     },
     {
       "id": "reward2",
       "description": "A DIY pizza kit",
-      "imageUrl": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMG1ha2luZ3xlbnwwfHx8fDE3NjU0MTQ5NzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "pizza making"
+      "imageUrl": "https://images.unsplash.com/photo-1619024097486-7883a656898a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwcGl6emF8ZW58MHx8fHwxNzY1NDk1NzQ3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon pizza"
     },
     {
       "id": "reward3",
       "description": "Movie night popcorn",
-      "imageUrl": "https://images.unsplash.com/photo-1627888639994-f86c3599e125?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtb3ZpZSUyMG5pZ2h0JTIwcG9wY29ybnxlbnwwfHx8fDE3NjU0MTQ5OTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "movie popcorn"
+      "imageUrl": "https://images.unsplash.com/photo-1617392434522-f418b37f4044?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwcG9wY29ybnxlbnwwfHx8fDE3NjU0OTU3Njl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon popcorn"
     },
     {
       "id": "reward4",
       "description": "Ice cream sundae",
-      "imageUrl": "https://images.unsplash.com/photo-1570197825525-6380a3c20275?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxpY2UlMjBjcmVhbSUyMHN1bmRhZXxlbnwwfHx8fDE3NjU0MTUwMjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "icecream sundae"
+      "imageUrl": "https://images.unsplash.com/photo-1617392434522-f418b37f4044?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwaWNlJTIwY3JlYW18ZW58MHx8fHwxNzY1NDk1NzkxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon icecream"
     },
     {
       "id": "reward5",
       "description": "Arts and crafts supplies",
-      "imageUrl": "https://images.unsplash.com/photo-1513364776144-60967b0f800f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhcnRzJTIwY3JhZnRzfGVufDB8fHx8fDE3NjU0MTUwNDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "arts crafts"
+      "imageUrl": "https://images.unsplash.com/photo-1620503374956-c942862c045b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwYXJ0fGVufDB8fHx8fDE3NjU0OTU4MTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon art"
     },
     {
       "id": "reward6",
       "description": "A picnic basket",
-      "imageUrl": "https://images.unsplash.com/photo-1605302257918-0955986968f4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwaWNuaWMlMjBiYXNrZXR8ZW58MHx8fHwxNzY1NDE1MDY1fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "picnic basket"
+      "imageUrl": "https://images.unsplash.com/photo-1617066367520-41a9f45e7510?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwcGljbmljfGVufDB8fHx8fDE3NjU0OTU4MzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cartoon picnic"
     }
   ]
 }
