@@ -1,15 +1,24 @@
 'use client';
 
-import { users } from '@/app/lib/mock-data';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Crown, Users } from 'lucide-react';
+import { Crown, Users, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '../context/language-context';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy } from 'firebase/firestore';
+import type { UserProfile } from '@/app/lib/types';
 
 export default function LeaderboardPage() {
-  const sortedUsers = [...users].sort((a, b) => b.score - a.score);
   const { t } = useLanguage();
+  const firestore = useFirestore();
+
+  const usersQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'users'), orderBy('totalPoints', 'desc'));
+  }, [firestore]);
+
+  const { data: sortedUsers, isLoading } = useCollection<UserProfile>(usersQuery);
 
   const getRankBadge = (rank: number) => {
     switch (rank) {
@@ -32,6 +41,14 @@ export default function LeaderboardPage() {
         return <span className="font-semibold text-muted-foreground">{rank}th</span>;
     }
   };
+  
+  if (isLoading) {
+    return (
+        <div className="flex items-center justify-center min-h-[calc(100vh-10rem)]">
+            <Loader2 className="h-16 w-16 animate-spin text-primary" />
+        </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -53,7 +70,7 @@ export default function LeaderboardPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sortedUsers.map((user, index) => (
+            {sortedUsers?.map((user, index) => (
               <TableRow key={user.id} className={index < 3 ? 'bg-card' : ''}>
                 <TableCell className="text-center font-medium">
                   {getRankBadge(index + 1)}
@@ -61,14 +78,14 @@ export default function LeaderboardPage() {
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Avatar>
-                      <AvatarImage src={user.avatar} alt={user.name} data-ai-hint="child portrait" />
-                      <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                      <AvatarImage src={user.profilePicture} alt={user.firstName} data-ai-hint="child portrait" />
+                      <AvatarFallback>{user.firstName?.charAt(0)}</AvatarFallback>
                     </Avatar>
-                    <span className="font-semibold">{user.name}</span>
+                    <span className="font-semibold">{user.firstName} {user.lastName}</span>
                   </div>
                 </TableCell>
                 <TableCell className="text-right font-bold text-lg text-primary">
-                  {user.score.toLocaleString()}
+                  {(user.totalPoints || 0).toLocaleString()}
                 </TableCell>
               </TableRow>
             ))}
