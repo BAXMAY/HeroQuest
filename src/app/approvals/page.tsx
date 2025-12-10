@@ -11,12 +11,13 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useLanguage } from '../context/language-context';
 import { useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking, useAdmin } from '@/firebase';
-import { collection, collectionGroup, doc, increment } from 'firebase/firestore';
+import { collection, collectionGroup, doc, increment, getDoc } from 'firebase/firestore';
 import type { Deed } from '@/app/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { checkAndAwardAchievements } from '@/app/lib/achievements';
 
 
 const QuestCard = ({ deed, user, onApproval }: { deed: Deed; user?: UserProfile; onApproval: (deed: Deed, status: 'approved' | 'rejected', points?: number, coins?: number) => void; }) => {
@@ -123,7 +124,7 @@ export default function ApprovalsPage() {
   
   const { data: users, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
 
-  const handleApproval = (deed: Deed, newStatus: 'approved' | 'rejected', points?: number, coins?: number) => {
+  const handleApproval = async (deed: Deed, newStatus: 'approved' | 'rejected', points?: number, coins?: number) => {
     if (!firestore) return;
     
     const deedRef = doc(firestore, 'users', deed.userProfileId, 'volunteer_work', deed.id);
@@ -136,11 +137,26 @@ export default function ApprovalsPage() {
       const userRef = doc(firestore, 'users', deed.userProfileId);
       const pointsAwarded = points || deed.points;
       const coinsAwarded = coins || Math.floor(pointsAwarded / 10);
-      updateDocumentNonBlocking(userRef, {
+      
+      await updateDocumentNonBlocking(userRef, {
         totalPoints: increment(pointsAwarded),
         braveCoins: increment(coinsAwarded),
         questsCompleted: increment(1)
       });
+      
+      const updatedUserSnap = await getDoc(userRef);
+      if (updatedUserSnap.exists()) {
+        const updatedUserProfile = { id: updatedUserSnap.id, ...updatedUserSnap.data() } as UserProfile;
+        const newAchievements = await checkAndAwardAchievements(updatedUserProfile);
+
+        if (newAchievements.length > 0) {
+            toast({
+                title: 'Achievement Unlocked!',
+                description: `You've earned: ${newAchievements.map(a => a.name).join(', ')}`,
+            });
+        }
+      }
+
     }
 
     toast({
