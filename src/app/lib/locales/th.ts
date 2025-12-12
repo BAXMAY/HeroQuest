@@ -17,6 +17,7 @@ export const th = {
       register: 'สมัครสมาชิก',
       roadmap: 'แผนที่เลเวล',
       admin: 'จัดการระบบ',
+      "artificer-studio": "Artificer's Studio",
     },
     // Navigation
     nav: {
@@ -31,6 +32,7 @@ export const th = {
       lorebook: 'หนังสือตำนาน',
       settings: 'การตั้งค่า',
       admin: 'แอดมิน',
+      artificerStudio: "สตูดิโอช่างศิลป์",
     },
     // Header
     adventurer: 'นักผจญภัย',

@@ -17,6 +17,7 @@ export const en = {
     register: 'Register',
     roadmap: 'Level Roadmap',
     admin: 'Admin Management',
+    "artificer-studio": "Artificer's Studio",
   },
   // Navigation
   nav: {
@@ -31,6 +32,7 @@ export const en = {
     lorebook: 'Lorebook',
     settings: 'Settings',
     admin: 'Admin',
+    artificerStudio: "Artificer's Studio",
   },
   // Header
   adventurer: 'Adventurer',

@@ -21,6 +21,7 @@ import {
   Users,
   Map,
   Shield,
+  Paintbrush,
 } from 'lucide-react';
 import Mascot from './mascot';
 import { useLanguage } from '@/app/context/language-context';
@@ -41,6 +42,7 @@ export default function Nav() {
     { href: '/approvals', label: t('nav.questReview'), icon: CheckSquare, admin: true },
     { href: '/admin', label: 'Admin', icon: Shield, admin: true },
     { href: '/gallery', label: t('nav.opportunityBoard'), icon: Sparkles },
+    { href: '/artificer-studio', label: "Artificer's Studio", icon: Paintbrush },
     { href: '/rewards', label: t('nav.rewardShop'), icon: ShoppingBag },
     { href: '/lorebook', label: t('nav.lorebook'), icon: BookMarked },
   ];
@@ -58,20 +60,23 @@ export default function Nav() {
 
       <SidebarContent>
         <SidebarMenu>
-          {navItems.map((item) => (
-            <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname.startsWith(item.href)}
-                tooltip={item.label}
-              >
-                <Link href={item.href}>
-                  <item.icon />
-                  <span>{item.label}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          {navItems.map((item) => {
+            if (item.admin && !isAdmin) return null;
+            return (
+                <SidebarMenuItem key={item.href}>
+                <SidebarMenuButton
+                    asChild
+                    isActive={pathname.startsWith(item.href)}
+                    tooltip={item.label}
+                >
+                    <Link href={item.href}>
+                    <item.icon />
+                    <span>{item.label}</span>
+                    </Link>
+                </SidebarMenuButton>
+                </SidebarMenuItem>
+            );
+           })}
         </SidebarMenu>
       </SidebarContent>
 
