@@ -52,3 +52,13 @@ export type Achievement = {
   icon: string;
   unlockedAt?: string; // Should be ISO8601 string
 };
+
+// Represents a reward that a user has redeemed
+export type RedeemedReward = {
+  id: string; // Document ID
+  rewardId: string;
+  name: string;
+  cost: number;
+  image: string;
+  redeemedAt: Timestamp;
+}
