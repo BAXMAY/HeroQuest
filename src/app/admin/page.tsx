@@ -18,6 +18,7 @@ import { useLanguage } from "../context/language-context";
 import { rewards as mockRewards, deeds as mockDeeds, allAchievements as mockAchievements } from '@/app/lib/mock-data';
 import { useState } from "react";
 import Image from "next/image";
+import { Label } from "@/components/ui/label";
 
 
 const achievementSchema = z.object({
@@ -428,4 +429,5 @@ export default function AdminPage() {
   );
 }
 
+    
     
