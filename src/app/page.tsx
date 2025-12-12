@@ -83,13 +83,13 @@ export default function LandingPage() {
             data-ai-hint="children volunteering"
           />
         </div>
-        <div className="relative z-10 p-4 space-y-4">
-          <h1 className="text-5xl md:text-7xl font-bold font-headline tracking-wider text-shadow-lg">
-            HeroQuest
-          </h1>
-          <p className="text-lg md:text-xl max-w-2xl mx-auto text-shadow">
-            {t('anAdventureInEveryGoodDeed')}
-          </p>
+        <div className="relative z-10 p-4 flex flex-col items-center space-y-6">
+          {xpCoinIcon && (
+            <div className="relative w-48 h-48 md:w-64 md:h-64">
+              <Image src={xpCoinIcon} alt="XP and Coins Icon" layout="fill" className="object-contain" />
+            </div>
+          )}
+          
           <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg">
             <Link href="/register">
               {t('joinAdventure')} <ArrowRight className="ml-2 h-5 w-5" />
