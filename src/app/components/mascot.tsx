@@ -1,6 +1,19 @@
 import type { SVGProps } from "react";
+import Image from "next/image";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export default function Mascot(props: SVGProps<SVGSVGElement>) {
+  const logoImage = PlaceHolderImages.find(img => img.id === 'xp-coin-icon')?.imageUrl;
+
+  if (logoImage) {
+    // Using a div wrapper to apply SVG props like className, width, height
+    return (
+      <div className={props.className}>
+        <Image src={logoImage} alt="HeroQuest Mascot" width={24} height={24} />
+      </div>
+    );
+  }
+
   return (
     <svg
       {...props}
