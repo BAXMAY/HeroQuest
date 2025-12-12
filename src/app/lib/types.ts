@@ -14,6 +14,12 @@ export type UserProfile = {
   questsCompleted: number;
   gender?: 'male' | 'female' | 'other';
   birthday?: string;
+  settings?: {
+    notifications?: {
+      questUpdates?: boolean;
+      weeklySummary?: boolean;
+    }
+  }
 };
 
 // This represents a "deed" or "quest" submission document in Firestore
@@ -63,3 +69,14 @@ export type RedeemedReward = {
   redeemedAt: Timestamp;
   status: 'processing' | 'shipped' | 'delivered';
 }
+
+// Represents a notification for a user
+export type Notification = {
+  id: string; // Document ID
+  title: string;
+  description: string;
+  createdAt: Timestamp;
+  read: boolean;
+  type: 'quest_approved' | 'achievement_unlocked';
+  link?: string;
+};

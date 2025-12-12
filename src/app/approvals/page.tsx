@@ -10,8 +10,8 @@ import { Check, X, Info, Coins, Loader2, CheckCircle, XCircle } from 'lucide-rea
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useLanguage } from '../context/language-context';
-import { useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking, useAdmin } from '@/firebase';
-import { collection, collectionGroup, doc, increment, getDoc } from 'firebase/firestore';
+import { useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking, useAdmin, addDocumentNonBlocking } from '@/firebase';
+import { collection, collectionGroup, doc, increment, getDoc, serverTimestamp } from 'firebase/firestore';
 import type { Deed } from '@/app/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -156,7 +156,17 @@ export default function ApprovalsPage() {
             });
         }
       }
-
+      
+      // Create a notification for the user
+      const notificationsCollection = collection(firestore, 'users', deed.userProfileId, 'notifications');
+      addDocumentNonBlocking(notificationsCollection, {
+        title: 'Quest Approved!',
+        description: `Your quest "${deed.description.substring(0, 30)}..." was approved. You earned ${pointsAwarded} XP!`,
+        createdAt: serverTimestamp(),
+        read: false,
+        type: 'quest_approved',
+        link: '/dashboard'
+      });
     }
 
     toast({

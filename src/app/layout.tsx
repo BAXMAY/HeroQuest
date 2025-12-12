@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { FirebaseClientProvider } from '@/firebase';
 import { LanguageProvider } from '@/app/context/language-context';
 import AppShell from './components/app-shell';
+import NotificationListener from './components/notification-listener';
 
 export const metadata: Metadata = {
   title: 'HeroQuest',
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className="font-body antialiased h-full bg-background text-foreground">
         <FirebaseClientProvider>
           <LanguageProvider>
+              <NotificationListener />
               <AppShell>
                 {children}
               </AppShell>

@@ -5,18 +5,27 @@ import { Switch } from "@/components/ui/switch";
 import { Bell, Brush, ShieldQuestion, Code } from "lucide-react";
 import { useLanguage } from "../context/language-context";
 import { Button } from "@/components/ui/button";
-import { useUser, useFirebase } from "@/firebase";
+import { useUser, useFirebase, updateDocumentNonBlocking, useDoc, useMemoFirebase } from "@/firebase";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { doc } from "firebase/firestore";
+import type { UserProfile } from "@/app/lib/types";
 
 export default function SettingsPage() {
     const { t } = useLanguage();
     const { user } = useUser();
-    const { firebaseApp } = useFirebase();
+    const { firebaseApp, firestore } = useFirebase();
     const { toast } = useToast();
     const [isMakingAdmin, setIsMakingAdmin] = useState(false);
+
+    const userProfileRef = useMemoFirebase(() => {
+        if (!user) return null;
+        return doc(firestore, 'users', user.uid);
+    }, [user, firestore]);
+
+    const { data: userProfile } = useDoc<UserProfile>(userProfileRef);
 
     const handleMakeAdmin = async () => {
         if (!user || !user.email) {
@@ -50,6 +59,12 @@ export default function SettingsPage() {
         }
     };
 
+    const handleNotificationChange = (key: 'questUpdates' | 'weeklySummary', value: boolean) => {
+        if (!userProfileRef) return;
+        updateDocumentNonBlocking(userProfileRef, {
+            [`settings.notifications.${key}`]: value
+        });
+    };
 
   return (
     <div className="space-y-8 max-w-2xl mx-auto">
@@ -72,14 +87,22 @@ export default function SettingsPage() {
                         <Label htmlFor="quest-updates" className="font-medium">{t('questUpdates')}</Label>
                         <p className="text-sm text-muted-foreground">{t('questUpdatesDescription')}</p>
                     </div>
-                    <Switch id="quest-updates" defaultChecked />
+                    <Switch 
+                        id="quest-updates" 
+                        checked={userProfile?.settings?.notifications?.questUpdates ?? true} 
+                        onCheckedChange={(checked) => handleNotificationChange('questUpdates', checked)}
+                    />
                 </div>
                 <div className="flex items-center justify-between p-4 rounded-lg bg-background border">
                     <div>
                         <Label htmlFor="weekly-summary" className="font-medium">{t('weeklySummary')}</Label>
                         <p className="text-sm text-muted-foreground">{t('weeklySummaryDescription')}</p>
                     </div>
-                    <Switch id="weekly-summary" />
+                    <Switch 
+                        id="weekly-summary" 
+                        checked={userProfile?.settings?.notifications?.weeklySummary ?? false}
+                        onCheckedChange={(checked) => handleNotificationChange('weeklySummary', checked)}
+                     />
                 </div>
             </CardContent>
         </Card>

@@ -186,6 +186,45 @@
         }
       },
       "required": ["id", "rewardId", "name", "cost", "image", "redeemedAt", "status"]
+    },
+    "Notification": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Notification",
+      "description": "Represents a notification for a user.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the notification."
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the notification."
+        },
+        "description": {
+          "type": "string",
+          "description": "The body of the notification."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The date and time the notification was created."
+        },
+        "read": {
+          "type": "boolean",
+          "description": "Whether the notification has been read."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of notification (e.g., 'quest_approved', 'achievement_unlocked')."
+        },
+        "link": {
+          "type": "string",
+          "format": "uri",
+          "description": "A link to navigate to when the notification is clicked."
+        }
+      },
+      "required": ["id", "title", "description", "createdAt", "read", "type"]
     }
   },
   "auth": {
@@ -269,6 +308,26 @@
             {
               "name": "redeemedRewardId",
               "description": "The unique identifier for the redeemed reward record."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/notifications/{notificationId}",
+        "definition": {
+          "entityName": "Notification",
+          "schema": {
+            "$ref": "#/backend/entities/Notification"
+          },
+          "description": "Stores notifications for a user. Ownership is enforced by the path.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            },
+            {
+              "name": "notificationId",
+              "description": "The unique identifier for the notification."
             }
           ]
         }
