@@ -10,15 +10,19 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Award, LogOut, Settings, User as UserIcon, Coins, Loader2, LogIn, Home, ShieldCheck } from 'lucide-react';
+import { Award, LogOut, Settings, User as UserIcon, Coins, Loader2, LogIn, Home, ShieldCheck, Bell, Check } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useAuth, useUser, useFirestore, useDoc, useMemoFirebase, useAdmin } from '@/firebase';
+import { useAuth, useUser, useFirestore, useDoc, useMemoFirebase, useAdmin, useCollection, updateDocumentNonBlocking } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
-import { doc } from 'firebase/firestore';
+import { collection, doc, writeBatch } from 'firebase/firestore';
 import { getLevelFromXP } from '@/app/lib/levels';
 import { useLanguage } from '@/app/context/language-context';
+import type { Notification } from '../lib/types';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+import { formatDistanceToNow } from 'date-fns';
 
 
 export function AppHeader() {
@@ -34,8 +38,16 @@ export function AppHeader() {
     if (!user) return null;
     return doc(firestore, 'users', user.uid);
   }, [user, firestore]);
+  
+  const notificationsRef = useMemoFirebase(() => {
+    if(!user) return null;
+    return collection(firestore, 'users', user.uid, 'notifications');
+  }, [user, firestore]);
 
   const { data: userProfile, isLoading: isProfileLoading } = useDoc(userProfileRef);
+  const { data: notifications, isLoading: isLoadingNotifications } = useCollection<Notification>(notificationsRef);
+  
+  const unreadNotifications = notifications?.filter(n => !n.read) || [];
 
   const pathname = usePathname();
   const title = t(`pageTitles.${pathname.replace('/', '') || 'home'}`);
@@ -62,7 +74,17 @@ export function AppHeader() {
     setLanguage(language === 'en' ? 'th' : 'en');
   };
 
-  const isLoading = isUserLoading || isProfileLoading;
+  const handleMarkAllRead = async () => {
+    if (!firestore || !user || !unreadNotifications.length) return;
+    const batch = writeBatch(firestore);
+    unreadNotifications.forEach(notif => {
+        const notifRef = doc(firestore, 'users', user.uid, 'notifications', notif.id);
+        batch.update(notifRef, { read: true });
+    });
+    await batch.commit();
+  }
+
+  const isLoading = isUserLoading || isProfileLoading || isLoadingNotifications;
   const displayName = userProfile?.firstName || user?.displayName || t('adventurer');
   const currentLevel = getLevelFromXP(userProfile?.totalPoints);
   const isAnonymous = user?.isAnonymous;
@@ -81,6 +103,47 @@ export function AppHeader() {
       <Button variant="outline" onClick={handleLanguageToggle} className="w-16">
         {language === 'en' ? 'EN' : 'ไทย'}
       </Button>
+
+      {user && !user.isAnonymous && (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="relative">
+                    <Bell />
+                    {unreadNotifications.length > 0 && (
+                        <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 justify-center p-0">{unreadNotifications.length}</Badge>
+                    )}
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-80" align="end">
+                <DropdownMenuLabel className="flex justify-between items-center">
+                    Notifications
+                    {unreadNotifications.length > 0 && (
+                        <Button variant="ghost" size="sm" className="h-auto p-1" onClick={handleMarkAllRead}>
+                            <Check className="w-4 h-4 mr-1" />
+                            Mark all read
+                        </Button>
+                    )}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {notifications && notifications.length > 0 ? (
+                    notifications.slice(0, 5).map(notif => (
+                        <DropdownMenuItem key={notif.id} asChild className={cn("flex-col items-start gap-1 whitespace-normal", !notif.read && "bg-accent/50")}>
+                           <Link href={notif.link || '#'}>
+                                <p className="font-semibold">{notif.title}</p>
+                                <p className="text-xs text-muted-foreground">{notif.description}</p>
+                                <p className="text-xs text-muted-foreground/80 mt-1">
+                                    {formatDistanceToNow(notif.createdAt.toDate(), { addSuffix: true })}
+                                </p>
+                           </Link>
+                        </DropdownMenuItem>
+                    ))
+                ) : (
+                    <div className="px-2 py-4 text-center text-sm text-muted-foreground">You're all caught up!</div>
+                )}
+            </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+
 
       {isLoading ? (
         <Loader2 className="h-6 w-6 animate-spin" />
