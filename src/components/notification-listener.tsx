@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useUser, useFirestore, useCollection, useMemoFirebase, updateDocumentNonBlocking } from '@/firebase';
-import { collection, query, where, doc, limit, orderBy } from 'firebase/firestore';
+import { collection, query, where, doc } from 'firebase/firestore';
 import type { Notification } from '@/app/lib/types';
 import { useToast } from '@/hooks/use-toast';
 
@@ -10,16 +10,12 @@ export default function NotificationListener() {
   const { user } = useUser();
   const firestore = useFirestore();
   const { toast } = useToast();
-  const [lastNotifiedId, setLastNotifiedId] = useState<string | null>(null);
 
-  // Query for the most recent unread notification
   const notificationsQuery = useMemoFirebase(() => {
     if (!user || !firestore) return null;
     return query(
       collection(firestore, 'users', user.uid, 'notifications'),
-      where('read', '==', false),
-      orderBy('createdAt', 'desc'),
-      limit(1)
+      where('read', '==', false)
     );
   }, [user, firestore]);
 
@@ -27,17 +23,19 @@ export default function NotificationListener() {
 
   useEffect(() => {
     if (notifications && notifications.length > 0) {
-      const latestNotif = notifications[0];
-      // Only show a toast if it's a new notification we haven't seen in this session
-      if (latestNotif.id !== lastNotifiedId) {
+      notifications.forEach((notif) => {
+        // Show a toast for each unread notification
         toast({
-          title: latestNotif.title,
-          description: latestNotif.description,
+          title: notif.title,
+          description: notif.description,
         });
-        setLastNotifiedId(latestNotif.id);
-      }
+
+        // Mark the notification as read
+        const notifRef = doc(firestore, 'users', user!.uid, 'notifications', notif.id);
+        updateDocumentNonBlocking(notifRef, { read: true });
+      });
     }
-  }, [notifications, toast, lastNotifiedId]);
+  }, [notifications, firestore, user, toast]);
 
   return null; // This component doesn't render anything
 }
