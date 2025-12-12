@@ -10,7 +10,18 @@ export default function LorebookPage() {
   const { t } = useLanguage();
   const loreImage = PlaceHolderImages.find(img => img.id === 'loreDragon')?.imageUrl;
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 relative">
+       {loreImage && (
+        <div className="absolute inset-0 top-16 -z-10 opacity-15 blur-sm">
+            <Image 
+                src={loreImage} 
+                alt="A dragon reading a book." 
+                fill 
+                className="object-cover" 
+                data-ai-hint="dragon reading"
+            />
+        </div>
+      )}
       <div>
         <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
           <BookMarked className="w-8 h-8 text-primary" />
@@ -19,13 +30,7 @@ export default function LorebookPage() {
         <p className="text-muted-foreground">{t('lorebookDescription')}</p>
       </div>
 
-      {loreImage && (
-        <div className="relative aspect-video w-full max-w-3xl mx-auto overflow-hidden rounded-lg border shadow-lg">
-            <Image src={loreImage} alt="A dragon reading a book." fill className="object-cover" data-ai-hint="reading dragon"/>
-        </div>
-      )}
-
-      <Card>
+      <Card className="bg-background/80 backdrop-blur-sm">
         <CardHeader>
           <CardTitle>{t('chaptersOfHeroQuest')}</CardTitle>
           <CardDescription>{t('knowledgeIsMighty')}</CardDescription>
