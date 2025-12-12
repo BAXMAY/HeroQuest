@@ -61,4 +61,5 @@ export type RedeemedReward = {
   cost: number;
   image: string;
   redeemedAt: Timestamp;
+  status: 'processing' | 'shipped' | 'delivered';
 }

@@ -178,9 +178,14 @@
           "type": "string",
           "format": "date-time",
           "description": "The date and time the reward was redeemed."
+        },
+        "status": {
+          "type": "string",
+          "description": "The fulfillment status of the reward.",
+          "enum": ["processing", "shipped", "delivered"]
         }
       },
-      "required": ["id", "rewardId", "name", "cost", "image", "redeemedAt"]
+      "required": ["id", "rewardId", "name", "cost", "image", "redeemedAt", "status"]
     }
   },
   "auth": {

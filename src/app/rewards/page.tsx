@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Coins, ShoppingBag, Sparkles, Loader2, CheckCircle, Gift } from 'lucide-react';
+import { Coins, ShoppingBag, Sparkles, Loader2, CheckCircle, Gift, Truck } from 'lucide-react';
 import type { Reward, UserProfile, RedeemedReward } from '@/app/lib/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
@@ -38,6 +38,8 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 export default function RewardsPage() {
   const { user, isUserLoading } = useUser();
@@ -83,6 +85,7 @@ export default function RewardsPage() {
         cost: reward.cost,
         image: reward.image,
         redeemedAt: serverTimestamp(),
+        status: 'processing',
       };
       addDocumentNonBlocking(redeemedRewardsCollectionRef, newRedeemedReward);
 
@@ -102,6 +105,15 @@ export default function RewardsPage() {
 
   const isLoading = isUserLoading || isProfileLoading || isLoadingRewards || isLoadingRedeemed;
   const redeemedRewardIds = new Set(redeemedRewards?.map(r => r.rewardId));
+
+  const getStatusIcon = (status: RedeemedReward['status']) => {
+    switch (status) {
+        case 'processing': return <Loader2 className="w-3 h-3 mr-1 animate-spin" />;
+        case 'shipped': return <Truck className="w-3 h-3 mr-1" />;
+        case 'delivered': return <CheckCircle className="w-3 h-3 mr-1" />;
+        default: return null;
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -211,13 +223,21 @@ export default function RewardsPage() {
                     {redeemedRewards.map((reward) => (
                          <Card key={reward.id} className="flex flex-col overflow-hidden bg-secondary/30">
                             <div className="relative w-full h-40 opacity-80">
-                            <Image
-                                src={reward.image}
-                                alt={reward.name}
-                                fill
-                                className="object-cover"
-                                data-ai-hint="reward item"
-                            />
+                                <Image
+                                    src={reward.image}
+                                    alt={reward.name}
+                                    fill
+                                    className="object-cover"
+                                    data-ai-hint="reward item"
+                                />
+                                <Badge className={cn("absolute top-2 right-2 capitalize", {
+                                  'bg-blue-500': reward.status === 'processing',
+                                  'bg-orange-500': reward.status === 'shipped',
+                                  'bg-green-500': reward.status === 'delivered',
+                                })}>
+                                    {getStatusIcon(reward.status)}
+                                    {reward.status}
+                                </Badge>
                             </div>
                             <CardHeader>
                                 <CardTitle className="text-lg leading-tight">{reward.name}</CardTitle>
