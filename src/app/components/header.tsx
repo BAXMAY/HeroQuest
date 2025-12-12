@@ -131,9 +131,11 @@ export function AppHeader() {
                            <Link href={notif.link || '#'}>
                                 <p className="font-semibold">{notif.title}</p>
                                 <p className="text-xs text-muted-foreground">{notif.description}</p>
-                                <p className="text-xs text-muted-foreground/80 mt-1">
-                                    {formatDistanceToNow(notif.createdAt.toDate(), { addSuffix: true })}
-                                </p>
+                                {notif.createdAt && (
+                                  <p className="text-xs text-muted-foreground/80 mt-1">
+                                      {formatDistanceToNow(notif.createdAt.toDate(), { addSuffix: true })}
+                                  </p>
+                                )}
                            </Link>
                         </DropdownMenuItem>
                     ))
