@@ -111,20 +111,26 @@
     {
       "id": "hero1",
       "description": "Hero Background",
-      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3450126925-72971.appspot.com/o/uploads%2F1765524252251_Gemini_Generated_Image_cb6aoccb6aoccb6a.png?alt=media&token=07a15003-1568-4cfd-839a-2db64cc2e614",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3450126925-72971.firebasestorage.app/o/uploads%2F1765524252251_Gemini_Generated_Image_cb6aoccb6aoccb6a.png?alt=media&token=07a15003-1568-4cfd-839a-2db64cc2e614",
       "imageHint": "cartoon superhero"
     },
     {
       "id": "loreDragon",
       "description": "Dragon reading a book",
-      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3450126925-72971.appspot.com/o/uploads%2F1765524169570_Gemini_Generated_Image_tr5pr4tr5pr4tr5p.png?alt=media&token=94f96c3f-d62d-4178-a2db-f9733319eda8",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3450126925-72971.firebasestorage.app/o/uploads%2F1765524198718_Gemini_Generated_Image_rt0dp6rt0dp6rt0d.png?alt=media&token=0c756bd3-a438-48fa-8987-33b0ddc66ab5",
       "imageHint": "dragon reading"
     },
     {
       "id": "deed-run",
       "description": "A character running for a quest.",
-      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3450126925-72971.appspot.com/o/uploads%2F1765524198718_Gemini_Generated_Image_rt0dp6rt0dp6rt0d.png?alt=media&token=0c756bd3-a438-48fa-8987-33b0ddc66ab5",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3450126925-72971.firebasestorage.app/o/uploads%2F1765524169570_Gemini_Generated_Image_tr5pr4tr5pr4tr5p.png?alt=media&token=94f96c3f-d62d-4178-a2db-f9733319eda8",
       "imageHint": "cartoon running"
+    },
+    {
+      "id": "xp-coin-icon",
+      "description": "An icon representing XP and Coins",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3450126925-72971.firebasestorage.app/o/uploads%2F1765532448941_Gemini_Generated_Image_60aclk60aclk60ac.png?alt=media&token=3540757f-d395-4827-acad-b22d0eed920b",
+      "imageHint": "coin icon"
     }
   ]
 }

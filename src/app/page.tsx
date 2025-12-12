@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { ArrowRight, Award, Shield, Users } from 'lucide-react';
+import { ArrowRight, Shield, Users } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from './context/language-context';
@@ -21,6 +21,8 @@ export default function LandingPage() {
   const featureImage1 = PlaceHolderImages.find(img => img.id === 'deed1')?.imageUrl || 'https://picsum.photos/seed/deed1/600/400';
   const featureImage2 = PlaceHolderImages.find(img => img.id === 'deed7')?.imageUrl || 'https://picsum.photos/seed/deed7/600/400';
   const featureImage3 = PlaceHolderImages.find(img => img.id === 'reward1')?.imageUrl || 'https://picsum.photos/seed/reward1/600/400';
+  const xpCoinIcon = PlaceHolderImages.find(img => img.id === 'xp-coin-icon')?.imageUrl;
+
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -104,7 +106,13 @@ export default function LandingPage() {
         <div className="grid md:grid-cols-3 gap-8">
           <Card className="text-center feature-card">
             <CardContent className="p-6">
-              <Award className="w-12 h-12 mx-auto text-primary mb-4" />
+              {xpCoinIcon ? (
+                <div className="relative w-12 h-12 mx-auto mb-4">
+                    <Image src={xpCoinIcon} alt="XP and Coins Icon" fill className="object-contain" />
+                </div>
+              ) : (
+                <Users className="w-12 h-12 mx-auto text-primary mb-4" />
+              )}
               <h3 className="text-xl font-bold font-headline mb-2">{t('earnXPAndCoins')}</h3>
               <p className="text-muted-foreground">
                 {t('earnXPAndCoinsDescription')}
