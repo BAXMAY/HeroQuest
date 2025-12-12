@@ -9,12 +9,15 @@ import { useToast } from "@/hooks/use-toast";
 import { addDocumentNonBlocking, useCollection, useFirebase, useMemoFirebase, updateDocumentNonBlocking } from "@/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { collection, doc, writeBatch, serverTimestamp } from "firebase/firestore";
-import { Loader2, PlusCircle, Save, Shield, Trash2, Database } from "lucide-react";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import { Loader2, PlusCircle, Save, Shield, Trash2, Database, Upload } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 import type { Achievement, Reward, Deed } from "../lib/types";
 import { useLanguage } from "../context/language-context";
 import { rewards as mockRewards, deeds as mockDeeds, allAchievements as mockAchievements } from '@/app/lib/mock-data';
+import { useState } from "react";
+import Image from "next/image";
 
 
 const achievementSchema = z.object({
@@ -43,6 +46,9 @@ export default function AdminPage() {
   const { firestore } = useFirebase();
   const { toast } = useToast();
   const { t } = useLanguage();
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
   const achievementsCollectionRef = useMemoFirebase(() => collection(firestore, 'achievements'), [firestore]);
   const rewardsCollectionRef = useMemoFirebase(() => collection(firestore, 'rewards'), [firestore]);
@@ -67,6 +73,35 @@ export default function AdminPage() {
     control: form.control,
     name: "rewards",
   });
+  
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+        setImageFile(file);
+    }
+  };
+
+  const handleImageUpload = async () => {
+    if (!imageFile) {
+        toast({ title: "No file selected", description: "Please select an image file to upload.", variant: "destructive" });
+        return;
+    }
+    setIsUploading(true);
+    setUploadedImageUrl(null);
+    try {
+        const storage = getStorage();
+        const fileRef = storageRef(storage, `uploads/${Date.now()}_${imageFile.name}`);
+        const snapshot = await uploadBytes(fileRef, imageFile);
+        const downloadUrl = await getDownloadURL(snapshot.ref);
+        setUploadedImageUrl(downloadUrl);
+        toast({ title: "Upload Successful!", description: "You can now copy the URL below." });
+    } catch (error) {
+        console.error("Error uploading image: ", error);
+        toast({ title: "Upload Failed", description: "There was an error uploading your image.", variant: "destructive" });
+    } finally {
+        setIsUploading(false);
+    }
+  };
 
   const handleSeedRewards = async () => {
     if (!firestore) return;
@@ -194,6 +229,32 @@ export default function AdminPage() {
         </h1>
         <p className="text-muted-foreground">{t('adminDescription')}</p>
       </div>
+
+       <Card>
+        <CardHeader>
+          <CardTitle>Image Uploader</CardTitle>
+          <CardDescription>Upload images to Firebase Storage to get a usable URL.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="image-upload">Select Image</Label>
+            <Input id="image-upload" type="file" accept="image/*" onChange={handleImageFileChange} />
+          </div>
+          <Button onClick={handleImageUpload} disabled={isUploading || !imageFile}>
+            {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
+            Upload Image
+          </Button>
+          {uploadedImageUrl && (
+            <div className="space-y-4">
+              <p className="text-sm font-medium">Upload successful! Copy this URL:</p>
+              <Input readOnly value={uploadedImageUrl} onFocus={(e) => e.target.select()} />
+              <div className="relative aspect-video w-full max-w-sm rounded-md border overflow-hidden">
+                <Image src={uploadedImageUrl} alt="Uploaded image preview" fill className="object-contain" />
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -366,3 +427,5 @@ export default function AdminPage() {
     </div>
   );
 }
+
+    
