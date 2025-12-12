@@ -8,7 +8,7 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export default function LorebookPage() {
   const { t } = useLanguage();
-  const loreImage = PlaceHolderImages.find(img => img.id === 'loreDragon')?.imageUrl;
+  const loreImage = PlaceHolderImages.find(img => img.id === 'loreDragon')?.imageUrl || 'https://picsum.photos/seed/loreDragon/1200/800';
   return (
     <div className="space-y-8 relative">
        {loreImage && (

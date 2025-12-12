@@ -17,7 +17,7 @@ export default function LandingPage() {
   const { t } = useLanguage();
   const mainRef = useRef<HTMLDivElement>(null);
   
-  const heroImage = PlaceHolderImages.find(img => img.id === 'hero1')?.imageUrl || 'https://picsum.photos/seed/deed7/1200/800';
+  const heroImage = PlaceHolderImages.find(img => img.id === 'hero1')?.imageUrl || 'https://picsum.photos/seed/hero1/1200/800';
   const featureImage1 = PlaceHolderImages.find(img => img.id === 'deed1')?.imageUrl || 'https://picsum.photos/seed/deed1/600/400';
   const featureImage2 = PlaceHolderImages.find(img => img.id === 'deed7')?.imageUrl || 'https://picsum.photos/seed/deed7/600/400';
   const featureImage3 = PlaceHolderImages.find(img => img.id === 'reward1')?.imageUrl || 'https://picsum.photos/seed/reward1/600/400';
