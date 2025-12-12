@@ -26,6 +26,8 @@ import { useFirebase, useUser } from "@/firebase";
 import { addDocumentNonBlocking } from "@/firebase/non-blocking-updates";
 import { collection, serverTimestamp } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import ReactConfetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 
 const formSchema = z.object({
@@ -52,6 +54,8 @@ export default function SubmissionForm() {
     const { t } = useLanguage();
     const { firestore } = useFirebase();
     const { user } = useUser();
+    const [showConfetti, setShowConfetti] = useState(false);
+    const { width, height } = useWindowSize();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -109,9 +113,18 @@ export default function SubmissionForm() {
           title: t('questSubmitted'),
           description: status === 'pending' ? t('questSubmittedDescription') : 'Your quest has been saved as a draft.',
       });
+
+      if (status === 'pending') {
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 5000); // Hide confetti after 5 seconds
+      }
+
       form.reset();
       setImagePreview(null);
-      router.push('/dashboard');
+
+      // Redirect after a short delay to let user see confetti
+      setTimeout(() => router.push('/dashboard'), status === 'pending' ? 2000 : 500);
+
     } catch(error) {
       console.error("Error submitting quest: ", error);
       toast({
@@ -125,102 +138,105 @@ export default function SubmissionForm() {
   }
 
   return (
-    <Form {...form}>
-      <form className="space-y-8">
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t('describeYourQuest')}</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder={t('describePlaceholder')}
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                {t('describeHint')}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="category"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t('category')}</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+    <>
+      {showConfetti && <ReactConfetti width={width} height={height} recycle={false} numberOfPieces={500} tweenDuration={3000}/>}
+      <Form {...form}>
+        <form className="space-y-8">
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t('describeYourQuest')}</FormLabel>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('selectCategory')} />
-                  </SelectTrigger>
+                  <Textarea
+                    placeholder={t('describePlaceholder')}
+                    {...field}
+                  />
                 </FormControl>
-                <SelectContent>
-                  <SelectItem value="environment">สิ่งแวดล้อม (Environment)</SelectItem>
-                  <SelectItem value="animals">สัตว์ (Animals)</SelectItem>
-                  <SelectItem value="community">ชุมชน (Community)</SelectItem>
-                  <SelectItem value="education">การศึกษา (Education)</SelectItem>
-                  <SelectItem value="health">สุขภาพ (Health)</SelectItem>
-                  <SelectItem value="charity">การให้ทาน (Charity)</SelectItem>
-                  <SelectItem value="family">ครอบครัวและความเคารพ (Family & Respect)</SelectItem>
-                  <SelectItem value="quran">การอ่านอัลกุรอาน (Quran Reading)</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                {t('categoryHint')}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="photo"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t('uploadProof')}</FormLabel>
-              <FormControl>
-                <Input type="file" accept="image/*" onChange={(e) => handlePhotoChange(e, field.onChange)} />
-              </FormControl>
-              <FormDescription>
-                {t('uploadProofHint')}
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormDescription>
+                  {t('describeHint')}
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t('category')}</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder={t('selectCategory')} />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="environment">สิ่งแวดล้อม (Environment)</SelectItem>
+                    <SelectItem value="animals">สัตว์ (Animals)</SelectItem>
+                    <SelectItem value="community">ชุมชน (Community)</SelectItem>
+                    <SelectItem value="education">การศึกษา (Education)</SelectItem>
+                    <SelectItem value="health">สุขภาพ (Health)</SelectItem>
+                    <SelectItem value="charity">การให้ทาน (Charity)</SelectItem>
+                    <SelectItem value="family">ครอบครัวและความเคารพ (Family & Respect)</SelectItem>
+                    <SelectItem value="quran">การอ่านอัลกุรอาน (Quran Reading)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormDescription>
+                  {t('categoryHint')}
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="photo"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t('uploadProof')}</FormLabel>
+                <FormControl>
+                  <Input type="file" accept="image/*" onChange={(e) => handlePhotoChange(e, field.onChange)} />
+                </FormControl>
+                <FormDescription>
+                  {t('uploadProofHint')}
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        {imagePreview && (
-            <div className="mt-4">
-                <p className="text-sm font-medium text-muted-foreground mb-2">Image Preview:</p>
-                <div className="relative aspect-video w-full max-w-sm mx-auto overflow-hidden rounded-lg border">
-                    <Image src={imagePreview} alt="Image preview" fill className="object-cover"/>
-                </div>
-            </div>
-        )}
+          {imagePreview && (
+              <div className="mt-4">
+                  <p className="text-sm font-medium text-muted-foreground mb-2">Image Preview:</p>
+                  <div className="relative aspect-video w-full max-w-sm mx-auto overflow-hidden rounded-lg border">
+                      <Image src={imagePreview} alt="Image preview" fill className="object-cover"/>
+                  </div>
+              </div>
+          )}
 
-        <div className="flex gap-2">
-            <Button type="button" onClick={form.handleSubmit(data => onSubmit(data, 'pending'))} disabled={!!isLoading}>
-            {isLoading === 'pending' ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                <Send className="mr-2 h-4 w-4" />
-                )}
-            {t('submitForReview')}
-            </Button>
-             <Button type="button" variant="outline" onClick={form.handleSubmit(data => onSubmit(data, 'draft'))} disabled={!!isLoading}>
-            {isLoading === 'draft' ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                <Save className="mr-2 h-4 w-4" />
-                )}
-            {t('saveAsDraft')}
-            </Button>
-        </div>
-      </form>
-    </Form>
+          <div className="flex gap-2">
+              <Button type="button" onClick={form.handleSubmit(data => onSubmit(data, 'pending'))} disabled={!!isLoading}>
+              {isLoading === 'pending' ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                  <Send className="mr-2 h-4 w-4" />
+                  )}
+              {t('submitForReview')}
+              </Button>
+               <Button type="button" variant="outline" onClick={form.handleSubmit(data => onSubmit(data, 'draft'))} disabled={!!isLoading}>
+              {isLoading === 'draft' ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                  <Save className="mr-2 h-4 w-4" />
+                  )}
+              {t('saveAsDraft')}
+              </Button>
+          </div>
+        </form>
+      </Form>
+    </>
   );
 }
