@@ -73,12 +73,6 @@
       "imageHint": "cartoon running"
     },
     {
-      "id": "hero1",
-      "description": "Hero Background",
-      "imageUrl": "https://images.unsplash.com/photo-1617469165786-8007eda335c7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwc3VwZXJoZXJvfGVufDB8fHx8MTc2NTQ5NTcwNXww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "cartoon superhero"
-    },
-    {
       "id": "reward1",
       "description": "A board game",
       "imageUrl": "https://images.unsplash.com/photo-1633520625934-118a8b1a5e12?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwYm9hcmQlMjBnYW1lfGVufDB8fHx8fDE3NjU0OTU3MjZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -115,10 +109,22 @@
       "imageHint": "cartoon picnic"
     },
     {
+      "id": "hero1",
+      "description": "Hero Background",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3450126925-72971.appspot.com/o/uploads%2F1765524252251_Gemini_Generated_Image_cb6aoccb6aoccb6a.png?alt=media&token=07a15003-1568-4cfd-839a-2db64cc2e614",
+      "imageHint": "cartoon superhero"
+    },
+    {
       "id": "loreDragon",
       "description": "Dragon reading a book",
-      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3450126925-72971.appspot.com/o/uploads%2F1765521718606_heroquest-creation-1765520766674.png?alt=media&token=464c7cf7-1d1e-42ee-a613-c786925aa04f",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3450126925-72971.appspot.com/o/uploads%2F1765524169570_Gemini_Generated_Image_tr5pr4tr5pr4tr5p.png?alt=media&token=94f96c3f-d62d-4178-a2db-f9733319eda8",
       "imageHint": "dragon reading"
+    },
+    {
+      "id": "deed-run",
+      "description": "A character running for a quest.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3450126925-72971.appspot.com/o/uploads%2F1765524198718_Gemini_Generated_Image_rt0dp6rt0dp6rt0d.png?alt=media&token=0c756bd3-a438-48fa-8987-33b0ddc66ab5",
+      "imageHint": "cartoon running"
     }
   ]
 }
