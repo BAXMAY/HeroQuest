@@ -11,6 +11,9 @@ import Mascot from "@/app/components/mascot";
 import { useDoc, useFirestore, useMemoFirebase, useUser } from "@/firebase";
 import { doc } from "firebase/firestore";
 import { useLanguage } from "@/app/context/language-context";
+import { useState, useEffect } from "react";
+import ReactConfetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 const anonymousStarterDeeds = mockDeeds.slice(0, 2).map(d => ({...d, status: 'approved'}));
 
@@ -18,6 +21,8 @@ export default function DashboardPage() {
   const { user, isUserLoading } = useUser();
   const firestore = useFirestore();
   const { t } = useLanguage();
+  const [showConfetti, setShowConfetti] = useState(false);
+  const { width, height } = useWindowSize();
 
   const userProfileRef = useMemoFirebase(() => {
     if (!user) return null;
@@ -25,6 +30,15 @@ export default function DashboardPage() {
   }, [user, firestore]);
 
   const { data: userProfile, isLoading: isProfileLoading } = useDoc(userProfileRef);
+
+  useEffect(() => {
+    const shouldShow = sessionStorage.getItem('showQuestConfetti');
+    if (shouldShow) {
+      setShowConfetti(true);
+      sessionStorage.removeItem('showQuestConfetti');
+      setTimeout(() => setShowConfetti(false), 7000); // Confetti for 7 seconds
+    }
+  }, []);
 
   const userDeeds = (user?.isAnonymous ? anonymousStarterDeeds : mockDeeds
     .filter((deed) => deed.userId === user?.uid && deed.status === "approved")
@@ -46,6 +60,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
+       {showConfetti && <ReactConfetti width={width} height={height} recycle={false} numberOfPieces={800} tweenDuration={5000} />}
        <div className="flex items-center gap-4 p-6 rounded-lg border-2 border-primary/30 bg-primary/5">
         <Mascot className="w-16 h-16 text-primary flex-shrink-0 hidden sm:block" />
         <div className="space-y-1">

@@ -26,8 +26,6 @@ import { useFirebase, useUser } from "@/firebase";
 import { addDocumentNonBlocking } from "@/firebase/non-blocking-updates";
 import { collection, serverTimestamp } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import ReactConfetti from 'react-confetti';
-import { useWindowSize } from 'react-use';
 
 
 const formSchema = z.object({
@@ -54,8 +52,6 @@ export default function SubmissionForm() {
     const { t } = useLanguage();
     const { firestore } = useFirebase();
     const { user } = useUser();
-    const [showConfetti, setShowConfetti] = useState(false);
-    const { width, height } = useWindowSize();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -115,15 +111,12 @@ export default function SubmissionForm() {
       });
 
       if (status === 'pending') {
-        setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 5000); // Hide confetti after 5 seconds
+        sessionStorage.setItem('showQuestConfetti', 'true');
       }
 
       form.reset();
       setImagePreview(null);
-
-      // Redirect after a short delay to let user see confetti
-      setTimeout(() => router.push('/dashboard'), status === 'pending' ? 2000 : 500);
+      router.push('/dashboard');
 
     } catch(error) {
       console.error("Error submitting quest: ", error);
@@ -139,7 +132,6 @@ export default function SubmissionForm() {
 
   return (
     <>
-      {showConfetti && <ReactConfetti width={width} height={height} recycle={false} numberOfPieces={500} tweenDuration={3000}/>}
       <Form {...form}>
         <form className="space-y-8">
           <FormField
