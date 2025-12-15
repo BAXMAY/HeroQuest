@@ -5,7 +5,8 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarContent,
-  SidebarFooter
+  SidebarFooter,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -34,6 +35,8 @@ export default function Nav() {
   const { t } = useLanguage();
   const { isAdmin } = useAdmin();
   const logoImage = PlaceHolderImages.find(img => img.id === 'xp-coin-icon')?.imageUrl;
+  const { setOpenMobile } = useSidebar();
+
 
   const navItems = [
     { href: '/dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
@@ -48,6 +51,10 @@ export default function Nav() {
     { href: '/rewards', label: t('nav.rewardShop'), icon: ShoppingBag },
     { href: '/lorebook', label: t('nav.lorebook'), icon: BookMarked },
   ];
+
+  const handleLinkClick = () => {
+    setOpenMobile(false);
+  }
 
   return (
     <>
@@ -71,7 +78,7 @@ export default function Nav() {
                     isActive={pathname.startsWith(item.href)}
                     tooltip={item.label}
                 >
-                    <Link href={item.href}>
+                    <Link href={item.href} onClick={handleLinkClick}>
                     <item.icon />
                     <span>{item.label}</span>
                     </Link>
@@ -86,7 +93,7 @@ export default function Nav() {
         <SidebarMenu>
             <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip={t('nav.settings')} isActive={pathname === '/settings'}>
-                    <Link href="/settings">
+                    <Link href="/settings" onClick={handleLinkClick}>
                         <Settings />
                         <span>{t('nav.settings')}</span>
                     </Link>
