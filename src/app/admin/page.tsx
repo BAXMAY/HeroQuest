@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { addDocumentNonBlocking, useCollection, useFirebase, useMemoFirebase, updateDocumentNonBlocking } from "@/firebase";
@@ -19,6 +18,7 @@ import { useLanguage } from "../context/language-context";
 import { rewards as mockRewards, deeds as mockDeeds, allAchievements as mockAchievements } from '@/app/lib/mock-data';
 import { useState } from "react";
 import Image from "next/image";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 
 const achievementSchema = z.object({
@@ -346,64 +346,80 @@ export default function AdminPage() {
                       </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        {isLoading ? <Loader2 className="animate-spin" /> : rewardFields.map((field, index) => (
-                           <Card key={field.id} className="p-4">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-                                    <div className="space-y-4">
-                                         <FormField
-                                            control={form.control}
-                                            name={`rewards.${index}.name`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>{t('name')}</FormLabel>
-                                                    <FormControl><Input {...field} /></FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`rewards.${index}.description`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>{t('description')}</FormLabel>
-                                                    <FormControl><Input {...field} /></FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-                                    <div className="space-y-4">
-                                        <FormField
-                                            control={form.control}
-                                            name={`rewards.${index}.cost`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>{t('costInBraveCoins')}</FormLabel>
-                                                    <FormControl><Input type="number" {...field} /></FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`rewards.${index}.image`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>{t('imageUrl')}</FormLabel>
-                                                    <FormControl><Input placeholder={t('imageUrlPlaceholder')} {...field} /></FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-                                </div>
-                                 <Button type="button" variant="destructive" size="sm" className="mt-4" onClick={() => removeReward(index)}>
-                                    <Trash2 className="w-4 h-4 mr-2"/>
-                                    {t('remove')}
-                                </Button>
-                           </Card>
-                        ))}
+                        {isLoading ? <Loader2 className="animate-spin" /> : (
+                            <div className="border rounded-lg">
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead className="w-[20%]">{t('name')}</TableHead>
+                                            <TableHead className="w-[40%]">{t('description')}</TableHead>
+                                            <TableHead>{t('costInBraveCoins')}</TableHead>
+                                            <TableHead className="w-[25%]">{t('imageUrl')}</TableHead>
+                                            <TableHead className="w-fit">Actions</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {rewardFields.map((field, index) => (
+                                            <TableRow key={field.id}>
+                                                <TableCell>
+                                                    <FormField
+                                                        control={form.control}
+                                                        name={`rewards.${index}.name`}
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormControl><Input {...field} /></FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                </TableCell>
+                                                <TableCell>
+                                                    <FormField
+                                                        control={form.control}
+                                                        name={`rewards.${index}.description`}
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormControl><Input {...field} /></FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                </TableCell>
+                                                <TableCell>
+                                                     <FormField
+                                                        control={form.control}
+                                                        name={`rewards.${index}.cost`}
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormControl><Input type="number" {...field} /></FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                </TableCell>
+                                                <TableCell>
+                                                    <FormField
+                                                        control={form.control}
+                                                        name={`rewards.${index}.image`}
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormControl><Input placeholder={t('imageUrlPlaceholder')} {...field} /></FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Button type="button" variant="ghost" size="icon" onClick={() => removeReward(index)}>
+                                                        <Trash2 className="w-4 h-4 text-destructive"/>
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                        )}
                          <Button type="button" variant="outline" onClick={() => appendReward({ name: '', description: '', cost: 100, image: '' })}>
                             <PlusCircle className="w-4 h-4 mr-2"/>
                             {t('addReward')}
