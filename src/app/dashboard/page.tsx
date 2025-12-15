@@ -121,14 +121,14 @@ export default function DashboardPage() {
 
         <Card className="flex flex-col items-center justify-center text-center bg-accent/5 border-accent/20 border-dashed">
           <CardHeader>
-            <CardTitle>Reward Shop</CardTitle>
-            <CardDescription>Spend your Brave Coins on epic loot!</CardDescription>
+            <CardTitle>{t('rewardShopTitle')}</CardTitle>
+            <CardDescription>{t('rewardShopDescription')}</CardDescription>
           </CardHeader>
           <CardContent>
             <Button asChild size="lg" variant="outline">
               <Link href="/rewards">
                 <ShoppingBag className="w-5 h-5 mr-2" />
-                Visit the Shop
+                {t('visitTheShop')}
               </Link>
             </Button>
           </CardContent>
