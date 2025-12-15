@@ -10,7 +10,7 @@ import { addDocumentNonBlocking, useCollection, useFirebase, useMemoFirebase, up
 import { zodResolver } from "@hookform/resolvers/zod";
 import { collection, doc, writeBatch, serverTimestamp } from "firebase/firestore";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
-import { Loader2, PlusCircle, Save, Shield, Trash2, Database, Upload } from "lucide-react";
+import { Loader2, PlusCircle, Save, Shield, Trash2, Database, Upload, Edit, Check } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 import type { Achievement, Reward, Deed } from "../lib/types";
@@ -50,6 +50,8 @@ export default function AdminPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+  const [editingRewardId, setEditingRewardId] = useState<string | null>(null);
+
 
   const achievementsCollectionRef = useMemoFirebase(() => collection(firestore, 'achievements'), [firestore]);
   const rewardsCollectionRef = useMemoFirebase(() => collection(firestore, 'rewards'), [firestore]);
@@ -208,6 +210,7 @@ export default function AdminPage() {
         title: t('saveSuccessTitle'),
         description: t('saveSuccessDescription'),
       });
+      setEditingRewardId(null);
       // In a real app you might want to refresh the data after saving
     } catch (error) {
       console.error(error);
@@ -359,68 +362,63 @@ export default function AdminPage() {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {rewardFields.map((field, index) => (
+                                        {rewardFields.map((field, index) => {
+                                            const isEditing = editingRewardId === field.id;
+                                            return (
                                             <TableRow key={field.id}>
                                                 <TableCell>
-                                                    <FormField
-                                                        control={form.control}
-                                                        name={`rewards.${index}.name`}
-                                                        render={({ field }) => (
-                                                            <FormItem>
-                                                                <FormControl><Input {...field} /></FormControl>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
+                                                    {isEditing ? (
+                                                        <FormField control={form.control} name={`rewards.${index}.name`} render={({ field }) => (<FormItem><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                                    ) : (
+                                                        <span>{field.name}</span>
+                                                    )}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <FormField
-                                                        control={form.control}
-                                                        name={`rewards.${index}.description`}
-                                                        render={({ field }) => (
-                                                            <FormItem>
-                                                                <FormControl><Input {...field} /></FormControl>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
+                                                    {isEditing ? (
+                                                        <FormField control={form.control} name={`rewards.${index}.description`} render={({ field }) => (<FormItem><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                                    ) : (
+                                                        <span>{field.description}</span>
+                                                    )}
                                                 </TableCell>
                                                 <TableCell>
-                                                     <FormField
-                                                        control={form.control}
-                                                        name={`rewards.${index}.cost`}
-                                                        render={({ field }) => (
-                                                            <FormItem>
-                                                                <FormControl><Input type="number" {...field} /></FormControl>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
+                                                    {isEditing ? (
+                                                        <FormField control={form.control} name={`rewards.${index}.cost`} render={({ field }) => (<FormItem><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                                    ) : (
+                                                        <span>{field.cost}</span>
+                                                    )}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <FormField
-                                                        control={form.control}
-                                                        name={`rewards.${index}.image`}
-                                                        render={({ field }) => (
-                                                            <FormItem>
-                                                                <FormControl><Input placeholder={t('imageUrlPlaceholder')} {...field} /></FormControl>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
+                                                     {isEditing ? (
+                                                        <FormField control={form.control} name={`rewards.${index}.image`} render={({ field }) => (<FormItem><FormControl><Input placeholder={t('imageUrlPlaceholder')} {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                                     ) : (
+                                                        <span className="truncate w-full">{field.image}</span>
+                                                     )}
                                                 </TableCell>
-                                                <TableCell>
+                                                <TableCell className="flex gap-2">
+                                                    {isEditing ? (
+                                                        <Button type="button" variant="ghost" size="icon" onClick={() => setEditingRewardId(null)}>
+                                                            <Check className="w-4 h-4 text-green-500" />
+                                                        </Button>
+                                                    ) : (
+                                                        <Button type="button" variant="ghost" size="icon" onClick={() => setEditingRewardId(field.id)}>
+                                                            <Edit className="w-4 h-4" />
+                                                        </Button>
+                                                    )}
                                                     <Button type="button" variant="ghost" size="icon" onClick={() => removeReward(index)}>
                                                         <Trash2 className="w-4 h-4 text-destructive"/>
                                                     </Button>
                                                 </TableCell>
                                             </TableRow>
-                                        ))}
+                                            );
+                                        })}
                                     </TableBody>
                                 </Table>
                             </div>
                         )}
-                         <Button type="button" variant="outline" onClick={() => appendReward({ name: '', description: '', cost: 100, image: '' })}>
+                         <Button type="button" variant="outline" onClick={() => {
+                             const newReward = { name: '', description: '', cost: 100, image: '' };
+                             appendReward(newReward);
+                         }}>
                             <PlusCircle className="w-4 h-4 mr-2"/>
                             {t('addReward')}
                         </Button>
@@ -444,3 +442,5 @@ export default function AdminPage() {
     </div>
   );
 }
+
+    
