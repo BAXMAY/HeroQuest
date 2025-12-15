@@ -26,9 +26,8 @@ import { useFirebase, useUser } from "@/firebase";
 import { addDocumentNonBlocking } from "@/firebase/non-blocking-updates";
 import { collection, serverTimestamp } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { toBlob } from 'canvas-to-blob';
 
 
 const formSchema = z.object({
@@ -135,19 +134,18 @@ export default function SubmissionForm() {
     }
   };
 
-  const handleUseCapturedPhoto = () => {
+  const handleUseCapturedPhoto = async () => {
     if (capturedImage && canvasRef.current) {
-        toBlob(canvasRef.current, (blob) => {
-            if (blob) {
-                const file = new File([blob], `capture-${Date.now()}.jpg`, { type: 'image/jpeg' });
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                form.setValue('photo', dataTransfer.files);
-                setImagePreview(capturedImage);
-            }
-            setIsCameraDialogOpen(false);
-            setCapturedImage(null);
-        }, 'image/jpeg');
+        const blob = await new Promise<Blob | null>(resolve => canvasRef.current!.toBlob(resolve, 'image/jpeg'));
+        if (blob) {
+            const file = new File([blob], `capture-${Date.now()}.jpg`, { type: 'image/jpeg' });
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            form.setValue('photo', dataTransfer.files);
+            setImagePreview(capturedImage);
+        }
+        setIsCameraDialogOpen(false);
+        setCapturedImage(null);
     }
   }
 
