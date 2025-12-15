@@ -280,17 +280,20 @@ export default function SubmissionForm() {
                                 <DialogDescription>Position the camera and snap a photo of your heroic act!</DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4">
+                               <div className="relative">
+                                  <video ref={videoRef} className="w-full aspect-video rounded-md bg-secondary" autoPlay muted playsInline />
+                                  {capturedImage && (
+                                     <Image src={capturedImage} alt="Captured preview" layout="fill" className="object-contain rounded-md" />
+                                  )}
+                               </div>
+
                                {capturedImage ? (
-                                   <div className="space-y-4">
-                                        <Image src={capturedImage} alt="Captured preview" width={1280} height={720} className="rounded-md" />
-                                        <div className="flex justify-end gap-2">
-                                            <Button variant="outline" onClick={() => setCapturedImage(null)}>Retake</Button>
-                                            <Button onClick={handleUseCapturedPhoto}>Use This Photo</Button>
-                                        </div>
+                                   <div className="flex justify-end gap-2">
+                                       <Button variant="outline" onClick={() => setCapturedImage(null)}>Retake</Button>
+                                       <Button onClick={handleUseCapturedPhoto}>Use This Photo</Button>
                                    </div>
                                ) : (
                                    <>
-                                    <video ref={videoRef} className="w-full aspect-video rounded-md bg-secondary" autoPlay muted playsInline />
                                     {hasCameraPermission === false && (
                                         <Alert variant="destructive">
                                             <AlertTitle>Camera Access Required</AlertTitle>
