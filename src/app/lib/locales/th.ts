@@ -17,7 +17,7 @@ export const th = {
       register: 'สมัครสมาชิก',
       roadmap: 'แผนที่เลเวล',
       admin: 'จัดการระบบ',
-      "artificer-studio": "Artificer's Studio",
+      "artificer-studio": "สตูดิโอช่างศิลป์",
     },
     // Navigation
     nav: {
@@ -69,6 +69,7 @@ export const th = {
     unlocked: 'ปลดล็อคแล้ว',
     // Approvals Page
     approvalsDescription: 'ตรวจสอบการกระทำที่กล้าหาญและมอบคะแนนประสบการณ์!',
+    submittedOn: 'ส่งเมื่อ {date}',
     potentialXP: 'XP ที่อาจได้รับ',
     approve: 'อนุมัติ',
     reject: 'ปฏิเสธ',
@@ -201,7 +202,7 @@ export const th = {
     climbTheRanks: 'ไต่อันดับ',
     climbTheRanksDescription: 'ทะยานขึ้นสู่หอเกียรติยศ! แข่งขันกับเพื่อน ๆ และดูว่าใครสามารถสร้างผลกระทบที่ยิ่งใหญ่ที่สุดในชุมชนของคุณ',
     unlockAchievements: 'ปลดล็อกความสำเร็จ',
-    unlockAchievementsDescription: 'รับ значки และถ้วยรางวัลที่ไม่เหมือนใครสำหรับความสำเร็จที่กล้าหาญของคุณและสร้างตำนานของคุณ',
+    unlockAchievementsDescription: 'รับเหรียญตราและถ้วยรางวัลที่ไม่เหมือนใครสำหรับความสำเร็จที่กล้าหาญของคุณและสร้างตำนานของคุณ',
     logYourQuests: 'บันทึกเควสของคุณ',
     logYourQuestsDescription: 'บันทึกความดีของคุณได้อย่างง่ายดายด้วยรูปภาพและคำอธิบาย ดู XP ของคุณเติบโตขึ้นกับทุกเควสที่ได้รับอนุมัติและรู้สึกภาคภูมิใจในความสำเร็จของคุณ',
     becomeALegend: 'มาเป็นตำนาน',
@@ -235,3 +236,5 @@ export const th = {
     saveErrorTitle: 'ข้อผิดพลาด',
     saveErrorDescription: 'เกิดข้อผิดพลาดบางอย่าง',
 };
+
+    
