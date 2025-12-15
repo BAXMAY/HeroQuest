@@ -82,6 +82,12 @@
   body {
     @apply bg-background text-foreground;
   }
+  .landing-page-gradient {
+    @apply bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100;
+  }
+  .dark .landing-page-gradient {
+    @apply bg-gradient-to-br from-pink-900/20 via-purple-900/20 to-blue-900/20;
+  }
 }
 
 @layer utilities {
