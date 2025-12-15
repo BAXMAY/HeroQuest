@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { deeds as mockDeeds } from "@/app/lib/mock-data";
-import { ArrowUpRight, Award, PlusCircle, Coins, Loader2 } from "lucide-react";
+import { ArrowUpRight, Award, PlusCircle, Coins, Loader2, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
@@ -73,7 +73,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2">
         <Card className="bg-gradient-to-br from-card to-secondary">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">{t('experiencePoints')}</CardTitle>
@@ -104,7 +104,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="flex flex-col items-center justify-center text-center bg-accent/20 border-accent/50 border-dashed">
+        <Card className="flex flex-col items-center justify-center text-center bg-primary/5 border-primary/20 border-dashed">
           <CardHeader>
             <CardTitle>{t('logNewQuest')}</CardTitle>
             <CardDescription>{t('everyDeedBetter')}</CardDescription>
@@ -118,6 +118,22 @@ export default function DashboardPage() {
             </Button>
           </CardContent>
         </Card>
+
+        <Card className="flex flex-col items-center justify-center text-center bg-accent/5 border-accent/20 border-dashed">
+          <CardHeader>
+            <CardTitle>Reward Shop</CardTitle>
+            <CardDescription>Spend your Brave Coins on epic loot!</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild size="lg" variant="outline">
+              <Link href="/rewards">
+                <ShoppingBag className="w-5 h-5 mr-2" />
+                Visit the Shop
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+
       </div>
 
       <div>
