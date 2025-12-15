@@ -10,11 +10,14 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '../context/language-context';
 import type { UserProfile } from '../lib/types';
+import { useRef, useEffect } from 'react';
 
 export default function RoadmapPage() {
     const { user, isUserLoading } = useUser();
     const firestore = useFirestore();
     const { t } = useLanguage();
+    const rowRefs = useRef<Record<number, HTMLTableRowElement | null>>({});
+
 
     const userProfileRef = useMemoFirebase(() => {
         if (!user) return null;
@@ -25,6 +28,17 @@ export default function RoadmapPage() {
     
     const currentLevel = getLevelFromXP(userProfile?.totalPoints);
     const isLoading = isUserLoading || isProfileLoading;
+
+    useEffect(() => {
+        if (!isLoading && currentLevel && rowRefs.current[currentLevel.level]) {
+            setTimeout(() => {
+                rowRefs.current[currentLevel.level]?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                });
+            }, 100);
+        }
+    }, [isLoading, currentLevel]);
 
     if (isLoading) {
         return (
@@ -63,6 +77,7 @@ export default function RoadmapPage() {
                     {levels.map((level) => (
                     <TableRow 
                         key={level.level} 
+                        ref={el => rowRefs.current[level.level] = el}
                         className={cn(currentLevel?.level === level.level && "bg-primary/20 font-bold border-y-2 border-primary")}
                         style={{
                             // Create a subtle gradient from transparent to primary color as levels increase
