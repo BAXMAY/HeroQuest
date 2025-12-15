@@ -1,12 +1,13 @@
 'use client';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { addDocumentNonBlocking, useCollection, useFirebase, useMemoFirebase, updateDocumentNonBlocking } from "@/firebase";
+import { addDocumentNonBlocking, useCollection, useFirebase, useMemoFirebase, updateDocumentNonBlocking, deleteDocumentNonBlocking } from "@/firebase";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { collection, doc, writeBatch, serverTimestamp } from "firebase/firestore";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -38,10 +39,96 @@ const rewardSchema = z.object({
 
 const adminFormSchema = z.object({
   achievements: z.array(achievementSchema),
-  rewards: z.array(rewardSchema),
+  // rewards are now handled separately
 });
 
 type AdminFormValues = z.infer<typeof adminFormSchema>;
+type RewardFormValues = z.infer<typeof rewardSchema>;
+
+const RewardFormDialog = ({ reward, onSave, children }: { reward?: Reward; onSave: (data: RewardFormValues) => void; children: React.ReactNode }) => {
+    const { t } = useLanguage();
+    const [open, setOpen] = useState(false);
+    const form = useForm<RewardFormValues>({
+        resolver: zodResolver(rewardSchema),
+        defaultValues: reward || { name: '', description: '', cost: 100, image: '' }
+    });
+    
+    const handleSave = (data: RewardFormValues) => {
+        onSave(data);
+        setOpen(false);
+        form.reset();
+    }
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                {children}
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>{reward ? 'Edit Reward' : 'Add New Reward'}</DialogTitle>
+                    <DialogDescription>
+                        {reward ? 'Edit the details of this reward.' : 'Create a new reward for the shop.'}
+                    </DialogDescription>
+                </DialogHeader>
+                 <Form {...form}>
+                    <form onSubmit={form.handleSubmit(handleSave)} className="space-y-4">
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>{t('name')}</FormLabel>
+                                    <FormControl><Input {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                         <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>{t('description')}</FormLabel>
+                                    <FormControl><Input {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="cost"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>{t('costInBraveCoins')}</FormLabel>
+                                    <FormControl><Input type="number" {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="image"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>{t('imageUrl')}</FormLabel>
+                                    <FormControl><Input placeholder={t('imageUrlPlaceholder')} {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button type="button" variant="secondary">Cancel</Button>
+                            </DialogClose>
+                            <Button type="submit">Save</Button>
+                        </DialogFooter>
+                    </form>
+                 </Form>
+            </DialogContent>
+        </Dialog>
+    )
+}
 
 export default function AdminPage() {
   const { firestore } = useFirebase();
@@ -50,8 +137,6 @@ export default function AdminPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
-  const [editingRewardId, setEditingRewardId] = useState<string | null>(null);
-
 
   const achievementsCollectionRef = useMemoFirebase(() => collection(firestore, 'achievements'), [firestore]);
   const rewardsCollectionRef = useMemoFirebase(() => collection(firestore, 'rewards'), [firestore]);
@@ -63,18 +148,12 @@ export default function AdminPage() {
     resolver: zodResolver(adminFormSchema),
     values: {
         achievements: achievements || [],
-        rewards: rewards || []
     }
   });
 
   const { fields: achievementFields, append: appendAchievement, remove: removeAchievement } = useFieldArray({
     control: form.control,
     name: "achievements",
-  });
-
-  const { fields: rewardFields, append: appendReward, remove: removeReward } = useFieldArray({
-    control: form.control,
-    name: "rewards",
   });
   
   const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,7 +189,6 @@ export default function AdminPage() {
     if (!firestore) return;
     const batch = writeBatch(firestore);
     mockRewards.forEach((reward) => {
-      // Use the id from mock data if available, otherwise let Firestore generate one
       const docRef = reward.id ? doc(firestore, "rewards", reward.id) : doc(collection(firestore, "rewards"));
       batch.set(docRef, reward);
     });
@@ -186,7 +264,7 @@ export default function AdminPage() {
   };
 
 
-  const onSubmit = async (data: AdminFormValues) => {
+  const onAchievementsSubmit = async (data: AdminFormValues) => {
     try {
       // This is a simplified save - in a real app, you'd check for diffs
       for (const achievement of data.achievements) {
@@ -198,19 +276,10 @@ export default function AdminPage() {
           addDocumentNonBlocking(achievementsCollectionRef, achievement);
         }
       }
-      for (const reward of data.rewards) {
-        if (reward.id) {
-          const ref = doc(firestore, 'rewards', reward.id);
-          updateDocumentNonBlocking(ref, reward);
-        } else {
-           addDocumentNonBlocking(rewardsCollectionRef, reward);
-        }
-      }
        toast({
         title: t('saveSuccessTitle'),
         description: t('saveSuccessDescription'),
       });
-      setEditingRewardId(null);
       // In a real app you might want to refresh the data after saving
     } catch (error) {
       console.error(error);
@@ -221,6 +290,28 @@ export default function AdminPage() {
       });
     }
   };
+
+  const handleSaveReward = (data: RewardFormValues) => {
+    try {
+        if (data.id) {
+            const ref = doc(firestore, 'rewards', data.id);
+            updateDocumentNonBlocking(ref, data);
+            toast({ title: "Reward Updated!", description: `${data.name} has been updated.` });
+        } else {
+            addDocumentNonBlocking(rewardsCollectionRef, data);
+            toast({ title: "Reward Added!", description: `${data.name} has been added to the shop.` });
+        }
+    } catch (error) {
+        console.error(error);
+        toast({ title: "Error Saving Reward", variant: "destructive" });
+    }
+  };
+
+  const handleDeleteReward = (rewardId: string) => {
+    const ref = doc(firestore, 'rewards', rewardId);
+    deleteDocumentNonBlocking(ref);
+    toast({ title: "Reward Removed", description: "The reward has been removed from the shop." });
+  }
   
   const isLoading = loadingAchievements || loadingRewards;
 
@@ -260,187 +351,152 @@ export default function AdminPage() {
         </CardContent>
       </Card>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <Tabs defaultValue="achievements">
-            <TabsList>
-              <TabsTrigger value="achievements">{t('achievements')} ({achievementFields.length})</TabsTrigger>
-              <TabsTrigger value="rewards">{t('rewards')} ({rewardFields.length})</TabsTrigger>
-            </TabsList>
-            <TabsContent value="achievements">
-                <Card>
-                    <CardHeader className="flex flex-row flex-wrap justify-between items-center gap-4">
-                        <div>
-                            <CardTitle>{t('manageAchievements')}</CardTitle>
-                            <CardDescription>{t('manageAchievementsDescription')}</CardDescription>
-                        </div>
-                        <Button type="button" variant="secondary" onClick={handleSeedAchievements}>
-                            <Database className="w-4 h-4 mr-2"/>
-                            Seed Achievements
-                        </Button>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        {isLoading ? <Loader2 className="animate-spin" /> : achievementFields.map((field, index) => (
-                           <Card key={field.id} className="p-4">
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <FormField
-                                        control={form.control}
-                                        name={`achievements.${index}.name`}
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>{t('name')}</FormLabel>
-                                                <FormControl><Input {...field} /></FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name={`achievements.${index}.description`}
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>{t('description')}</FormLabel>
-                                                <FormControl><Input {...field} /></FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name={`achievements.${index}.icon`}
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>{t('icon')}</FormLabel>
-                                                <FormControl><Input placeholder={t('iconPlaceholder')} {...field} /></FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
-                                 <Button type="button" variant="destructive" size="sm" className="mt-4" onClick={() => removeAchievement(index)}>
-                                    <Trash2 className="w-4 h-4 mr-2"/>
-                                    {t('remove')}
-                                </Button>
-                           </Card>
-                        ))}
-                         <Button type="button" variant="outline" onClick={() => appendAchievement({ name: '', description: '', icon: '' })}>
-                            <PlusCircle className="w-4 h-4 mr-2"/>
-                            {t('addAchievement')}
-                        </Button>
-                    </CardContent>
-                </Card>
-            </TabsContent>
-            <TabsContent value="rewards">
-               <Card>
-                    <CardHeader className="flex flex-row flex-wrap justify-between items-center gap-4">
-                      <div>
-                        <CardTitle>{t('manageRewards')}</CardTitle>
-                        <CardDescription>{t('manageRewardsDescription')}</CardDescription>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button type="button" variant="secondary" onClick={handleSeedRewards}>
-                            <Database className="w-4 h-4 mr-2"/>
-                            Seed Rewards
-                        </Button>
-                         <Button type="button" variant="secondary" onClick={handleSeedQuests}>
-                            <Database className="w-4 h-4 mr-2"/>
-                            สร้างเควสจำลอง
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        {isLoading ? <Loader2 className="animate-spin" /> : (
-                            <div className="border rounded-lg">
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead className="w-[20%]">{t('name')}</TableHead>
-                                            <TableHead className="w-[40%]">{t('description')}</TableHead>
-                                            <TableHead>{t('costInBraveCoins')}</TableHead>
-                                            <TableHead className="w-[25%]">{t('imageUrl')}</TableHead>
-                                            <TableHead className="w-fit">Actions</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {rewardFields.map((field, index) => {
-                                            const isEditing = editingRewardId === field.id;
-                                            return (
-                                            <TableRow key={field.id}>
-                                                <TableCell>
-                                                    {isEditing ? (
-                                                        <FormField control={form.control} name={`rewards.${index}.name`} render={({ field }) => (<FormItem><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-                                                    ) : (
-                                                        <span>{field.name}</span>
-                                                    )}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {isEditing ? (
-                                                        <FormField control={form.control} name={`rewards.${index}.description`} render={({ field }) => (<FormItem><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
-                                                    ) : (
-                                                        <span>{field.description}</span>
-                                                    )}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {isEditing ? (
-                                                        <FormField control={form.control} name={`rewards.${index}.cost`} render={({ field }) => (<FormItem><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
-                                                    ) : (
-                                                        <span>{field.cost}</span>
-                                                    )}
-                                                </TableCell>
-                                                <TableCell>
-                                                     {isEditing ? (
-                                                        <FormField control={form.control} name={`rewards.${index}.image`} render={({ field }) => (<FormItem><FormControl><Input placeholder={t('imageUrlPlaceholder')} {...field} /></FormControl><FormMessage /></FormItem>)} />
-                                                     ) : (
-                                                        <span className="truncate w-full">{field.image}</span>
-                                                     )}
-                                                </TableCell>
-                                                <TableCell className="flex gap-2">
-                                                    {isEditing ? (
-                                                        <Button type="button" variant="ghost" size="icon" onClick={() => setEditingRewardId(null)}>
-                                                            <Check className="w-4 h-4 text-green-500" />
-                                                        </Button>
-                                                    ) : (
-                                                        <Button type="button" variant="ghost" size="icon" onClick={() => setEditingRewardId(field.id)}>
-                                                            <Edit className="w-4 h-4" />
-                                                        </Button>
-                                                    )}
-                                                    <Button type="button" variant="ghost" size="icon" onClick={() => removeReward(index)}>
-                                                        <Trash2 className="w-4 h-4 text-destructive"/>
-                                                    </Button>
-                                                </TableCell>
-                                            </TableRow>
-                                            );
-                                        })}
-                                    </TableBody>
-                                </Table>
+      <Tabs defaultValue="achievements">
+        <TabsList>
+            <TabsTrigger value="achievements">{t('achievements')} ({achievementFields.length})</TabsTrigger>
+            <TabsTrigger value="rewards">{t('rewards')} ({rewards?.length || 0})</TabsTrigger>
+        </TabsList>
+        <TabsContent value="achievements">
+             <Form {...form}>
+                <form onSubmit={form.handleSubmit(onAchievementsSubmit)}>
+                    <Card>
+                        <CardHeader className="flex flex-row flex-wrap justify-between items-center gap-4">
+                            <div>
+                                <CardTitle>{t('manageAchievements')}</CardTitle>
+                                <CardDescription>{t('manageAchievementsDescription')}</CardDescription>
                             </div>
-                        )}
-                         <Button type="button" variant="outline" onClick={() => {
-                             const newReward = { name: '', description: '', cost: 100, image: '' };
-                             appendReward(newReward);
-                         }}>
-                            <PlusCircle className="w-4 h-4 mr-2"/>
-                            {t('addReward')}
-                        </Button>
-                    </CardContent>
-                </Card>
-            </TabsContent>
-          </Tabs>
-
-           <div className="mt-6">
-            <Button type="submit" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Save className="mr-2 h-4" />
-              )}
-              {t('saveAllChanges')}
-            </Button>
-          </div>
-        </form>
-      </Form>
+                            <Button type="button" variant="secondary" onClick={handleSeedAchievements}>
+                                <Database className="w-4 h-4 mr-2"/>
+                                Seed Achievements
+                            </Button>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            {isLoading ? <Loader2 className="animate-spin" /> : achievementFields.map((field, index) => (
+                            <Card key={field.id} className="p-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <FormField
+                                            control={form.control}
+                                            name={`achievements.${index}.name`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>{t('name')}</FormLabel>
+                                                    <FormControl><Input {...field} /></FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name={`achievements.${index}.description`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>{t('description')}</FormLabel>
+                                                    <FormControl><Input {...field} /></FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name={`achievements.${index}.icon`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>{t('icon')}</FormLabel>
+                                                    <FormControl><Input placeholder={t('iconPlaceholder')} {...field} /></FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <Button type="button" variant="destructive" size="sm" className="mt-4" onClick={() => removeAchievement(index)}>
+                                        <Trash2 className="w-4 h-4 mr-2"/>
+                                        {t('remove')}
+                                    </Button>
+                            </Card>
+                            ))}
+                            <div className="flex gap-2">
+                                <Button type="button" variant="outline" onClick={() => appendAchievement({ name: '', description: '', icon: '' })}>
+                                    <PlusCircle className="w-4 h-4 mr-2"/>
+                                    {t('addAchievement')}
+                                </Button>
+                                <Button type="submit" disabled={form.formState.isSubmitting}>
+                                {form.formState.isSubmitting ? (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                    <Save className="mr-2 h-4" />
+                                )}
+                                {t('saveAllChanges')}
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </form>
+             </Form>
+        </TabsContent>
+        <TabsContent value="rewards">
+            <Card>
+                <CardHeader className="flex flex-row flex-wrap justify-between items-center gap-4">
+                    <div>
+                    <CardTitle>{t('manageRewards')}</CardTitle>
+                    <CardDescription>{t('manageRewardsDescription')}</CardDescription>
+                    </div>
+                    <div className="flex gap-2">
+                    <Button type="button" variant="secondary" onClick={handleSeedRewards}>
+                        <Database className="w-4 h-4 mr-2"/>
+                        Seed Rewards
+                    </Button>
+                        <Button type="button" variant="secondary" onClick={handleSeedQuests}>
+                        <Database className="w-4 h-4 mr-2"/>
+                        สร้างเควสจำลอง
+                    </Button>
+                    </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="flex justify-end">
+                       <RewardFormDialog onSave={handleSaveReward}>
+                            <Button variant="outline">
+                                <PlusCircle className="w-4 h-4 mr-2"/>
+                                {t('addReward')}
+                            </Button>
+                        </RewardFormDialog>
+                    </div>
+                    {isLoading ? <Loader2 className="animate-spin" /> : (
+                        <div className="border rounded-lg">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>{t('name')}</TableHead>
+                                        <TableHead className="hidden md:table-cell">{t('description')}</TableHead>
+                                        <TableHead className="text-right">{t('costInBraveCoins')}</TableHead>
+                                        <TableHead className="text-right">Actions</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {rewards?.map((reward) => (
+                                        <TableRow key={reward.id}>
+                                            <TableCell className="font-medium">{reward.name}</TableCell>
+                                            <TableCell className="hidden md:table-cell max-w-xs truncate">{reward.description}</TableCell>
+                                            <TableCell className="text-right">{reward.cost}</TableCell>
+                                            <TableCell className="flex gap-2 justify-end">
+                                                 <RewardFormDialog reward={reward} onSave={(data) => handleSaveReward({ ...data, id: reward.id })}>
+                                                    <Button type="button" variant="ghost" size="icon">
+                                                        <Edit className="w-4 h-4" />
+                                                    </Button>
+                                                 </RewardFormDialog>
+                                                <Button type="button" variant="ghost" size="icon" onClick={() => handleDeleteReward(reward.id)}>
+                                                    <Trash2 className="w-4 h-4 text-destructive"/>
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
-
-    
