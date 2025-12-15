@@ -1,9 +1,8 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { levels, getLevelFromXP } from '@/app/lib/levels';
-import { Map, Award, Loader2 } from 'lucide-react';
+import { Map, Award, Loader2, Star, Check } from 'lucide-react';
 import { useUser, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
@@ -16,7 +15,7 @@ export default function RoadmapPage() {
     const { user, isUserLoading } = useUser();
     const firestore = useFirestore();
     const { t } = useLanguage();
-    const rowRefs = useRef<Record<number, HTMLTableRowElement | null>>({});
+    const currentLevelRef = useRef<HTMLDivElement | null>(null);
 
 
     const userProfileRef = useMemoFirebase(() => {
@@ -30,13 +29,13 @@ export default function RoadmapPage() {
     const isLoading = isUserLoading || isProfileLoading;
 
     useEffect(() => {
-        if (!isLoading && currentLevel && rowRefs.current[currentLevel.level]) {
+        if (!isLoading && currentLevel && currentLevelRef.current) {
             setTimeout(() => {
-                rowRefs.current[currentLevel.level]?.scrollIntoView({
+                currentLevelRef.current?.scrollIntoView({
                     behavior: 'smooth',
                     block: 'center',
                 });
-            }, 100);
+            }, 300);
         }
     }, [isLoading, currentLevel]);
 
@@ -64,41 +63,57 @@ export default function RoadmapPage() {
             <CardDescription>{t('allLevelsDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
-            <div className="border rounded-lg max-h-[60vh] overflow-y-auto">
-                <Table>
-                <TableHeader className="sticky top-0 bg-secondary z-10">
-                    <TableRow>
-                    <TableHead className="w-[100px]">{t('levelColumn')}</TableHead>
-                    <TableHead>{t('titleColumn')}</TableHead>
-                    <TableHead className="text-right">{t('xpRequired')}</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {levels.map((level) => (
-                    <TableRow 
-                        key={level.level} 
-                        ref={el => rowRefs.current[level.level] = el}
-                        className={cn(currentLevel?.level === level.level && "bg-primary/20 font-bold border-y-2 border-primary")}
-                        style={{
-                            // Create a subtle gradient from transparent to primary color as levels increase
-                            background: `linear-gradient(90deg, hsl(var(--primary) / ${level.level / 200}) 0%, transparent 100%)`
-                        }}
-                    >
-                        <TableCell>
-                           <div className="flex items-center gap-2">
-                             {currentLevel?.level === level.level && <Badge>{t('current')}</Badge>}
-                             <span>{level.level}</span>
-                           </div>
-                        </TableCell>
-                        <TableCell>{level.title}</TableCell>
-                        <TableCell className="text-right flex items-center justify-end gap-1.5">
-                            <Award className="w-4 h-4 text-yellow-500/80"/>
-                            {level.minXP.toLocaleString()}
-                        </TableCell>
-                    </TableRow>
-                    ))}
-                </TableBody>
-                </Table>
+            <div className="relative w-full max-w-4xl mx-auto py-8">
+                {/* The Path */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1 bg-border/40 h-full rounded-full" />
+                <div 
+                    className="absolute top-0 left-1/2 -translate-x-1/2 w-1 bg-primary/50 rounded-full transition-all duration-1000" 
+                    style={{ height: `${((currentLevel?.level || 0) / levels.length) * 100}%` }}
+                />
+                
+                <div className="space-y-8">
+                    {levels.map((level, index) => {
+                        const isUnlocked = currentLevel.level >= level.level;
+                        const isCurrent = currentLevel.level === level.level;
+
+                        return (
+                            <div 
+                                key={level.level}
+                                ref={isCurrent ? currentLevelRef : null}
+                                className={cn(
+                                    "relative flex items-center w-full",
+                                    index % 2 === 0 ? "justify-start" : "justify-end"
+                                )}
+                            >
+                                {/* The node on the central path */}
+                                <div className={cn(
+                                    "absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full z-10 transition-colors",
+                                    isUnlocked ? "bg-primary" : "bg-border",
+                                    isCurrent && "ring-4 ring-primary/30"
+                                )}>
+                                </div>
+                                
+                                <div className={cn(
+                                    "w-[calc(50%-2rem)]",
+                                    index % 2 === 0 ? "pr-4 text-right" : "pl-4 text-left"
+                                )}>
+                                    <div className={cn(
+                                        "p-3 rounded-lg border bg-card/80 backdrop-blur-sm transition-all",
+                                        isUnlocked ? "border-primary/30" : "border-dashed",
+                                        isCurrent && "border-2 border-primary shadow-lg"
+                                    )}>
+                                        <p className={cn("font-bold text-sm", isUnlocked ? "text-primary" : "text-muted-foreground")}>Level {level.level}</p>
+                                        <p className="font-headline text-lg">{level.title}</p>
+                                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground justify-end">
+                                            {isUnlocked ? <Check className="w-3 h-3 text-green-500" /> : <Star className="w-3 h-3"/>}
+                                            {level.minXP.toLocaleString()} XP
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
         </CardContent>
       </Card>
