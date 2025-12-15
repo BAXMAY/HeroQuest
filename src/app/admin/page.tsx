@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { collection, doc, writeBatch, serverTimestamp } from "firebase/firestore";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Loader2, PlusCircle, Save, Shield, Trash2, Database, Upload, Edit, Check } from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 import type { Achievement, Reward, Deed } from "../lib/types";
 import { useLanguage } from "../context/language-context";
@@ -37,13 +37,82 @@ const rewardSchema = z.object({
   image: z.string().url("Must be a valid image URL"),
 });
 
-const adminFormSchema = z.object({
-  achievements: z.array(achievementSchema),
-  // rewards are now handled separately
-});
-
-type AdminFormValues = z.infer<typeof adminFormSchema>;
+type AchievementFormValues = z.infer<typeof achievementSchema>;
 type RewardFormValues = z.infer<typeof rewardSchema>;
+
+const AchievementFormDialog = ({ achievement, onSave, children }: { achievement?: Achievement; onSave: (data: AchievementFormValues) => void; children: React.ReactNode }) => {
+    const { t } = useLanguage();
+    const [open, setOpen] = useState(false);
+    const form = useForm<AchievementFormValues>({
+        resolver: zodResolver(achievementSchema),
+        defaultValues: achievement || { name: '', description: '', icon: '' }
+    });
+    
+    const handleSave = (data: AchievementFormValues) => {
+        onSave(data);
+        setOpen(false);
+        form.reset();
+    }
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                {children}
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>{achievement ? 'Edit Achievement' : 'Add New Achievement'}</DialogTitle>
+                    <DialogDescription>
+                        {achievement ? 'Edit the details of this achievement.' : 'Create a new achievement for players to unlock.'}
+                    </DialogDescription>
+                </DialogHeader>
+                 <Form {...form}>
+                    <form onSubmit={form.handleSubmit(handleSave)} className="space-y-4">
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>{t('name')}</FormLabel>
+                                    <FormControl><Input {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                         <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>{t('description')}</FormLabel>
+                                    <FormControl><Input {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="icon"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>{t('icon')}</FormLabel>
+                                    <FormControl><Input placeholder={t('iconPlaceholder')} {...field} /></FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button type="button" variant="secondary">Cancel</Button>
+                            </DialogClose>
+                            <Button type="submit">Save</Button>
+                        </DialogFooter>
+                    </form>
+                 </Form>
+            </DialogContent>
+        </Dialog>
+    )
+}
 
 const RewardFormDialog = ({ reward, onSave, children }: { reward?: Reward; onSave: (data: RewardFormValues) => void; children: React.ReactNode }) => {
     const { t } = useLanguage();
@@ -143,18 +212,6 @@ export default function AdminPage() {
   
   const { data: achievements, isLoading: loadingAchievements } = useCollection<Achievement>(achievementsCollectionRef);
   const { data: rewards, isLoading: loadingRewards } = useCollection<Reward>(rewardsCollectionRef);
-
-  const form = useForm<AdminFormValues>({
-    resolver: zodResolver(adminFormSchema),
-    values: {
-        achievements: achievements || [],
-    }
-  });
-
-  const { fields: achievementFields, append: appendAchievement, remove: removeAchievement } = useFieldArray({
-    control: form.control,
-    name: "achievements",
-  });
   
   const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -263,33 +320,27 @@ export default function AdminPage() {
     }
   };
 
-
-  const onAchievementsSubmit = async (data: AdminFormValues) => {
+  const handleSaveAchievement = (data: AchievementFormValues) => {
     try {
-      // This is a simplified save - in a real app, you'd check for diffs
-      for (const achievement of data.achievements) {
-        if (achievement.id) {
-          const ref = doc(firestore, 'achievements', achievement.id);
-          updateDocumentNonBlocking(ref, achievement);
+        if (data.id) {
+            const ref = doc(firestore, 'achievements', data.id);
+            updateDocumentNonBlocking(ref, data);
+            toast({ title: "Achievement Updated!", description: `${data.name} has been updated.` });
         } else {
-          // This is a new achievement
-          addDocumentNonBlocking(achievementsCollectionRef, achievement);
+            addDocumentNonBlocking(achievementsCollectionRef, data);
+            toast({ title: "Achievement Added!", description: `${data.name} has been added.` });
         }
-      }
-       toast({
-        title: t('saveSuccessTitle'),
-        description: t('saveSuccessDescription'),
-      });
-      // In a real app you might want to refresh the data after saving
     } catch (error) {
-      console.error(error);
-      toast({
-        title: t('saveErrorTitle'),
-        description: t('saveErrorDescription'),
-        variant: "destructive",
-      });
+        console.error(error);
+        toast({ title: "Error Saving Achievement", variant: "destructive" });
     }
   };
+
+  const handleDeleteAchievement = (achievementId: string) => {
+    const ref = doc(firestore, 'achievements', achievementId);
+    deleteDocumentNonBlocking(ref);
+    toast({ title: "Achievement Removed", description: "The achievement has been removed." });
+  }
 
   const handleSaveReward = (data: RewardFormValues) => {
     try {
@@ -353,85 +404,65 @@ export default function AdminPage() {
 
       <Tabs defaultValue="achievements">
         <TabsList>
-            <TabsTrigger value="achievements">{t('achievements')} ({achievementFields.length})</TabsTrigger>
+            <TabsTrigger value="achievements">{t('achievements')} ({achievements?.length || 0})</TabsTrigger>
             <TabsTrigger value="rewards">{t('rewards')} ({rewards?.length || 0})</TabsTrigger>
         </TabsList>
         <TabsContent value="achievements">
-             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onAchievementsSubmit)}>
-                    <Card>
-                        <CardHeader className="flex flex-row flex-wrap justify-between items-center gap-4">
-                            <div>
-                                <CardTitle>{t('manageAchievements')}</CardTitle>
-                                <CardDescription>{t('manageAchievementsDescription')}</CardDescription>
-                            </div>
-                            <Button type="button" variant="secondary" onClick={handleSeedAchievements}>
-                                <Database className="w-4 h-4 mr-2"/>
-                                Seed Achievements
+            <Card>
+                <CardHeader className="flex flex-row flex-wrap justify-between items-center gap-4">
+                    <div>
+                        <CardTitle>{t('manageAchievements')}</CardTitle>
+                        <CardDescription>{t('manageAchievementsDescription')}</CardDescription>
+                    </div>
+                    <div className="flex gap-2">
+                        <Button type="button" variant="secondary" onClick={handleSeedAchievements}>
+                            <Database className="w-4 h-4 mr-2"/>
+                            Seed Achievements
+                        </Button>
+                         <AchievementFormDialog onSave={handleSaveAchievement}>
+                            <Button variant="outline">
+                                <PlusCircle className="w-4 h-4 mr-2"/>
+                                {t('addAchievement')}
                             </Button>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            {isLoading ? <Loader2 className="animate-spin" /> : achievementFields.map((field, index) => (
-                            <Card key={field.id} className="p-4">
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        <FormField
-                                            control={form.control}
-                                            name={`achievements.${index}.name`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>{t('name')}</FormLabel>
-                                                    <FormControl><Input {...field} /></FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`achievements.${index}.description`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>{t('description')}</FormLabel>
-                                                    <FormControl><Input {...field} /></FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`achievements.${index}.icon`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>{t('icon')}</FormLabel>
-                                                    <FormControl><Input placeholder={t('iconPlaceholder')} {...field} /></FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-                                    <Button type="button" variant="destructive" size="sm" className="mt-4" onClick={() => removeAchievement(index)}>
-                                        <Trash2 className="w-4 h-4 mr-2"/>
-                                        {t('remove')}
-                                    </Button>
-                            </Card>
-                            ))}
-                            <div className="flex gap-2">
-                                <Button type="button" variant="outline" onClick={() => appendAchievement({ name: '', description: '', icon: '' })}>
-                                    <PlusCircle className="w-4 h-4 mr-2"/>
-                                    {t('addAchievement')}
-                                </Button>
-                                <Button type="submit" disabled={form.formState.isSubmitting}>
-                                {form.formState.isSubmitting ? (
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                ) : (
-                                    <Save className="mr-2 h-4" />
-                                )}
-                                {t('saveAllChanges')}
-                                </Button>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </form>
-             </Form>
+                        </AchievementFormDialog>
+                    </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                     {isLoading ? <Loader2 className="animate-spin" /> : (
+                        <div className="border rounded-lg">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>{t('name')}</TableHead>
+                                        <TableHead className="hidden md:table-cell">{t('description')}</TableHead>
+                                        <TableHead>{t('icon')}</TableHead>
+                                        <TableHead className="text-right">Actions</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {achievements?.map((achievement) => (
+                                        <TableRow key={achievement.id}>
+                                            <TableCell className="font-medium">{achievement.name}</TableCell>
+                                            <TableCell className="hidden md:table-cell max-w-xs truncate">{achievement.description}</TableCell>
+                                            <TableCell>{achievement.icon}</TableCell>
+                                            <TableCell className="flex gap-2 justify-end">
+                                                 <AchievementFormDialog achievement={achievement} onSave={(data) => handleSaveAchievement({ ...data, id: achievement.id })}>
+                                                    <Button type="button" variant="ghost" size="icon">
+                                                        <Edit className="w-4 h-4" />
+                                                    </Button>
+                                                 </AchievementFormDialog>
+                                                <Button type="button" variant="ghost" size="icon" onClick={() => handleDeleteAchievement(achievement.id)}>
+                                                    <Trash2 className="w-4 h-4 text-destructive"/>
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
         </TabsContent>
         <TabsContent value="rewards">
             <Card>
@@ -500,3 +531,5 @@ export default function AdminPage() {
     </div>
   );
 }
+
+    
