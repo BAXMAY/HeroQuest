@@ -169,7 +169,7 @@ export function AppHeader() {
                 <p className="text-xs text-muted-foreground">{isAnonymous ? t('anonymousUser') : user.email}</p>
                 {userProfile && (
                   <>
-                    <p className="text-xs font-semibold text-primary pt-1">{currentLevel.title}</p>
+                    <p className="text-xs font-semibold text-primary pt-1">{t(`levelNames.${currentLevel.title}` as any)}</p>
                     <div className="text-xs leading-none text-muted-foreground flex items-center justify-between">
                       <div className="flex items-center">
                           <Award className="w-3 h-3 mr-1 text-yellow-500"/>

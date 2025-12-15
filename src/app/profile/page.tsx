@@ -107,7 +107,7 @@ export default function ProfilePage() {
         <div className="text-center md:text-left">
             <h1 className="text-3xl font-bold tracking-tight font-headline">{displayName} {userProfile.lastName}</h1>
             <p className="text-muted-foreground">{user?.email}</p>
-            <p className="text-lg font-semibold text-primary">{currentLevel.title}</p>
+            <p className="text-lg font-semibold text-primary">{t(`levelNames.${currentLevel.title}` as any)}</p>
         </div>
       </div>
 

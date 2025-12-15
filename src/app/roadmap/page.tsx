@@ -103,7 +103,7 @@ export default function RoadmapPage() {
                                         isCurrent && "border-2 border-primary shadow-lg"
                                     )}>
                                         <p className={cn("font-bold text-sm", isUnlocked ? "text-primary" : "text-muted-foreground")}>Level {level.level}</p>
-                                        <p className="font-headline text-lg">{level.title}</p>
+                                        <p className="font-headline text-lg">{t(`levelNames.${level.title}` as any)}</p>
                                         <div className="flex items-center gap-1.5 text-xs text-muted-foreground justify-end">
                                             {isUnlocked ? <Check className="w-3 h-3 text-green-500" /> : <Star className="w-3 h-3"/>}
                                             {level.minXP.toLocaleString()} XP
