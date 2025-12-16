@@ -33,7 +33,7 @@
     {
       "id": "deed1",
       "description": "Park cleanup photo",
-      "imageUrl": "https://images.unsplash.com/photo-1601633939023-e6a242858b1a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwY2xlYW5pbmclMjBwYXJrfGVufDB8fHx8MTc2NTQ5NTU1NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3450126925-72971.firebasestorage.app/o/uploads%2F1765889794518_Gemini_Generated_Image_ya4tzxya4tzxya4t.png?alt=media&token=af53ab9a-2258-4e2a-beb3-783e93e868dc",
       "imageHint": "cartoon cleaning"
     },
     {
@@ -69,13 +69,13 @@
     {
       "id": "deed7",
       "description": "Charity run photo",
-      "imageUrl": "https://images.unsplash.com/photo-1625907499982-19e487a55225?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwcnVubmluZ3xlbnwwfHx8fDE3NjU0OTU2ODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3450126925-72971.firebasestorage.app/o/uploads%2F1765889915342_Gemini_Generated_Image_k0hi7yk0hi7yk0hi.png?alt=media&token=fc80708a-d310-4bce-925d-c7220e580fc9",
       "imageHint": "cartoon running"
     },
     {
       "id": "reward1",
       "description": "A board game",
-      "imageUrl": "https://images.unsplash.com/photo-1633520625934-118a8b1a5e12?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjYXJ0b29uJTIwYm9hcmQlMjBnYW1lfGVufDB8fHx8fDE3NjU0OTU3MjZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3450126925-72971.firebasestorage.app/o/uploads%2F1765890018352_a.jpg?alt=media&token=2ffe8e78-47f1-44d6-bd07-a6c455d4830a",
       "imageHint": "cartoon boardgame"
     },
     {
