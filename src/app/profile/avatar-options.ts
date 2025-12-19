@@ -1,36 +1,46 @@
 'use client';
 import type { AvatarConfig } from "../lib/types";
-import { earSize, eyeStyle, eyeType, hairStyle, hatType, mouthType, noseType, shirtType, glassesType } from 'react-nice-avatar';
+import type { EarSize, EyeStyle, EyeType, HairStyle, HatType, MouthType, NoseType, ShirtType, GlassesType } from 'react-nice-avatar';
 
+// Manually define the available options as arrays of strings
+const earSizeOptions: EarSize[] = ['small', 'big'];
+const eyeStyleOptions: EyeStyle[] = ['circle', 'shadow', 'round'];
+const eyeTypeOptions: EyeType[] = ['circle', 'oval', 'smile', 'shadow', 'round'];
+const hairStyleOptions: HairStyle[] = ['normal', 'thick', 'mohawk', 'womanLong', 'womanShort', 'womanBig', 'none'];
+const hatTypeOptions: HatType[] = ['none', 'beanie', 'turban', 'party', 'hijab'];
+const mouthTypeOptions: MouthType[] = ['laugh', 'smile', 'peace', 'sad', 'tongue'];
+const noseTypeOptions: NoseType[] = ['short', 'long', 'round'];
+const shirtTypeOptions: ShirtType[] = ['hoody', 'polo', 'shirt'];
+const glassesTypeOptions: GlassesType[] = ['none', 'round', 'square'];
 
 export const avatarOptions = {
     // Shape
-    earSize: Object.values(earSize),
+    earSize: earSizeOptions,
     
     // Face
     faceColor: ['#F9C9B6', '#AC6651', '#77311D'],
-    hairStyle: Object.values(hairStyle),
+    hairStyle: hairStyleOptions,
     hairColor: ['#000', '#fff', '#77311D', '#FC909F', '#D2EFF3', '#506AF4', '#F48150'],
-    eyeType: Object.values(eyeType),
-    eyeStyle: Object.values(eyeStyle),
-    noseType: Object.values(noseType),
-    mouthType: Object.values(mouthType),
+    eyeType: eyeTypeOptions,
+    eyeStyle: eyeStyleOptions,
+    noseType: noseTypeOptions,
+    mouthType: mouthTypeOptions,
     
     // Clothes
-    shirtType: Object.values(shirtType),
+    shirtType: shirtTypeOptions,
     shirtColor: ['#9287FF', '#6BD9E9', '#FC909F', '#F4D150', '#77311D'],
     
     // Accessories
-    glassesType: Object.values(glassesType),
-    hatType: Object.values(hatType),
-    hatColor: ['#000', '#fff', '#77311D', '#FC909F', '#D2EFF3', '#506AF4', '#F48150'],
+    glassesType: glassesTypeOptions,
+    hatType: hatTypeOptions,
+hatColor: ['#000', '#fff', '#77311D', '#FC909F', '#D2EFF3', '#506AF4', '#F48150'],
     
     // Other
     bgColor: ['#9287FF', '#6BD9E9', '#FC909F', '#F4D150', '#E0DDFF', 'linear-gradient(45deg, #1A1A1A 0%, #333333 100%)'],
 } as const;
 
 
-export const optionLabels: { [key in keyof AvatarConfig]: string } = {
+export const optionLabels: { [key in keyof Omit<AvatarConfig, 'isGradient'>]: string } = {
     // Shape
     earSize: 'Ear size',
     
@@ -70,5 +80,6 @@ export const defaultAvatarConfig: AvatarConfig = {
     mouthType: 'smile',
     shirtType: 'hoody',
     shirtColor: '#9287FF',
-    bgColor: '#E0DDFF'
+    bgColor: '#E0DDFF',
+    isGradient: false,
 };
