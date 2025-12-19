@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useLanguage } from './context/language-context';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import Mascot from '@/app/components/mascot';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -193,8 +194,11 @@ export default function LandingPage() {
         </Card>
       </section>
 
-      <footer className="container mx-auto px-4 md:px-6 text-center text-sm text-muted-foreground mt-8 border-t pt-8">
-        © 2024 HeroQuest Creator. All Rights Reserved.
+      <footer className="container mx-auto px-4 md:px-6 text-sm text-muted-foreground mt-8 border-t pt-8">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+          <Mascot className="w-8 h-8 text-primary" />
+          <span>© 2024 HeroQuest Creator. All Rights Reserved.</span>
+        </div>
       </footer>
     </div>
   );
