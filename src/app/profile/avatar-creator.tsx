@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import CustomAvatar from './custom-avatar';
 import { ChevronLeft, ChevronRight, Save } from 'lucide-react';
-import { defaultAvatarConfig, avatarOptions } from './avatar-options';
+import { defaultAvatarConfig, avatarOptions, optionLabels } from './avatar-options';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface AvatarCreatorProps {
   initialConfig?: AvatarConfig;
@@ -29,20 +30,19 @@ export default function AvatarCreator({ initialConfig, onSave }: AvatarCreatorPr
   };
   
   const renderSelector = (label: string, option: keyof AvatarConfig, values: readonly any[]) => (
-    <div className="space-y-2">
+    <div key={option} className="space-y-2">
       <Label className="font-semibold">{label}</Label>
       <div className="flex items-center gap-2">
         <Button variant="outline" size="icon" onClick={() => handlePrev(option, values)}>
           <ChevronLeft className="w-4 h-4" />
         </Button>
-        <div className="flex-1 text-center capitalize text-sm font-medium p-2 border rounded-md bg-secondary">
+        <div className="flex-1 text-center capitalize text-sm font-medium p-2 border rounded-md bg-secondary h-10 flex items-center justify-center">
           {option.includes('Color') ? (
              <div className='flex items-center justify-center gap-2'>
                 <div className='w-4 h-4 rounded-full border' style={{ backgroundColor: config[option] as string }}></div>
-                <span>{ (config[option] as string).replace('#', '')}</span>
             </div>
           ) : (
-            config[option]
+            <span className='truncate'>{config[option]}</span>
           )}
         </div>
         <Button variant="outline" size="icon" onClick={() => handleNext(option, values)}>
@@ -60,15 +60,13 @@ export default function AvatarCreator({ initialConfig, onSave }: AvatarCreatorPr
         </div>
       </div>
       
-      <div className="grid grid-cols-2 gap-4">
-        {renderSelector('Skin Color', 'skinColor', avatarOptions.skinColors)}
-        {renderSelector('Hair Style', 'hairStyle', avatarOptions.hairStyles)}
-        {renderSelector('Hair Color', 'hairColor', avatarOptions.hairColors)}
-        {renderSelector('Eye Style', 'eyeStyle', avatarOptions.eyeStyles)}
-        {renderSelector('Shirt Style', 'shirtStyle', avatarOptions.shirtStyles)}
-        {renderSelector('Shirt Color', 'shirtColor', avatarOptions.shirtColors)}
-        {renderSelector('Accessory', 'accessory', avatarOptions.accessories)}
-      </div>
+      <ScrollArea className="h-64">
+        <div className="grid grid-cols-2 gap-4 pr-4">
+          {(Object.keys(avatarOptions) as Array<keyof typeof avatarOptions>).map(key =>
+            renderSelector(optionLabels[key], key, avatarOptions[key])
+          )}
+        </div>
+      </ScrollArea>
 
       <Button onClick={() => onSave(config)} className="w-full">
         <Save className="mr-2 h-4 w-4" />

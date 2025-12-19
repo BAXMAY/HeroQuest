@@ -1,24 +1,22 @@
 'use client';
+import Avatar from 'avataaars';
 import type { AvatarConfig } from '../lib/types';
-import { Eyes, Hair, Shirt, Accessories } from './avatar-assets';
+import { defaultAvatarConfig } from './avatar-options';
 
 interface CustomAvatarProps {
-    config: AvatarConfig;
+    config?: AvatarConfig;
 }
 
 export default function CustomAvatar({ config }: CustomAvatarProps) {
+    const avatarProps = config || defaultAvatarConfig;
+
     return (
         <div className="w-full h-full relative">
-            <svg viewBox="0 0 100 100" className="w-full h-full">
-                {/* Skin / Head */}
-                <circle cx="50" cy="50" r="40" fill={config.skinColor} />
-
-                {/* Features */}
-                <Shirt style={config.shirtStyle} color={config.shirtColor} />
-                <Eyes style={config.eyeStyle} />
-                <Hair style={config.hairStyle} color={config.hairColor} />
-                <Accessories style={config.accessory} />
-            </svg>
+            <Avatar
+                style={{ width: '100%', height: '100%' }}
+                avatarStyle='Circle'
+                {...avatarProps}
+            />
         </div>
     );
 }

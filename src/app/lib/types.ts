@@ -2,13 +2,16 @@
 import type { Timestamp } from 'firebase/firestore';
 
 export type AvatarConfig = {
-  skinColor: string;
-  hairStyle: 'short' | 'long' | 'bald';
+  topType: string;
+  accessoriesType: string;
   hairColor: string;
-  eyeStyle: 'normal' | 'happy' | 'wink';
-  shirtStyle: 'crew' | 'polo';
-  shirtColor: string;
-  accessory: 'none' | 'glasses';
+  facialHairType: string;
+  clotheType: string;
+  clotheColor: string;
+  eyeType: string;
+  eyebrowType: string;
+  mouthType: string;
+  skinColor: string;
 };
 
 
