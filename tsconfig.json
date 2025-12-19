@@ -26,7 +26,11 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "types": [
+      "node",
+      "@types/jspdf"
+    ]
   },
   "include": [
     "next-env.d.ts",

@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { collection, doc } from 'firebase/firestore';
-import { Award, Coins, Loader2, Save, Shield, Star, Wand2 } from 'lucide-react';
+import { Award, Coins, Loader2, Save, Shield, Star, Wand2, FileText } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -22,6 +22,7 @@ import { useLanguage } from '../context/language-context';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import AvatarCreator from './avatar-creator';
 import CustomAvatar from './custom-avatar';
+import Link from 'next/link';
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, 'First name is too short').max(50, 'First name is too long'),
@@ -140,11 +141,17 @@ export default function ProfilePage() {
           </DialogContent>
         </Dialog>
 
-        <div className="text-center md:text-left">
+        <div className="flex-grow text-center md:text-left">
             <h1 className="text-3xl font-bold tracking-tight font-headline">{displayName} {userProfile.lastName}</h1>
             <p className="text-muted-foreground">{user?.email}</p>
             <p className="text-lg font-semibold text-primary">{t(`levelNames.${currentLevel.title}` as any)}</p>
         </div>
+        <Button asChild variant="outline">
+          <Link href="/profile/portfolio" target="_blank">
+            <FileText className="mr-2 h-4 w-4" />
+            Export Portfolio
+          </Link>
+        </Button>
       </div>
 
       <Card>
