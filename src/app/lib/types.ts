@@ -1,18 +1,16 @@
 'use client';
 import type { Timestamp } from 'firebase/firestore';
-
-export type AvatarConfig = {
-  topType: string;
-  accessoriesType: string;
-  hairColor: string;
-  facialHairType: string;
-  clotheType: string;
-  clotheColor: string;
-  eyeType: string;
-  eyebrowType: string;
-  mouthType: string;
-  skinColor: string;
-};
+import type { 
+  EyeStyle, 
+  EyeType, 
+  HairStyle, 
+  MouthType, 
+  NoseType, 
+  ShirtType, 
+  GlassesType, 
+  EarSize, 
+  HatType 
+} from 'react-nice-avatar';
 
 
 // This represents the user profile document stored in Firestore
@@ -36,6 +34,24 @@ export type UserProfile = {
   }
   avatarConfig?: AvatarConfig;
 };
+
+export type AvatarConfig = {
+  faceColor: string;
+  hairColor: string;
+  hatColor: string;
+  shirtColor: string;
+  bgColor: string;
+  earSize: EarSize;
+  eyeType: EyeType;
+  eyeStyle: EyeStyle;
+  hairStyle: HairStyle;
+  hatType: HatType;
+  mouthType: MouthType;
+  noseType: NoseType;
+  shirtType: ShirtType;
+  glassesType: GlassesType;
+};
+
 
 // This represents a "deed" or "quest" submission document in Firestore
 export type Deed = {

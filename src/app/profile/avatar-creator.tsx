@@ -37,12 +37,12 @@ export default function AvatarCreator({ initialConfig, onSave }: AvatarCreatorPr
           <ChevronLeft className="w-4 h-4" />
         </Button>
         <div className="flex-1 text-center capitalize text-sm font-medium p-2 border rounded-md bg-secondary h-10 flex items-center justify-center">
-          {option.includes('Color') ? (
+          {option.toLowerCase().includes('color') ? (
              <div className='flex items-center justify-center gap-2'>
                 <div className='w-4 h-4 rounded-full border' style={{ backgroundColor: config[option] as string }}></div>
             </div>
           ) : (
-            <span className='truncate'>{config[option]}</span>
+            <span className='truncate'>{String(config[option])}</span>
           )}
         </div>
         <Button variant="outline" size="icon" onClick={() => handleNext(option, values)}>

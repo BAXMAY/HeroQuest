@@ -1,41 +1,74 @@
 'use client';
 import type { AvatarConfig } from "../lib/types";
+import { earSize, eyeStyle, eyeType, hairStyle, hatType, mouthType, noseType, shirtType, glassesType } from 'react-nice-avatar';
+
 
 export const avatarOptions = {
-    topType: ['NoHair', 'Eyepatch', 'Hat', 'Hijab', 'Turban', 'WinterHat1', 'WinterHat2', 'WinterHat3', 'WinterHat4', 'LongHairBigHair', 'LongHairBob', 'LongHairBun', 'LongHairCurly', 'LongHairCurvy', 'LongHairDreads', 'LongHairFrida', 'LongHairFro', 'LongHairFroBand', 'LongHairNotTooLong', 'LongHairShavedSides', 'LongHairMiaWallace', 'LongHairStraight', 'LongHairStraight2', 'LongHairStraightStrand', 'ShortHairDreads01', 'ShortHairDreads02', 'ShortHairFrizzle', 'ShortHairShaggyMullet', 'ShortHairShortCurly', 'ShortHairShortFlat', 'ShortHairShortRound', 'ShortHairShortWaved', 'ShortHairSides', 'ShortHairTheCaesar', 'ShortHairTheCaesarSidePart'],
-    accessoriesType: ['Blank', 'Kurt', 'Prescription01', 'Prescription02', 'Round', 'Sunglasses', 'Wayfarers'],
-    hairColor: ['Auburn', 'Black', 'Blonde', 'BlondeGolden', 'Brown', 'BrownDark', 'PastelPink', 'Platinum', 'Red', 'SilverGray'],
-    facialHairType: ['Blank', 'BeardMedium', 'BeardLight', 'BeardMajestic', 'MoustacheFancy', 'MoustacheMagnum'],
-    clotheType: ['BlazerShirt', 'BlazerSweater', 'CollarSweater', 'GraphicShirt', 'Hoodie', 'Overall', 'ShirtCrewNeck', 'ShirtScoopNeck', 'ShirtVNeck'],
-    clotheColor: ['Black', 'Blue01', 'Blue02', 'Blue03', 'Gray01', 'Gray02', 'Heather', 'PastelBlue', 'PastelGreen', 'PastelOrange', 'PastelRed', 'PastelYellow', 'Pink', 'Red', 'White'],
-    eyeType: ['Close', 'Cry', 'Default', 'Dizzy', 'EyeRoll', 'Happy', 'Hearts', 'Side', 'Squint', 'Surprised', 'Wink', 'WinkWacky'],
-    eyebrowType: ['Angry', 'AngryNatural', 'Default', 'DefaultNatural', 'FlatNatural', 'RaisedExcited', 'RaisedExcitedNatural', 'SadConcerned', 'SadConcernedNatural', 'UnibrowNatural', 'UpDown', 'UpDownNatural'],
-    mouthType: ['Concerned', 'Default', 'Disbelief', 'Eating', 'Grimace', 'Sad', 'ScreamOpen', 'Serious', 'Smile', 'Tongue', 'Twinkle', 'Vomit'],
-    skinColor: ['Tanned', 'Yellow', 'Pale', 'Light', 'Brown', 'DarkBrown', 'Black']
+    // Shape
+    earSize: Object.values(earSize),
+    
+    // Face
+    faceColor: ['#F9C9B6', '#AC6651', '#77311D'],
+    hairStyle: Object.values(hairStyle),
+    hairColor: ['#000', '#fff', '#77311D', '#FC909F', '#D2EFF3', '#506AF4', '#F48150'],
+    eyeType: Object.values(eyeType),
+    eyeStyle: Object.values(eyeStyle),
+    noseType: Object.values(noseType),
+    mouthType: Object.values(mouthType),
+    
+    // Clothes
+    shirtType: Object.values(shirtType),
+    shirtColor: ['#9287FF', '#6BD9E9', '#FC909F', '#F4D150', '#77311D'],
+    
+    // Accessories
+    glassesType: Object.values(glassesType),
+    hatType: Object.values(hatType),
+    hatColor: ['#000', '#fff', '#77311D', '#FC909F', '#D2EFF3', '#506AF4', '#F48150'],
+    
+    // Other
+    bgColor: ['#9287FF', '#6BD9E9', '#FC909F', '#F4D150', '#E0DDFF', 'linear-gradient(45deg, #1A1A1A 0%, #333333 100%)'],
 } as const;
 
+
 export const optionLabels: { [key in keyof AvatarConfig]: string } = {
-    topType: "Hair/Head",
-    accessoriesType: "Accessories",
-    hairColor: "Hair Color",
-    facialHairType: "Facial Hair",
-    clotheType: "Clothing",
-    clotheColor: "Cloth Color",
-    eyeType: "Eyes",
-    eyebrowType: "Eyebrows",
-    mouthType: "Mouth",
-    skinColor: "Skin Color"
+    // Shape
+    earSize: 'Ear size',
+    
+    // Face
+    faceColor: 'Face color',
+    hairColor: 'Hair color',
+    hairStyle: 'Hair style',
+    eyeType: 'Eye type',
+    eyeStyle: 'Eye style',
+    noseType: 'Nose type',
+    mouthType: 'Mouth type',
+    
+    // Clothes
+    shirtType: 'Shirt',
+    shirtColor: 'Shirt color',
+    
+    // Accessories
+    glassesType: 'Glasses',
+    hatType: 'Hat',
+    hatColor: 'Hat color',
+    
+    // Other
+    bgColor: 'Background',
 };
 
 export const defaultAvatarConfig: AvatarConfig = {
-    topType: 'ShortHairShortFlat',
-    accessoriesType: 'Blank',
-    hairColor: 'Brown',
-    facialHairType: 'Blank',
-    clotheType: 'Hoodie',
-    clotheColor: 'Blue02',
-    eyeType: 'Default',
-    eyebrowType: 'Default',
-    mouthType: 'Smile',
-    skinColor: 'Light'
+    earSize: 'small',
+    faceColor: '#F9C9B6',
+    hairColor: '#000',
+    hairStyle: 'normal',
+    hatColor: '#000',
+    hatType: 'none',
+    eyeType: 'normal',
+    eyeStyle: 'circle',
+    glassesType: 'none',
+    noseType: 'short',
+    mouthType: 'smile',
+    shirtType: 'hoody',
+    shirtColor: '#9287FF',
+    bgColor: '#E0DDFF'
 };
