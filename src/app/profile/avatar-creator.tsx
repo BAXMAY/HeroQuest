@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { AvatarConfig } from '../lib/types';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -16,6 +16,11 @@ interface AvatarCreatorProps {
 
 export default function AvatarCreator({ initialConfig, onSave }: AvatarCreatorProps) {
   const [config, setConfig] = useState<AvatarConfig>(initialConfig || defaultAvatarConfig);
+
+  useEffect(() => {
+    setConfig(initialConfig || defaultAvatarConfig);
+  }, [initialConfig]);
+
 
   const handleNext = (option: keyof AvatarConfig, values: readonly string[]) => {
     const currentIndex = values.indexOf(config[option] as string);
