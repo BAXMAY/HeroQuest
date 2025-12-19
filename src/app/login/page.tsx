@@ -96,12 +96,26 @@ export default function LoginPage() {
 
   function handleGoogleSignIn() {
     setIsLoading(true);
-    initiateGoogleSignIn(auth);
-     toast({
-        title: t('signingInWithGoogle'),
-        description: t('followPopup'),
-    });
-     setTimeout(() => setIsLoading(false), 3000);
+    initiateGoogleSignIn(auth)
+      .then(() => {
+          toast({
+              title: t('signingInWithGoogle'),
+              description: t('followPopup'),
+          });
+      })
+      .catch((error) => {
+          if (error.code !== 'auth/popup-closed-by-user') {
+              console.error("Google Sign-In Error: ", error);
+              toast({
+                  title: "Sign-In Failed",
+                  description: "Could not sign in with Google. Please try again.",
+                  variant: "destructive"
+              });
+          }
+      })
+      .finally(() => {
+          setIsLoading(false);
+      });
   }
 
   if (isUserLoading || (user && !user.isAnonymous)) {

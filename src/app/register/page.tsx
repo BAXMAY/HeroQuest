@@ -97,12 +97,26 @@ export default function RegisterPage() {
 
   function handleGoogleSignIn() {
     setIsLoading(true);
-    initiateGoogleSignIn(auth);
-     toast({
-        title: t('signingUpWithGoogle'),
-        description: t('followPopup'),
-    });
-     setTimeout(() => setIsLoading(false), 3000);
+    initiateGoogleSignIn(auth)
+        .then(() => {
+            toast({
+                title: t('signingUpWithGoogle'),
+                description: t('followPopup'),
+            });
+        })
+        .catch((error) => {
+            if (error.code !== 'auth/popup-closed-by-user') {
+                console.error("Google Sign-Up Error: ", error);
+                toast({
+                    title: "Sign-Up Failed",
+                    description: "Could not sign up with Google. Please try again.",
+                    variant: "destructive"
+                });
+            }
+        })
+        .finally(() => {
+            setIsLoading(false);
+        });
   }
 
   if (isUserLoading || (user && !user.isAnonymous)) {

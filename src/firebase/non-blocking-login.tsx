@@ -67,10 +67,10 @@ export function initiateEmailSignIn(authInstance: Auth, email: string, password:
 }
 
 /** Initiate Google sign-in (non-blocking). */
-export function initiateGoogleSignIn(authInstance: Auth): void {
+export function initiateGoogleSignIn(authInstance: Auth) {
     const provider = new GoogleAuthProvider();
     const { firestore } = getSdks(authInstance.app);
-    signInWithPopup(authInstance, provider)
+    return signInWithPopup(authInstance, provider)
     .then(async (credential) => {
         const userProfileRef = doc(firestore, 'users', credential.user.uid);
         const docSnap = await getDoc(userProfileRef);
