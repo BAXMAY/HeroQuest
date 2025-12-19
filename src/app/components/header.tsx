@@ -23,6 +23,7 @@ import type { Notification } from '../lib/types';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
+import CustomAvatar from '../profile/custom-avatar';
 
 
 export function AppHeader() {
@@ -154,8 +155,14 @@ export function AppHeader() {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
               <Avatar className="h-10 w-10 border-2 border-primary/50">
-                <AvatarImage src={userProfile?.profilePicture || user.photoURL} alt={displayName} data-ai-hint="child portrait" />
-                <AvatarFallback>{displayName.charAt(0)}</AvatarFallback>
+                 {userProfile?.avatarConfig ? (
+                    <CustomAvatar config={userProfile.avatarConfig} />
+                 ) : (
+                    <>
+                      <AvatarImage src={userProfile?.profilePicture || user.photoURL} alt={displayName} data-ai-hint="child portrait" />
+                      <AvatarFallback>{displayName.charAt(0)}</AvatarFallback>
+                    </>
+                 )}
               </Avatar>
             </Button>
           </DropdownMenuTrigger>

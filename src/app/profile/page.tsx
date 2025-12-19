@@ -9,8 +9,8 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { collection, doc } from 'firebase/firestore';
-import { Award, Coins, Loader2, Save, Shield, Star } from 'lucide-react';
-import { useEffect } from 'react';
+import { Award, Coins, Loader2, Save, Shield, Star, Wand2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { getLevelFromXP } from '../lib/levels';
@@ -19,6 +19,9 @@ import { Label } from '@/components/ui/label';
 import { Achievement, UserProfile } from '../lib/types';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useLanguage } from '../context/language-context';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import AvatarCreator from './avatar-creator';
+import CustomAvatar from './custom-avatar';
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, 'First name is too short').max(50, 'First name is too long'),
@@ -33,6 +36,7 @@ export default function ProfilePage() {
   const firestore = useFirestore();
   const { toast } = useToast();
   const { t } = useLanguage();
+  const [isAvatarCreatorOpen, setIsAvatarCreatorOpen] = useState(false);
 
   const userProfileRef = useMemoFirebase(() => {
     if (!user) return null;
@@ -100,10 +104,42 @@ export default function ProfilePage() {
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
       <div className="flex flex-col md:flex-row items-center gap-6">
-        <Avatar className="h-24 w-24 border-4 border-primary">
-            <AvatarImage src={userProfile.profilePicture || user?.photoURL} alt={displayName} data-ai-hint="child portrait" />
-            <AvatarFallback>{displayName.charAt(0)}</AvatarFallback>
-        </Avatar>
+        <Dialog open={isAvatarCreatorOpen} onOpenChange={setIsAvatarCreatorOpen}>
+          <DialogTrigger asChild>
+            <button className="relative group">
+              <Avatar className="h-24 w-24 border-4 border-primary transition-transform group-hover:scale-105">
+                {userProfile.avatarConfig ? (
+                  <CustomAvatar config={userProfile.avatarConfig} />
+                ) : (
+                  <>
+                    <AvatarImage src={userProfile.profilePicture || user?.photoURL} alt={displayName} data-ai-hint="child portrait" />
+                    <AvatarFallback>{displayName.charAt(0)}</AvatarFallback>
+                  </>
+                )}
+              </Avatar>
+              <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Wand2 className="w-8 h-8 text-white" />
+              </div>
+            </button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md">
+              <DialogHeader>
+                  <DialogTitle>Create Your Hero</DialogTitle>
+                  <DialogDescription>Customize your character's look.</DialogDescription>
+              </DialogHeader>
+              <AvatarCreator 
+                  initialConfig={userProfile.avatarConfig}
+                  onSave={(newConfig) => {
+                      if(userProfileRef) {
+                          updateDocumentNonBlocking(userProfileRef, { avatarConfig: newConfig });
+                          toast({ title: 'Avatar Saved!', description: 'Your new look has been saved.' });
+                      }
+                      setIsAvatarCreatorOpen(false);
+                  }}
+              />
+          </DialogContent>
+        </Dialog>
+
         <div className="text-center md:text-left">
             <h1 className="text-3xl font-bold tracking-tight font-headline">{displayName} {userProfile.lastName}</h1>
             <p className="text-muted-foreground">{user?.email}</p>

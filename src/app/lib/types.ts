@@ -1,6 +1,17 @@
 'use client';
 import type { Timestamp } from 'firebase/firestore';
 
+export type AvatarConfig = {
+  skinColor: string;
+  hairStyle: 'short' | 'long' | 'bald';
+  hairColor: string;
+  eyeStyle: 'normal' | 'happy' | 'wink';
+  shirtStyle: 'crew' | 'polo';
+  shirtColor: string;
+  accessory: 'none' | 'glasses';
+};
+
+
 // This represents the user profile document stored in Firestore
 export type UserProfile = {
   id: string;
@@ -20,6 +31,7 @@ export type UserProfile = {
       weeklySummary?: boolean;
     }
   }
+  avatarConfig?: AvatarConfig;
 };
 
 // This represents a "deed" or "quest" submission document in Firestore
