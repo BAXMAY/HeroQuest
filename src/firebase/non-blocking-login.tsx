@@ -78,6 +78,9 @@ export function initiateGoogleSignIn(authInstance: Auth) {
         if (!docSnap.exists()) {
             // New user, redirect to onboarding
             window.location.href = '/onboarding';
+        } else {
+            // Existing user, redirect to dashboard
+            window.location.href = '/dashboard';
         }
     });
 }
