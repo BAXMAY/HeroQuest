@@ -33,14 +33,14 @@ export const avatarOptions = {
     // Accessories
     glassesType: glassesTypeOptions,
     hatType: hatTypeOptions,
-hatColor: ['#000', '#fff', '#77311D', '#FC909F', '#D2EFF3', '#506AF4', '#F48150'],
+    hatColor: ['#000', '#fff', '#77311D', '#FC909F', '#D2EFF3', '#506AF4', '#F48150'],
     
     // Other
     bgColor: ['#9287FF', '#6BD9E9', '#FC909F', '#F4D150', '#E0DDFF', 'linear-gradient(45deg, #1A1A1A 0%, #333333 100%)'],
 } as const;
 
 
-export const optionLabels: { [key in keyof Omit<AvatarConfig, 'isGradient'>]: string } = {
+export const optionLabels: { [key in keyof AvatarConfig]: string } = {
     // Shape
     earSize: 'Ear size',
     
@@ -67,19 +67,18 @@ export const optionLabels: { [key in keyof Omit<AvatarConfig, 'isGradient'>]: st
 };
 
 export const defaultAvatarConfig: AvatarConfig = {
-    earSize: 'small',
     faceColor: '#F9C9B6',
     hairColor: '#000',
-    hairStyle: 'normal',
     hatColor: '#000',
-    hatType: 'none',
-    eyeType: 'normal',
-    eyeStyle: 'circle',
-    glassesType: 'none',
-    noseType: 'short',
-    mouthType: 'smile',
-    shirtType: 'hoody',
     shirtColor: '#9287FF',
     bgColor: '#E0DDFF',
-    isGradient: false,
+    earSize: 'small',
+    eyeType: 'oval',
+    eyeStyle: 'circle',
+    hairStyle: 'normal',
+    hatType: 'none',
+    mouthType: 'smile',
+    noseType: 'short',
+    shirtType: 'hoody',
+    glassesType: 'none',
 };
