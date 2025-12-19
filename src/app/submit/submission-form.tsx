@@ -47,7 +47,7 @@ type SubmissionStatus = 'draft' | 'pending';
 
 const compressImage = async (file: File, quality = 0.7): Promise<File> => {
     return new Promise((resolve, reject) => {
-        const img = new Image();
+        const img = new window.Image();
         img.src = URL.createObjectURL(file);
         img.onload = () => {
             const canvas = document.createElement('canvas');
