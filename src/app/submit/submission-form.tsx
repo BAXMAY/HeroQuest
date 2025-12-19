@@ -45,6 +45,35 @@ const formSchema = z.object({
 
 type SubmissionStatus = 'draft' | 'pending';
 
+const compressImage = async (file: File, quality = 0.7): Promise<File> => {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = URL.createObjectURL(file);
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx?.drawImage(img, 0, 0);
+
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    const compressedFile = new File([blob], file.name, {
+                        type: 'image/jpeg',
+                        lastModified: Date.now()
+                    });
+                    resolve(compressedFile);
+                } else {
+                    reject(new Error('Canvas to Blob conversion failed'));
+                }
+            }, 'image/jpeg', quality);
+        };
+        img.onerror = (error) => {
+            reject(error);
+        };
+    });
+};
+
 
 export default function SubmissionForm() {
     const { toast } = useToast();
@@ -158,10 +187,18 @@ export default function SubmissionForm() {
     const file = values.photo[0] as File;
 
     if(file) {
-      const storage = getStorage();
-      const storageRef = ref(storage, `quests/${user.uid}/${Date.now()}_${file.name}`);
-      const uploadResult = await uploadBytes(storageRef, file);
-      photoUrl = await getDownloadURL(uploadResult.ref);
+      try {
+        const compressedFile = await compressImage(file);
+        const storage = getStorage();
+        const storageRef = ref(storage, `quests/${user.uid}/${Date.now()}_${compressedFile.name}`);
+        const uploadResult = await uploadBytes(storageRef, compressedFile);
+        photoUrl = await getDownloadURL(uploadResult.ref);
+      } catch (error) {
+        console.error("Error compressing or uploading image: ", error);
+        toast({ title: "Image Error", description: "Could not process the image. Please try another one.", variant: "destructive" });
+        setIsLoading(false);
+        return;
+      }
     }
 
     const questData = {
