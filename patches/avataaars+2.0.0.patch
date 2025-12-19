@@ -1,0 +1,94 @@
+diff --git a/node_modules/avataaars/lib/Avatar.js b/node_modules/avataaars/lib/Avatar.js
+index 9a20436..7e69f33 100644
+--- a/node_modules/avataaars/lib/Avatar.js
++++ b/node_modules/avataaars/lib/Avatar.js
+@@ -1,5 +1,5 @@
+ "use strict";
+ var __extends = (this && this.__extends) || (function () {
+     var extendStatics = Object.setPrototypeOf ||
+         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+@@ -20,25 +20,13 @@ var React = require("react");
+ var PropTypes = require("prop-types");
+ var avatar_1 = require("./avatar");
+ var OptionContext_1 = require("./option/OptionContext");
+-var Avatar = /** @class */ (function (_super) {
++var AvatarContext = React.createContext(null);
++var Avatar = /** @class */ (function (_super) {
+     __extends(Avatar, _super);
+     function Avatar() {
+         var _this = _super !== null && _super.apply(this, arguments) || this;
+         _this.avatar = new avatar_1.default(_this.props);
+         return _this;
+     }
+-    Avatar.prototype.getChildContext = function () {
+-        return {
+-            optionContext: new OptionContext_1.OptionContext(this.props),
+-            avatar: this.avatar
+-        };
+-    };
+-    Avatar.prototype.UNSAFE_componentWillReceiveProps = function (nextProps) {
+-        this.avatar.update(nextProps);
+-    };
+     Avatar.prototype.render = function () {
+         var _a = this.props, style = _a.style, pieceType = _a.pieceType, pieceSize = _a.pieceSize, viewBox = _a.viewBox;
+         if (pieceType) {
+@@ -52,18 +40,25 @@ var Avatar = /** @class */ (function (_super) {
+             var svgStyle = {
+                 width: '100%',
+                 height: '100%',
+-            };
++            }
+             if (style) {
+                 Object.assign(svgStyle, style);
+             }
+             var backgroundShape = this.avatar.getBackgroundShape();
+             return (React.createElement("svg", { style: svgStyle, width: '100%', height: '100%', viewBox: backgroundShape.viewBox, xmlns: 'http://www.w3.org/2000/svg', xmlnsXlink: 'http://www.w3.org/1999/xlink' },
+-                this.avatar.render(),
+-                React.createElement("g", { id: '🖍\uFE0FColor' }, this.avatar.renderColor())));
++                React.createElement(AvatarContext.Provider, { value: {
++                        optionContext: new OptionContext_1.OptionContext(this.props),
++                        avatar: this.avatar
++                    } },
++                    this.avatar.render(),
++                    React.createElement("g", { id: '🖍\uFE0FColor' }, this.avatar.renderColor()))));
+         }
+     };
+-    Avatar.childContextTypes = {
+-        optionContext: PropTypes.instanceOf(OptionContext_1.OptionContext),
+-        avatar: PropTypes.instanceOf(avatar_1.default)
+-    };
++    Avatar.prototype.UNSAFE_componentWillReceiveProps = function (nextProps) {
++      this.avatar.update(nextProps);
++    };
+     Avatar.defaultProps = {
+         style: {
+             width: '264px',
+@@ -79,7 +74,7 @@ var Avatar = /** @class */ (function (_super) {
+     return Avatar;
+ }(React.Component));
+ exports.default = Avatar;
+-var AvatarComponent = /** @class */ (function (_super) {
++var AvatarComponent = /** @class */ (function (_super) {
+     __extends(AvatarComponent, _super);
+     function AvatarComponent() {
+         return _super !== null && _super.apply(this, arguments) || this;
+@@ -93,12 +88,14 @@ var AvatarComponent = /** @class */ (function (_super) {
+     };
+     AvatarComponent.prototype.render = function () {
+         var piece = this.piece;
+-        return piece ? piece.render() : null;
++        return (React.createElement(AvatarContext.Consumer, null,
++          function (context) {
++            this.optionContext = context.optionContext;
++            this.avatar = context.avatar;
++            return this.piece ? this.piece.render() : null;
++          }.bind(this)
++        ));
+     };
+-    AvatarComponent.contextTypes = {
+-        optionContext: PropTypes.instanceOf(OptionContext_1.OptionContext),
+-        avatar: PropTypes.instanceOf(avatar_1.default)
+-    };
+     return AvatarComponent;
+ }(React.Component));
+ exports.AvatarComponent = AvatarComponent;
