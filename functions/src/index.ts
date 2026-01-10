@@ -8,7 +8,7 @@ admin.initializeApp();
  *
  * This function can only be called by an already authenticated user who is an admin.
  * It takes an email address as input and sets a custom claim `admin: true` on the
- * corresponding user'''s account.
+ * corresponding user's account.
  */
 export const addAdminRole = functions.https.onCall(async (data, context) => {
   // For development: allow any authenticated user to become an admin.
