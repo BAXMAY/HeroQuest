@@ -2,9 +2,10 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Users can only read and write to their own profile.
-    // They can create their own profile upon signup.
+    // Any authenticated user can query the collection (for leaderboard, etc.)
+    // but can only read/write their own specific document.
     match /users/{userId} {
+      allow list: if request.auth != null;
       allow read, update, delete: if request.auth != null && request.auth.uid == userId;
       allow create: if request.auth != null;
 
@@ -38,6 +39,12 @@ service cloud.firestore {
     match /rewards/{rewardId} {
       allow read: if request.auth != null;
       allow write: if false;
+    }
+
+    // A collection group query for volunteer_work (for the admin approvals page)
+    // can only be performed by an admin.
+    match /{path=**}/volunteer_work/{workId} {
+      allow read: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
     }
   }
 }

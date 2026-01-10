@@ -26,11 +26,12 @@ export default function PortfolioPage() {
 
   const approvedQuestsQuery = useMemoFirebase(() => {
     if (!user) return null;
-    return query(
-      collection(firestore, 'users', user.uid, 'volunteer_work'),
-      where('status', '==', 'approved'),
-      orderBy('submittedAt', 'desc')
-    );
+    return 
+    // query(
+      collection(firestore, 'users', user.uid, 'volunteer_work')
+    //   where('status', '==', 'approved'),
+    //   orderBy('submittedAt', 'desc')
+    // );
   }, [user, firestore]);
 
   const achievementsRef = useMemoFirebase(() => {
