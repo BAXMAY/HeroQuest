@@ -26,12 +26,7 @@ export default function PortfolioPage() {
 
   const approvedQuestsQuery = useMemoFirebase(() => {
     if (!user) return null;
-    return 
-    // query(
-      collection(firestore, 'users', user.uid, 'volunteer_work')
-    //   where('status', '==', 'approved'),
-    //   orderBy('submittedAt', 'desc')
-    // );
+    return collection(firestore, 'users', user.uid, 'volunteer_work');
   }, [user, firestore]);
 
   const achievementsRef = useMemoFirebase(() => {
@@ -157,7 +152,8 @@ export default function PortfolioPage() {
         <section className="mb-8">
             <h2 className="text-2xl font-bold border-b-2 border-gray-200 pb-2 mb-4 font-headline">Completed Quests</h2>
             <div className="space-y-4">
-                {quests && quests.length > 0 ? quests.map(quest => (
+                {quests && quests.length > 0 ? quests.map(quest => quest.status == 'approved' ? (
+                    
                     <div key={quest.id} className="flex items-start gap-4 p-4 border rounded-lg bg-gray-50">
                         <div className="w-32 h-24 relative flex-shrink-0">
                             <Image src={quest.photo} alt={quest.description} fill className="rounded-md object-cover" />
@@ -170,7 +166,7 @@ export default function PortfolioPage() {
                             </div>
                         </div>
                     </div>
-                )) : <p className="text-gray-500">No completed quests yet.</p>}
+                ) : null ) : <p className="text-gray-500">No completed quests yet.</p>}
             </div>
         </section>
 
