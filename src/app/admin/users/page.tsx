@@ -10,6 +10,7 @@ import { Loader2, Users, Award, Coins, Star } from 'lucide-react';
 import { useLanguage } from '@/app/context/language-context';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import Link from 'next/link';
 
 export default function AdminUsersPage() {
   const firestore = useFirestore();
@@ -53,38 +54,40 @@ export default function AdminUsersPage() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {users?.filter(u => u.firstName !== 'Anonymous').map((user) => (
-          <Card key={user.id} className="flex flex-col text-center items-center">
-            <CardHeader className="pb-4">
-              <Avatar className="h-24 w-24 border-4 border-primary/20 mx-auto">
-                {user.avatarConfig ? (
-                  <CustomAvatar config={user.avatarConfig} />
-                ) : (
-                  <>
-                    <AvatarImage src={user.profilePicture} alt={user.firstName} data-ai-hint="child portrait" />
-                    <AvatarFallback>{user.firstName?.charAt(0)}</AvatarFallback>
-                  </>
-                )}
-              </Avatar>
-            </CardHeader>
-            <CardContent className="flex-grow space-y-2">
-              <CardTitle className="text-lg">{user.firstName} {user.lastName}</CardTitle>
-              <CardDescription>@{user.username}</CardDescription>
-              <div className="text-xs text-muted-foreground space-y-1 pt-2">
-                 <div className="flex items-center justify-center gap-2">
-                    <Award className="w-4 h-4 text-yellow-500" />
-                    <span>{(user.totalPoints || 0).toLocaleString()} XP</span>
-                 </div>
-                 <div className="flex items-center justify-center gap-2">
-                    <Coins className="w-4 h-4 text-amber-500" />
-                    <span>{(user.braveCoins || 0).toLocaleString()} Coins</span>
-                 </div>
-                  <div className="flex items-center justify-center gap-2">
-                    <Star className="w-4 h-4 text-green-500" />
-                    <span>{user.questsCompleted || 0} Quests</span>
-                 </div>
-              </div>
-            </CardContent>
-          </Card>
+          <Link key={user.id} href={`/admin/users/${user.id}`} className="block">
+            <Card className="flex flex-col text-center items-center h-full hover:bg-card/90 hover:shadow-md transition-all">
+              <CardHeader className="pb-4">
+                <Avatar className="h-24 w-24 border-4 border-primary/20 mx-auto">
+                  {user.avatarConfig ? (
+                    <CustomAvatar config={user.avatarConfig} />
+                  ) : (
+                    <>
+                      <AvatarImage src={user.profilePicture} alt={user.firstName} data-ai-hint="child portrait" />
+                      <AvatarFallback>{user.firstName?.charAt(0)}</AvatarFallback>
+                    </>
+                  )}
+                </Avatar>
+              </CardHeader>
+              <CardContent className="flex-grow space-y-2">
+                <CardTitle className="text-lg">{user.firstName} {user.lastName}</CardTitle>
+                <CardDescription>@{user.username}</CardDescription>
+                <div className="text-xs text-muted-foreground space-y-1 pt-2">
+                   <div className="flex items-center justify-center gap-2">
+                      <Award className="w-4 h-4 text-yellow-500" />
+                      <span>{(user.totalPoints || 0).toLocaleString()} XP</span>
+                   </div>
+                   <div className="flex items-center justify-center gap-2">
+                      <Coins className="w-4 h-4 text-amber-500" />
+                      <span>{(user.braveCoins || 0).toLocaleString()} Coins</span>
+                   </div>
+                    <div className="flex items-center justify-center gap-2">
+                      <Star className="w-4 h-4 text-green-500" />
+                      <span>{user.questsCompleted || 0} Quests</span>
+                   </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
     </div>
