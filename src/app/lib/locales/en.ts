@@ -17,6 +17,7 @@ export const en = {
     register: 'Register',
     roadmap: 'Level Roadmap',
     admin: 'Admin Management',
+    users: 'Classroom',
     "artificer-studio": "Artificer's Studio",
   },
   // Navigation
@@ -27,6 +28,7 @@ export const en = {
     trophyRoom: 'Trophy Room',
     levelRoadmap: 'Level Roadmap',
     questReview: 'Quest Review',
+    classroom: 'Classroom',
     opportunityBoard: 'Opportunity Board',
     rewardShop: 'Reward Shop',
     lorebook: 'Lorebook',
@@ -216,6 +218,7 @@ export const en = {
   readyToBeAHerp: 'Ready to Become a Hero?',
   readyToBecomeAHeroDescription: 'Your adventure awaits. Join a community of young heroes making a real difference in the world, one quest at a time.',
   joinTheGuildNow: 'Join the Guild Now',
+  usersDescription: 'View all adventurers in a classroom-style grid.',
   // Admin Page
   adminDescription: 'Manage achievements and rewards for the entire application.',
   manageAchievements: 'Manage Achievements',

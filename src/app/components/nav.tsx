@@ -45,6 +45,7 @@ export default function Nav() {
     { href: '/achievements', label: t('nav.trophyRoom'), icon: Trophy },
     { href: '/roadmap', label: t('nav.levelRoadmap'), icon: Map },
     { href: '/approvals', label: t('nav.questReview'), icon: CheckSquare, admin: true },
+    { href: '/admin/users', label: t('nav.classroom'), icon: Users, admin: true },
     { href: '/admin', label: 'Admin', icon: Shield, admin: true },
     { href: '/gallery', label: t('nav.opportunityBoard'), icon: Sparkles },
     { href: '/artificer-studio', label: "Artificer's Studio", icon: Paintbrush },

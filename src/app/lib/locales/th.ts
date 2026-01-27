@@ -17,6 +17,7 @@ export const th = {
       register: 'สมัครสมาชิก',
       roadmap: 'แผนที่เลเวล',
       admin: 'จัดการระบบ',
+      users: 'ห้องเรียน',
       "artificer-studio": "สตูดิโอช่างศิลป์",
     },
     // Navigation
@@ -27,6 +28,7 @@ export const th = {
       trophyRoom: 'ห้องถ้วยรางวัล',
       levelRoadmap: 'แผนที่เลเวล',
       questReview: 'ตรวจสอบเควส',
+      classroom: 'ห้องเรียน',
       opportunityBoard: 'บอร์ดโอกาส',
       rewardShop: 'ร้านค้ารางวัล',
       lorebook: 'หนังสือตำนาน',
@@ -217,6 +219,7 @@ export const th = {
     readyToBeAHerp: 'พร้อมที่จะเป็นฮีโร่แล้วหรือยัง?',
     readyToBecomeAHeroDescription: 'การผจญภัยของคุณกำลังรออยู่ เข้าร่วมชุมชนของฮีโร่รุ่นเยาว์ที่สร้างความแตกต่างอย่างแท้จริงในโลก ทีละเควส',
     joinTheGuildNow: 'เข้าร่วมกิลด์ทันที',
+    usersDescription: 'ดูนักผจญภัยทั้งหมดในตารางห้องเรียนของคุณ',
     // Admin Page
     adminDescription: 'จัดการความสำเร็จและรางวัลสำหรับทั้งแอปพลิเคชัน',
     manageAchievements: 'จัดการความสำเร็จ',
@@ -343,5 +346,3 @@ export const th = {
         'The Unwritten': 'ผู้ไม่ถูกจารึก',
     }
 };
-
-    
