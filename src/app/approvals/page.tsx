@@ -145,14 +145,14 @@ const QuestCard = ({ deed, user, onApproval }: { deed: Deed; user?: UserProfile;
                 <CardFooter className="flex gap-2">
                 <Button
                     onClick={() => onApproval(deed, 'approved', points, coins)}
-                    className="w-full bg-green-500 hover:bg-green-600 text-white"
+                    className="flex-1 bg-green-500 hover:bg-green-600 text-white"
                 >
                     <Check className="w-4 h-4 mr-2" /> {t('approve')}
                 </Button>
                 <Button
                     onClick={() => onApproval(deed, 'rejected')}
                     variant="destructive"
-                    className="w-full"
+                    className="flex-1"
                 >
                     <X className="w-4 h-4 mr-2" /> {t('reject')}
                 </Button>
