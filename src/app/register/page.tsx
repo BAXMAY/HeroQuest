@@ -19,7 +19,7 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import Mascot from "@/app/components/mascot";
+import Logo from "@/app/components/logo";
 import { useAuth, useUser } from "@/firebase";
 import { initiateEmailSignUp, initiateGoogleSignIn } from "@/firebase/non-blocking-login";
 import { Separator } from "@/components/ui/separator";
@@ -132,7 +132,7 @@ export default function RegisterPage() {
         <Card className="max-w-sm w-full">
             <CardHeader className="text-center">
                  <div className="flex justify-center mb-4">
-                    <Mascot className="w-16 h-16 text-primary" />
+                    <Logo className="w-16 h-16" />
                 </div>
                 <CardTitle className="text-3xl font-headline">{t('joinTheGuild')}</CardTitle>
                 <CardDescription>{t('createHeroProfile')}</CardDescription>

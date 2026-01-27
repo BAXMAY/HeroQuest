@@ -24,17 +24,15 @@ import {
   Shield,
   Paintbrush,
 } from 'lucide-react';
-import Image from 'next/image';
+import Logo from '@/app/components/logo';
 import { useLanguage } from '@/app/context/language-context';
 import { useAdmin } from '@/firebase';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 
 export default function Nav() {
   const pathname = usePathname();
   const { t } = useLanguage();
   const { isAdmin } = useAdmin();
-  const logoImage = PlaceHolderImages.find(img => img.id === 'xp-coin-icon')?.imageUrl;
   const { setOpenMobile } = useSidebar();
 
 
@@ -62,7 +60,7 @@ export default function Nav() {
       <SidebarHeader>
         <div className="flex items-center gap-2 p-2">
             <Link href="/" className="flex items-center gap-2">
-              {logoImage && <Image src={logoImage} alt="HeroQuest Logo" width={32} height={32} className="w-8 h-8" />}
+              <Logo className="w-8 h-8" />
               <h2 className="text-2xl font-bold font-headline">HeroQuest</h2>
             </Link>
         </div>

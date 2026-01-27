@@ -19,7 +19,7 @@ import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Mascot from "@/app/components/mascot";
+import Logo from "@/app/components/logo";
 import { useAuth, useUser } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { getSdks } from "@/firebase";
@@ -120,7 +120,7 @@ export default function OnboardingPage() {
         <Card className="max-w-lg w-full">
             <CardHeader className="text-center">
                  <div className="flex justify-center mb-4">
-                    <Mascot className="w-16 h-16 text-primary" />
+                    <Logo className="w-16 h-16" />
                 </div>
                 <CardTitle className="text-3xl font-headline">Welcome to the Guild!</CardTitle>
                 <CardDescription>Let's create your hero profile to get you started.</CardDescription>

@@ -8,7 +8,7 @@ import { collection, doc, query, where, orderBy } from 'firebase/firestore';
 import type { UserProfile, Deed, Achievement } from '@/app/lib/types';
 import { Loader2, Award, Coins, Star, Download, Shield } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
-import Mascot from '@/app/components/mascot';
+import Logo from '@/app/components/logo';
 import { getLevelFromXP } from '@/app/lib/levels';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -143,7 +143,7 @@ export default function PortfolioPage() {
                 <p className="text-sm text-gray-400">{userProfile.email}</p>
             </div>
             <div className="flex-shrink-0 ml-auto hidden sm:block">
-                <Mascot className="w-20 h-20 text-red-500" />
+                <Logo className="w-20 h-20" />
             </div>
         </header>
 
