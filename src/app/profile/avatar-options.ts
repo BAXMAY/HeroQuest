@@ -7,11 +7,11 @@ const earSizeOptions: EarSize[] = ['small', 'big'];
 const eyeStyleOptions: EyeStyle[] = ['circle', 'shadow', 'round'];
 const eyeTypeOptions: EyeType[] = ['circle', 'oval', 'smile', 'shadow', 'round'];
 const hairStyleOptions: HairStyle[] = ['normal', 'thick', 'mohawk', 'womanLong', 'womanShort', 'womanBig', 'none'];
-const hatTypeOptions: HatType[] = ['none', 'beanie', 'turban', 'party', 'hijab'];
-const mouthTypeOptions: MouthType[] = ['laugh', 'smile', 'peace', 'sad', 'tongue'];
-const noseTypeOptions: NoseType[] = ['short', 'long', 'round'];
-const shirtTypeOptions: ShirtType[] = ['hoody', 'polo', 'shirt'];
-const glassesTypeOptions: GlassesType[] = ['none', 'round', 'square'];
+const hatStyleOptions: HatType[] = ['none', 'beanie', 'turban', 'party', 'hijab'];
+const mouthStyleOptions: MouthType[] = ['laugh', 'smile', 'peace', 'sad', 'tongue'];
+const noseStyleOptions: NoseType[] = ['short', 'long', 'round'];
+const shirtStyleOptions: ShirtType[] = ['hoody', 'polo', 'shirt'];
+const glassesStyleOptions: GlassesType[] = ['none', 'round', 'square'];
 
 export const avatarOptions = {
     // Shape
@@ -23,16 +23,16 @@ export const avatarOptions = {
     hairColor: ['#000', '#fff', '#77311D', '#FC909F', '#D2EFF3', '#506AF4', '#F48150'],
     eyeType: eyeTypeOptions,
     eyeStyle: eyeStyleOptions,
-    noseType: noseTypeOptions,
-    mouthType: mouthTypeOptions,
+    noseStyle: noseStyleOptions,
+    mouthStyle: mouthStyleOptions,
     
     // Clothes
-    shirtType: shirtTypeOptions,
+    shirtStyle: shirtStyleOptions,
     shirtColor: ['#9287FF', '#6BD9E9', '#FC909F', '#F4D150', '#77311D'],
     
     // Accessories
-    glassesType: glassesTypeOptions,
-    hatType: hatTypeOptions,
+    glassesStyle: glassesStyleOptions,
+    hatStyle: hatStyleOptions,
     hatColor: ['#000', '#fff', '#77311D', '#FC909F', '#D2EFF3', '#506AF4', '#F48150'],
     
     // Other
@@ -50,16 +50,16 @@ export const optionLabels: { [key in keyof AvatarConfig]: string } = {
     hairStyle: 'Hair style',
     eyeType: 'Eye type',
     eyeStyle: 'Eye style',
-    noseType: 'Nose type',
-    mouthType: 'Mouth type',
+    noseStyle: 'Nose Style',
+    mouthStyle: 'Mouth Style',
     
     // Clothes
-    shirtType: 'Shirt',
+    shirtStyle: 'Shirt Style',
     shirtColor: 'Shirt color',
     
     // Accessories
-    glassesType: 'Glasses',
-    hatType: 'Hat',
+    glassesStyle: 'Glasses Style',
+    hatStyle: 'Hat Style',
     hatColor: 'Hat color',
     
     // Other
@@ -76,9 +76,9 @@ export const defaultAvatarConfig: AvatarConfig = {
     eyeType: 'oval',
     eyeStyle: 'circle',
     hairStyle: 'normal',
-    hatType: 'none',
-    mouthType: 'smile',
-    noseType: 'short',
-    shirtType: 'hoody',
-    glassesType: 'none',
+    hatStyle: 'none',
+    mouthStyle: 'smile',
+    noseStyle: 'short',
+    shirtStyle: 'hoody',
+    glassesStyle: 'none',
 };

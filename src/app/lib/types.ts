@@ -45,11 +45,11 @@ export type AvatarConfig = {
   eyeType: EyeType;
   eyeStyle: EyeStyle;
   hairStyle: HairStyle;
-  hatType: HatType;
-  mouthType: MouthType;
-  noseType: NoseType;
-  shirtType: ShirtType;
-  glassesType: GlassesType;
+  hatStyle: HatType;
+  mouthStyle: MouthType;
+  noseStyle: NoseType;
+  shirtStyle: ShirtType;
+  glassesStyle: GlassesType;
 };
 
 
