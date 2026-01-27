@@ -20,6 +20,7 @@ export const en = {
     users: 'Classroom',
     "artificer-studio": "Artificer's Studio",
     userDetails: 'User Details',
+    portfolio: 'Your Portfolio',
   },
   // Navigation
   nav: {
@@ -346,3 +347,5 @@ export const en = {
     'The Unwritten': 'The Unwritten',
   }
 };
+
+    

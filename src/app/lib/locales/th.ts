@@ -20,6 +20,7 @@ export const th = {
       users: 'ห้องเรียน',
       "artificer-studio": "สตูดิโอช่างศิลป์",
       userDetails: 'รายละเอียดผู้ใช้',
+      portfolio: 'ผลงานของคุณ',
     },
     // Navigation
     nav: {
@@ -347,3 +348,5 @@ export const th = {
         'The Unwritten': 'ผู้ไม่ถูกจารึก',
     }
 };
+
+    
