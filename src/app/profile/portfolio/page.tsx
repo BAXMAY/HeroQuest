@@ -50,7 +50,8 @@ export default function PortfolioPage() {
     if (portfolioRef.current) {
       html2canvas(portfolioRef.current, { 
         scale: 2, // Higher scale for better quality
-        useCORS: true 
+        useCORS: true,
+        backgroundColor: null, // Use background from the element
       }).then(canvas => {
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF('p', 'mm', 'a4');
@@ -124,7 +125,7 @@ export default function PortfolioPage() {
            Export as PDF
         </Button>
       </div>
-      <div ref={portfolioRef} className="bg-gray-900 text-gray-100 p-6 max-w-4xl mx-auto shadow-lg print:shadow-none">
+      <div ref={portfolioRef} className="bg-gray-900 text-gray-100 p-6 max-w-4xl mx-auto shadow-lg print:shadow-none w-[210mm] min-h-[297mm]">
         <header className="flex flex-col sm:flex-row items-center gap-4 border-b-2 border-gray-700 pb-4 mb-4">
             <Avatar className="h-24 w-24 border-4 border-yellow-400">
                 {userProfile.avatarConfig ? (
@@ -148,36 +149,36 @@ export default function PortfolioPage() {
 
         <section className="grid grid-cols-3 gap-2 text-center mb-6">
             <div className="p-2 bg-yellow-900/50 rounded-lg">
-                <Award className="w-8 h-8 mx-auto text-yellow-400 mb-1"/>
+                <Award className="w-6 h-6 mx-auto text-yellow-400 mb-1"/>
                 <p className="text-xl font-bold">{userProfile.totalPoints.toLocaleString()}</p>
-                <p className="text-sm font-semibold text-gray-300">Total XP</p>
+                <p className="text-xs font-semibold text-gray-300">Total XP</p>
             </div>
              <div className="p-2 bg-amber-900/50 rounded-lg">
-                <Coins className="w-8 h-8 mx-auto text-amber-400 mb-1"/>
+                <Coins className="w-6 h-6 mx-auto text-amber-400 mb-1"/>
                 <p className="text-xl font-bold">{userProfile.braveCoins.toLocaleString()}</p>
-                <p className="text-sm font-semibold text-gray-300">Brave Coins</p>
+                <p className="text-xs font-semibold text-gray-300">Brave Coins</p>
             </div>
              <div className="p-2 bg-green-900/50 rounded-lg">
-                <Star className="w-8 h-8 mx-auto text-green-400 mb-1"/>
+                <Star className="w-6 h-6 mx-auto text-green-400 mb-1"/>
                 <p className="text-xl font-bold">{userProfile.questsCompleted.toLocaleString()}</p>
-                <p className="text-sm font-semibold text-gray-300">Quests Completed</p>
+                <p className="text-xs font-semibold text-gray-300">Quests Completed</p>
             </div>
         </section>
 
         <section className="mb-6">
-            <h2 className="text-2xl font-bold border-b-2 border-gray-700 pb-2 mb-3 font-headline text-white">Completed Quests</h2>
-            <div className="space-y-4">
+            <h2 className="text-xl font-bold border-b-2 border-gray-700 pb-2 mb-3 font-headline text-white">Completed Quests</h2>
+            <div className="space-y-3">
                 {quests && quests.length > 0 ? quests.map(quest => quest.status == 'approved' ? (
                     
-                    <div key={quest.id} className="flex items-start gap-3 p-3 border border-gray-700 rounded-lg bg-gray-800">
-                        <div className="w-32 h-24 relative flex-shrink-0">
+                    <div key={quest.id} className="flex items-start gap-3 p-2 border border-gray-700 rounded-lg bg-gray-800">
+                        <div className="w-24 h-20 relative flex-shrink-0">
                             <Image src={quest.photo} alt={quest.description} fill className="rounded-md object-cover" />
                         </div>
                         <div className="flex-grow">
-                            <p className="font-semibold">{quest.description}</p>
+                            <p className="font-semibold text-sm">{quest.description}</p>
                             <div className="flex justify-between items-center mt-1">
-                                <p className="text-sm text-gray-400">Completed: {quest.submittedAt.toDate().toLocaleDateString()}</p>
-                                <p className="text-sm font-bold text-yellow-400">+{quest.points} XP</p>
+                                <p className="text-xs text-gray-400">Completed: {quest.submittedAt.toDate().toLocaleDateString()}</p>
+                                <p className="text-xs font-bold text-yellow-400">+{quest.points} XP</p>
                             </div>
                         </div>
                     </div>
@@ -186,11 +187,11 @@ export default function PortfolioPage() {
         </section>
 
         <section>
-            <h2 className="text-2xl font-bold border-b-2 border-gray-700 pb-2 mb-3 font-headline text-white">Achievements</h2>
-             <div className="flex flex-wrap gap-4">
+            <h2 className="text-xl font-bold border-b-2 border-gray-700 pb-2 mb-3 font-headline text-white">Achievements</h2>
+             <div className="flex flex-wrap gap-3">
                 {achievements && achievements.length > 0 ? achievements.map(ach => (
                   <div key={ach.id} className="text-center p-2 rounded-lg border border-gray-700 bg-blue-900/50 w-24">
-                    <Icon name={ach.icon} className="w-10 h-10 mx-auto text-blue-400 mb-1" />
+                    <Icon name={ach.icon} className="w-8 h-8 mx-auto text-blue-400 mb-1" />
                     <p className="text-xs font-semibold text-gray-300">{ach.name}</p>
                   </div>
                 )) : <p className="text-gray-400">No achievements unlocked yet.</p>}
