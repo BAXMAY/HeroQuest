@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import type { UserProfile } from '@/app/lib/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Check, X, Info, Coins, Loader2, CheckCircle, XCircle, Wand2, Bot } from 'lucide-react';
+import { Check, X, Info, Coins, Loader2, CheckCircle, XCircle, Wand2, Bot, Undo2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useLanguage } from '../context/language-context';
@@ -38,7 +38,7 @@ const getPhotoDataUri = async (url: string): Promise<string> => {
     });
 };
 
-const QuestCard = ({ deed, user, onApproval }: { deed: Deed; user?: UserProfile; onApproval: (deed: Deed, status: 'approved' | 'rejected', points?: number, coins?: number) => void; }) => {
+const QuestCard = ({ deed, user, onApproval }: { deed: Deed; user?: UserProfile; onApproval: (deed: Deed, status: 'approved' | 'rejected' | 'pending', points?: number, coins?: number) => void; }) => {
     const { t } = useLanguage();
     const { toast } = useToast();
     const [points, setPoints] = useState(deed.points || 50);
@@ -159,6 +159,14 @@ const QuestCard = ({ deed, user, onApproval }: { deed: Deed; user?: UserProfile;
                 </Button>
                 </CardFooter>
             )}
+            {deed.status !== 'pending' && (
+                 <CardFooter>
+                    <Button variant="outline" className="w-full" onClick={() => onApproval(deed, 'pending')}>
+                        <Undo2 className="w-4 h-4 mr-2" />
+                        Move back to Pending
+                    </Button>
+                </CardFooter>
+            )}
         </Card>
     );
 };
@@ -187,19 +195,21 @@ export default function ApprovalsPage() {
   const { data: users, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
   const pendingDeeds = allDeeds?.filter(d => d.status === 'pending');
 
-  const handleApproval = async (deed: Deed, newStatus: 'approved' | 'rejected', points?: number, coins?: number) => {
+  const handleApproval = async (deed: Deed, newStatus: 'approved' | 'rejected' | 'pending', points?: number, coins?: number) => {
     if (!firestore) return;
-    
+
     const batch = writeBatch(firestore);
-
     const deedRef = doc(firestore, 'users', deed.userProfileId, 'volunteer_work', deed.id);
-    batch.update(deedRef, { 
-        status: newStatus,
-        points: newStatus === 'approved' ? points : deed.points 
-    });
+    const userRef = doc(firestore, 'users', deed.userProfileId);
+    const originalStatus = deed.status;
 
-    if (newStatus === 'approved') {
-      const userRef = doc(firestore, 'users', deed.userProfileId);
+    // Update the deed's status
+    batch.update(deedRef, { status: newStatus, points: newStatus === 'approved' ? points : deed.points });
+
+    // Handle stat changes based on status transitions
+
+    // 1. Moving from PENDING to APPROVED
+    if (newStatus === 'approved' && originalStatus === 'pending') {
       const pointsAwarded = points || deed.points;
       const coinsAwarded = coins || Math.floor(pointsAwarded / 10);
       
@@ -222,11 +232,23 @@ export default function ApprovalsPage() {
       });
     }
 
+    // 2. Moving from APPROVED back to PENDING
+    if (newStatus === 'pending' && originalStatus === 'approved') {
+        const pointsToDecrement = deed.points;
+        const coinsToDecrement = Math.floor(pointsToDecrement / 10);
+        
+        batch.update(userRef, {
+            totalPoints: increment(-pointsToDecrement),
+            braveCoins: increment(-coinsToDecrement),
+            questsCompleted: increment(-1)
+        });
+        // Note: We are not deleting the original approval notification for simplicity.
+    }
+
     await batch.commit();
 
-    // Post-commit actions
-    if (newStatus === 'approved') {
-        const userRef = doc(firestore, 'users', deed.userProfileId);
+    // Post-commit actions (only for new approvals)
+    if (newStatus === 'approved' && originalStatus === 'pending') {
         const updatedUserSnap = await getDoc(userRef);
         if (updatedUserSnap.exists()) {
             const updatedUserProfile = { id: updatedUserSnap.id, ...updatedUserSnap.data() } as UserProfile;
@@ -240,10 +262,21 @@ export default function ApprovalsPage() {
             }
         }
     }
+    
+    let toastTitle = '';
+    let toastDescription = '';
+
+    if (newStatus === 'pending') {
+        toastTitle = 'Quest Reverted';
+        toastDescription = 'The quest has been moved back to the pending queue.';
+    } else {
+        toastTitle = t('questStatusTitle', { status: newStatus });
+        toastDescription = t('questStatusDescription', { status: newStatus });
+    }
 
     toast({
-      title: t('questStatusTitle', { status: newStatus }),
-      description: t('questStatusDescription', { status: newStatus }),
+      title: toastTitle,
+      description: toastDescription,
       variant: newStatus === 'rejected' ? 'destructive' : 'default',
     });
   };
