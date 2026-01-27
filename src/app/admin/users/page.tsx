@@ -9,19 +9,23 @@ import CustomAvatar from '@/app/profile/custom-avatar';
 import { Loader2, Users, Award, Coins, Star } from 'lucide-react';
 import { useLanguage } from '@/app/context/language-context';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 
 export default function AdminUsersPage() {
   const firestore = useFirestore();
   const { t } = useLanguage();
   const { isAdmin, isLoading: isAdminLoading } = useAdmin();
   const router = useRouter();
+  const [sortBy, setSortBy] = useState('firstName');
 
   const usersQuery = useMemoFirebase(() => {
     if (!firestore || !isAdmin) return null;
-    return query(collection(firestore, 'users'), orderBy('firstName'));
-  }, [firestore, isAdmin]);
+    const direction = sortBy === 'firstName' ? 'asc' : 'desc';
+    return query(collection(firestore, 'users'), orderBy(sortBy, direction));
+  }, [firestore, isAdmin, sortBy]);
 
   const { data: users, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
 
@@ -44,12 +48,28 @@ export default function AdminUsersPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
-          <Users className="w-8 h-8 text-primary" />
-          {t('pageTitles.users')}
-        </h1>
-        <p className="text-muted-foreground">{t('usersDescription')}</p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
+            <Users className="w-8 h-8 text-primary" />
+            {t('pageTitles.users')}
+          </h1>
+          <p className="text-muted-foreground">{t('usersDescription')}</p>
+        </div>
+        <div className="flex items-center gap-2">
+            <Label htmlFor="sort-by">Sort by</Label>
+            <Select onValueChange={setSortBy} defaultValue={sortBy}>
+              <SelectTrigger id="sort-by" className="w-[180px]">
+                <SelectValue placeholder="Sort by..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="firstName">Name</SelectItem>
+                <SelectItem value="totalPoints">XP</SelectItem>
+                <SelectItem value="braveCoins">Coins</SelectItem>
+                <SelectItem value="questsCompleted">Quests</SelectItem>
+              </SelectContent>
+            </Select>
+        </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
