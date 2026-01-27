@@ -9,7 +9,8 @@ import type {
   ShirtType, 
   GlassesType, 
   EarSize, 
-  HatType 
+  HatType,
+  EyebrowType
 } from 'react-nice-avatar';
 
 
@@ -44,6 +45,7 @@ export type AvatarConfig = {
   earSize: EarSize;
   eyeType: EyeType;
   eyeStyle: EyeStyle;
+  eyebrowStyle: EyebrowType;
   hairStyle: HairStyle;
   hatStyle: HatType;
   mouthStyle: MouthType;

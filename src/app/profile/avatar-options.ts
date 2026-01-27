@@ -1,11 +1,12 @@
 'use client';
 import type { AvatarConfig } from "../lib/types";
-import type { EarSize, EyeStyle, EyeType, HairStyle, HatType, MouthType, NoseType, ShirtType, GlassesType } from 'react-nice-avatar';
+import type { EarSize, EyeStyle, EyeType, EyebrowType, HairStyle, HatType, MouthType, NoseType, ShirtType, GlassesType } from 'react-nice-avatar';
 
 // Manually define the available options as arrays of strings
 const earSizeOptions: EarSize[] = ['small', 'big'];
 const eyeStyleOptions: EyeStyle[] = ['circle', 'shadow', 'round'];
 const eyeTypeOptions: EyeType[] = ['circle', 'oval', 'smile', 'shadow', 'round'];
+const eyebrowStyleOptions: EyebrowType[] = ['raised', 'leftLowered', 'serious', 'angry', 'concerned'];
 const hairStyleOptions: HairStyle[] = ['normal', 'thick', 'mohawk', 'womanLong', 'womanShort', 'womanBig', 'none'];
 const hatStyleOptions: HatType[] = ['none', 'beanie', 'turban', 'party', 'hijab'];
 const mouthStyleOptions: MouthType[] = ['laugh', 'smile', 'peace', 'sad', 'tongue'];
@@ -23,6 +24,7 @@ export const avatarOptions = {
     hairColor: ['#000', '#fff', '#77311D', '#FC909F', '#D2EFF3', '#506AF4', '#F48150'],
     eyeType: eyeTypeOptions,
     eyeStyle: eyeStyleOptions,
+    eyebrowStyle: eyebrowStyleOptions,
     noseStyle: noseStyleOptions,
     mouthStyle: mouthStyleOptions,
     
@@ -50,6 +52,7 @@ export const optionLabels: { [key in keyof AvatarConfig]: string } = {
     hairStyle: 'Hair style',
     eyeType: 'Eye type',
     eyeStyle: 'Eye style',
+    eyebrowStyle: 'Eyebrow Style',
     noseStyle: 'Nose Style',
     mouthStyle: 'Mouth Style',
     
@@ -75,6 +78,7 @@ export const defaultAvatarConfig: AvatarConfig = {
     earSize: 'small',
     eyeType: 'oval',
     eyeStyle: 'circle',
+    eyebrowStyle: 'raised',
     hairStyle: 'normal',
     hatStyle: 'none',
     mouthStyle: 'smile',
