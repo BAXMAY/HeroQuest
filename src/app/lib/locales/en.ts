@@ -19,6 +19,7 @@ export const en = {
     admin: 'Admin Management',
     users: 'Classroom',
     "artificer-studio": "Artificer's Studio",
+    userDetails: 'User Details',
   },
   // Navigation
   nav: {

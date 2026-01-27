@@ -24,6 +24,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import CustomAvatar from '../profile/custom-avatar';
+import { TranslationKey } from '../lib/locales/translations';
 
 
 export function AppHeader() {
@@ -51,7 +52,15 @@ export function AppHeader() {
   const unreadNotifications = notifications?.filter(n => !n.read) || [];
 
   const pathname = usePathname();
-  const title = t(`pageTitles.${pathname.replace('/', '') || 'home'}`);
+  let titleKey;
+  if (pathname.startsWith('/admin/users/')) {
+    titleKey = 'userDetails';
+  } else {
+    const parts = pathname.split('/').filter(p => p);
+    titleKey = parts[parts.length - 1] || 'home';
+  }
+  if (pathname === '/') titleKey = 'home';
+  const title = t(`pageTitles.${titleKey}` as TranslationKey);
 
   const handleLogout = async () => {
     try {

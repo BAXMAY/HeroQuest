@@ -19,6 +19,7 @@ export const th = {
       admin: 'จัดการระบบ',
       users: 'ห้องเรียน',
       "artificer-studio": "สตูดิโอช่างศิลป์",
+      userDetails: 'รายละเอียดผู้ใช้',
     },
     // Navigation
     nav: {
