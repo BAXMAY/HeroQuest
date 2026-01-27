@@ -147,7 +147,7 @@ export default function ProfilePage() {
             <p className="text-lg font-semibold text-primary">{t(`levelNames.${currentLevel.title}` as any)}</p>
         </div>
         <Button asChild variant="outline">
-          <Link href="/profile/portfolio" target="_blank">
+          <Link href="/profile/portfolio">
             <FileText className="mr-2 h-4 w-4" />
             Export Portfolio
           </Link>
