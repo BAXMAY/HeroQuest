@@ -48,7 +48,7 @@ const QuestCard = ({ deed, user, onApproval }: { deed: Deed; user?: UserProfile;
         setIsAiEvaluating(true);
         try {
             // Using a CORS proxy to prevent client-side fetch errors
-            const proxiedUrl = `https://images.weserv.nl/?url=${deed.photo}`;
+            const proxiedUrl = `https://images.weserv.nl/?url=${encodeURIComponent(deed.photo)}`;
             const photoDataUri = await getPhotoDataUri(proxiedUrl);
             
             const result = await evaluateQuest({
