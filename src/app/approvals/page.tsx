@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import type { UserProfile } from '@/app/lib/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Check, X, Info, Coins, Loader2, CheckCircle, XCircle } from 'lucide-react';
+import { Check, X, Info, Coins, Loader2, CheckCircle, XCircle, Wand2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useLanguage } from '../context/language-context';
@@ -18,12 +18,65 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { checkAndAwardAchievements } from '@/app/lib/achievements';
+import { evaluateQuest } from '@/ai/flows/evaluate-quest-flow';
 
+
+const getPhotoDataUri = async (url: string): Promise<string> => {
+    // This can fail if the image host doesn't have CORS enabled.
+    // We use a proxy to get around this for development.
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch image: ${response.statusText}`);
+    }
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
+};
 
 const QuestCard = ({ deed, user, onApproval }: { deed: Deed; user?: UserProfile; onApproval: (deed: Deed, status: 'approved' | 'rejected', points?: number, coins?: number) => void; }) => {
     const { t } = useLanguage();
+    const { toast } = useToast();
     const [points, setPoints] = useState(deed.points || 50);
     const [coins, setCoins] = useState(Math.floor((deed.points || 50) / 10));
+    const [isAiEvaluating, setIsAiEvaluating] = useState(false);
+
+    const handleAiEvaluation = async () => {
+        setIsAiEvaluating(true);
+        try {
+            // Using a CORS proxy to prevent client-side fetch errors
+            const proxiedUrl = `https://images.weserv.nl/?url=${deed.photo}`;
+            const photoDataUri = await getPhotoDataUri(proxiedUrl);
+            
+            const result = await evaluateQuest({
+                description: deed.description,
+                photoDataUri: photoDataUri,
+            });
+
+            if (result.points && result.coins) {
+                setPoints(result.points);
+                setCoins(result.coins);
+                toast({
+                    title: "AI Suggestion",
+                    description: result.justification,
+                });
+            }
+
+        } catch (error) {
+            console.error("AI Evaluation failed", error);
+            toast({
+                title: "AI Evaluation Failed",
+                description: "The AI oracle could not evaluate this quest. Please enter the values manually.",
+                variant: "destructive",
+            });
+        } finally {
+            setIsAiEvaluating(false);
+        }
+    };
+
 
     return (
         <Card key={deed.id} className="flex flex-col">
@@ -62,15 +115,21 @@ const QuestCard = ({ deed, user, onApproval }: { deed: Deed; user?: UserProfile;
             </div>
             <CardDescription>{deed.description}</CardDescription>
             {deed.status === 'pending' ? (
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <Label htmlFor={`points-${deed.id}`}>XP</Label>
-                        <Input id={`points-${deed.id}`} type="number" value={points} onChange={(e) => setPoints(Number(e.target.value))} />
+                <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor={`points-${deed.id}`}>XP</Label>
+                            <Input id={`points-${deed.id}`} type="number" value={points} onChange={(e) => setPoints(Number(e.target.value))} />
+                        </div>
+                         <div className="space-y-2">
+                            <Label htmlFor={`coins-${deed.id}`}>Brave Coins</Label>
+                            <Input id={`coins-${deed.id}`} type="number" value={coins} onChange={(e) => setCoins(Number(e.target.value))} />
+                        </div>
                     </div>
-                     <div className="space-y-2">
-                        <Label htmlFor={`coins-${deed.id}`}>Brave Coins</Label>
-                        <Input id={`coins-${deed.id}`} type="number" value={coins} onChange={(e) => setCoins(Number(e.target.value))} />
-                    </div>
+                     <Button variant="outline" className="w-full" onClick={handleAiEvaluation} disabled={isAiEvaluating}>
+                        {isAiEvaluating ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Wand2 className="w-4 h-4 mr-2" />}
+                        Ask AI for suggestion
+                    </Button>
                 </div>
             ) : (
                 <div className="flex justify-between items-center text-sm font-semibold">
