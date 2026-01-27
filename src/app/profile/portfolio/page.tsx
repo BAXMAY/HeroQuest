@@ -73,7 +73,7 @@ export default function PortfolioPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-100">
+      <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-gray-900">
         <Loader2 className="h-16 w-16 animate-spin text-primary" />
       </div>
     );
@@ -103,14 +103,14 @@ export default function PortfolioPage() {
           }
         }
       `}</style>
-      <div className="bg-gray-100 text-gray-800 font-sans p-4 sm:p-8 no-print">
+      <div className="bg-gray-100 dark:bg-black text-gray-800 dark:text-gray-200 font-sans p-4 sm:p-8 no-print">
          <Button onClick={handleExport} className="mb-4">
            <Download className="mr-2 h-4 w-4" />
            Export as PDF
         </Button>
       </div>
-      <div ref={portfolioRef} className="bg-white p-8 max-w-4xl mx-auto shadow-lg print:shadow-none">
-        <header className="flex flex-col sm:flex-row items-center gap-6 border-b-2 border-gray-200 pb-6 mb-6">
+      <div ref={portfolioRef} className="bg-gray-900 text-gray-100 p-8 max-w-4xl mx-auto shadow-lg print:shadow-none">
+        <header className="flex flex-col sm:flex-row items-center gap-6 border-b-2 border-gray-700 pb-6 mb-6">
             <Avatar className="h-24 w-24 border-4 border-yellow-400">
                 {userProfile.avatarConfig ? (
                   <CustomAvatar config={userProfile.avatarConfig} />
@@ -122,67 +122,67 @@ export default function PortfolioPage() {
                 )}
             </Avatar>
             <div>
-                <h1 className="text-4xl font-bold text-gray-800 font-headline">{userProfile.firstName} {userProfile.lastName}</h1>
-                <p className="text-xl text-yellow-600 font-semibold">{currentLevel.title}</p>
-                <p className="text-sm text-gray-500">{userProfile.email}</p>
+                <h1 className="text-4xl font-bold text-white font-headline">{userProfile.firstName} {userProfile.lastName}</h1>
+                <p className="text-xl text-yellow-400 font-semibold">{currentLevel.title}</p>
+                <p className="text-sm text-gray-400">{userProfile.email}</p>
             </div>
             <div className="flex-shrink-0 ml-auto hidden sm:block">
-                <Mascot className="w-20 h-20 text-red-600" />
+                <Mascot className="w-20 h-20 text-red-500" />
             </div>
         </header>
 
         <section className="grid grid-cols-3 gap-4 text-center mb-8">
-            <div className="p-4 bg-yellow-100 rounded-lg">
-                <Award className="w-8 h-8 mx-auto text-yellow-600 mb-1"/>
+            <div className="p-4 bg-yellow-900/50 rounded-lg">
+                <Award className="w-8 h-8 mx-auto text-yellow-400 mb-1"/>
                 <p className="text-2xl font-bold">{userProfile.totalPoints.toLocaleString()}</p>
-                <p className="text-sm font-semibold text-gray-600">Total XP</p>
+                <p className="text-sm font-semibold text-gray-300">Total XP</p>
             </div>
-             <div className="p-4 bg-amber-100 rounded-lg">
-                <Coins className="w-8 h-8 mx-auto text-amber-600 mb-1"/>
+             <div className="p-4 bg-amber-900/50 rounded-lg">
+                <Coins className="w-8 h-8 mx-auto text-amber-400 mb-1"/>
                 <p className="text-2xl font-bold">{userProfile.braveCoins.toLocaleString()}</p>
-                <p className="text-sm font-semibold text-gray-600">Brave Coins</p>
+                <p className="text-sm font-semibold text-gray-300">Brave Coins</p>
             </div>
-             <div className="p-4 bg-green-100 rounded-lg">
-                <Star className="w-8 h-8 mx-auto text-green-600 mb-1"/>
+             <div className="p-4 bg-green-900/50 rounded-lg">
+                <Star className="w-8 h-8 mx-auto text-green-400 mb-1"/>
                 <p className="text-2xl font-bold">{userProfile.questsCompleted.toLocaleString()}</p>
-                <p className="text-sm font-semibold text-gray-600">Quests Completed</p>
+                <p className="text-sm font-semibold text-gray-300">Quests Completed</p>
             </div>
         </section>
 
         <section className="mb-8">
-            <h2 className="text-2xl font-bold border-b-2 border-gray-200 pb-2 mb-4 font-headline">Completed Quests</h2>
+            <h2 className="text-2xl font-bold border-b-2 border-gray-700 pb-2 mb-4 font-headline text-white">Completed Quests</h2>
             <div className="space-y-4">
                 {quests && quests.length > 0 ? quests.map(quest => quest.status == 'approved' ? (
                     
-                    <div key={quest.id} className="flex items-start gap-4 p-4 border rounded-lg bg-gray-50">
+                    <div key={quest.id} className="flex items-start gap-4 p-4 border border-gray-700 rounded-lg bg-gray-800">
                         <div className="w-32 h-24 relative flex-shrink-0">
                             <Image src={quest.photo} alt={quest.description} fill className="rounded-md object-cover" />
                         </div>
                         <div className="flex-grow">
                             <p className="font-semibold">{quest.description}</p>
                             <div className="flex justify-between items-center mt-1">
-                                <p className="text-sm text-gray-500">Completed: {quest.submittedAt.toDate().toLocaleDateString()}</p>
-                                <p className="text-sm font-bold text-yellow-600">+{quest.points} XP</p>
+                                <p className="text-sm text-gray-400">Completed: {quest.submittedAt.toDate().toLocaleDateString()}</p>
+                                <p className="text-sm font-bold text-yellow-400">+{quest.points} XP</p>
                             </div>
                         </div>
                     </div>
-                ) : null ) : <p className="text-gray-500">No completed quests yet.</p>}
+                ) : null ) : <p className="text-gray-400">No completed quests yet.</p>}
             </div>
         </section>
 
         <section>
-            <h2 className="text-2xl font-bold border-b-2 border-gray-200 pb-2 mb-4 font-headline">Achievements</h2>
+            <h2 className="text-2xl font-bold border-b-2 border-gray-700 pb-2 mb-4 font-headline text-white">Achievements</h2>
              <div className="flex flex-wrap gap-4">
                 {achievements && achievements.length > 0 ? achievements.map(ach => (
-                  <div key={ach.id} className="text-center p-3 rounded-lg border bg-blue-50 w-28">
-                    <Award className="w-10 h-10 mx-auto text-blue-500 mb-1" />
-                    <p className="text-xs font-semibold text-gray-700">{ach.name}</p>
+                  <div key={ach.id} className="text-center p-3 rounded-lg border border-gray-700 bg-blue-900/50 w-28">
+                    <Award className="w-10 h-10 mx-auto text-blue-400 mb-1" />
+                    <p className="text-xs font-semibold text-gray-300">{ach.name}</p>
                   </div>
-                )) : <p className="text-gray-500">No achievements unlocked yet.</p>}
+                )) : <p className="text-gray-400">No achievements unlocked yet.</p>}
             </div>
         </section>
 
-        <footer className="text-center text-xs text-gray-400 mt-8 pt-4 border-t">
+        <footer className="text-center text-xs text-gray-500 mt-8 pt-4 border-t border-gray-700">
             Generated from HeroQuest on {new Date().toLocaleDateString()}
         </footer>
       </div>
