@@ -1,22 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import type { UserProfile } from '@/app/lib/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Check, X, Info, Coins, Loader2, CheckCircle, XCircle, Wand2 } from 'lucide-react';
+import { Check, X, Info, Coins, Loader2, CheckCircle, XCircle, Wand2, Bot } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useLanguage } from '../context/language-context';
-import { useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking, useAdmin, addDocumentNonBlocking } from '@/firebase';
-import { collection, collectionGroup, doc, increment, getDoc, serverTimestamp } from 'firebase/firestore';
+import { useCollection, useFirestore, useMemoFirebase, useAdmin } from '@/firebase';
+import { collection, collectionGroup, doc, increment, getDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import type { Deed } from '@/app/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { checkAndAwardAchievements } from '@/app/lib/achievements';
 import { evaluateQuest } from '@/ai/flows/evaluate-quest-flow';
 
@@ -168,6 +169,8 @@ export default function ApprovalsPage() {
   const { t } = useLanguage();
   const firestore = useFirestore();
   const { isAdmin, isLoading: isAdminLoading } = useAdmin();
+  const [isAutoPilotActive, setIsAutoPilotActive] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const allDeedsQuery = useMemoFirebase(() => {
     if (!firestore || !isAdmin) return null;
@@ -182,12 +185,15 @@ export default function ApprovalsPage() {
   }, [firestore, isAdmin]);
   
   const { data: users, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
+  const pendingDeeds = allDeeds?.filter(d => d.status === 'pending');
 
   const handleApproval = async (deed: Deed, newStatus: 'approved' | 'rejected', points?: number, coins?: number) => {
     if (!firestore) return;
     
+    const batch = writeBatch(firestore);
+
     const deedRef = doc(firestore, 'users', deed.userProfileId, 'volunteer_work', deed.id);
-    updateDocumentNonBlocking(deedRef, { 
+    batch.update(deedRef, { 
         status: newStatus,
         points: newStatus === 'approved' ? points : deed.points 
     });
@@ -197,28 +203,16 @@ export default function ApprovalsPage() {
       const pointsAwarded = points || deed.points;
       const coinsAwarded = coins || Math.floor(pointsAwarded / 10);
       
-      await updateDocumentNonBlocking(userRef, {
+      batch.update(userRef, {
         totalPoints: increment(pointsAwarded),
         braveCoins: increment(coinsAwarded),
         questsCompleted: increment(1)
       });
       
-      const updatedUserSnap = await getDoc(userRef);
-      if (updatedUserSnap.exists()) {
-        const updatedUserProfile = { id: updatedUserSnap.id, ...updatedUserSnap.data() } as UserProfile;
-        const newAchievements = await checkAndAwardAchievements(updatedUserProfile);
-
-        if (newAchievements.length > 0) {
-            toast({
-                title: 'Achievement Unlocked!',
-                description: `You've earned: ${newAchievements.map(a => a.name).join(', ')}`,
-            });
-        }
-      }
-      
       // Create a notification for the user
       const notificationsCollection = collection(firestore, 'users', deed.userProfileId, 'notifications');
-      addDocumentNonBlocking(notificationsCollection, {
+      const notificationRef = doc(notificationsCollection);
+      batch.set(notificationRef, {
         title: 'Quest Approved!',
         description: `Your quest "${deed.description.substring(0, 30)}..." was approved. You earned ${pointsAwarded} XP!`,
         createdAt: serverTimestamp(),
@@ -228,6 +222,25 @@ export default function ApprovalsPage() {
       });
     }
 
+    await batch.commit();
+
+    // Post-commit actions
+    if (newStatus === 'approved') {
+        const userRef = doc(firestore, 'users', deed.userProfileId);
+        const updatedUserSnap = await getDoc(userRef);
+        if (updatedUserSnap.exists()) {
+            const updatedUserProfile = { id: updatedUserSnap.id, ...updatedUserSnap.data() } as UserProfile;
+            const newAchievements = await checkAndAwardAchievements(updatedUserProfile);
+
+            if (newAchievements.length > 0) {
+                toast({
+                    title: 'Achievement Unlocked!',
+                    description: `You've earned: ${newAchievements.map(a => a.name).join(', ')}`,
+                });
+            }
+        }
+    }
+
     toast({
       title: t('questStatusTitle', { status: newStatus }),
       description: t('questStatusDescription', { status: newStatus }),
@@ -235,9 +248,58 @@ export default function ApprovalsPage() {
     });
   };
 
+  useEffect(() => {
+    // Cannot be an effect if we need to call async functions. 
+    // This is defined inside useEffect to capture the necessary variables.
+    const autoProcessDeed = async () => {
+        if (isAutoPilotActive && !isProcessing && pendingDeeds && pendingDeeds.length > 0) {
+            const deedToProcess = pendingDeeds[0];
+            
+            setIsProcessing(true);
+            const user = users?.find(u => u.id === deedToProcess.userProfileId);
+            try {
+                const proxiedUrl = `https://images.weserv.nl/?url=${encodeURIComponent(deedToProcess.photo)}`;
+                const photoDataUri = await getPhotoDataUri(proxiedUrl);
+                
+                const result = await evaluateQuest({
+                    description: deedToProcess.description,
+                    photoDataUri: photoDataUri,
+                });
+
+                if (result.points && result.points > 0 && result.coins) {
+                    await handleApproval(deedToProcess, 'approved', result.points, result.coins);
+                    toast({
+                        title: `AI Auto-Approved`,
+                        description: `Quest for ${user?.firstName} approved with ${result.points} XP. Justification: ${result.justification}`,
+                    });
+                } else {
+                    await handleApproval(deedToProcess, 'rejected');
+                    toast({
+                        title: `AI Auto-Rejected`,
+                        description: `AI could not determine a fair reward for ${user?.firstName}'s quest.`,
+                        variant: 'destructive'
+                    });
+                }
+            } catch (error) {
+                console.error("AI Auto-Pilot Error:", error);
+                await handleApproval(deedToProcess, 'rejected');
+                toast({
+                    title: `AI Error`,
+                    description: `Auto-approval failed for ${user?.firstName}'s quest. It has been rejected.`,
+                    variant: 'destructive'
+                });
+            } finally {
+                setIsProcessing(false);
+            }
+        }
+    };
+    
+    autoProcessDeed();
+}, [isAutoPilotActive, pendingDeeds, isProcessing, users, handleApproval, toast]);
+
+
   const isLoading = isLoadingDeeds || isLoadingUsers || isAdminLoading;
   
-  const pendingDeeds = allDeeds?.filter(d => d.status === 'pending');
   const approvedDeeds = allDeeds?.filter(d => d.status === 'approved');
   const rejectedDeeds = allDeeds?.filter(d => d.status === 'rejected');
 
@@ -255,6 +317,22 @@ export default function ApprovalsPage() {
         <h1 className="text-3xl font-bold tracking-tight font-headline">{t('pageTitles.approvals')}</h1>
         <p className="text-muted-foreground">{t('approvalsDescription')}</p>
       </div>
+
+        <div className="flex items-center space-x-2 rounded-lg border p-4">
+            <Bot className="w-5 h-5 text-primary"/>
+            <Label htmlFor="autopilot-switch" className="flex-grow font-medium">
+            AI Auto-Pilot
+            <p className="text-xs font-normal text-muted-foreground">Automatically approve or reject pending quests using AI.</p>
+            </Label>
+            {isProcessing && <Loader2 className="w-4 h-4 animate-spin"/>}
+            <Switch
+            id="autopilot-switch"
+            checked={isAutoPilotActive}
+            onCheckedChange={setIsAutoPilotActive}
+            disabled={isProcessing}
+            />
+        </div>
+
         <Tabs defaultValue="pending">
             <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="pending">Pending ({pendingDeeds?.length || 0})</TabsTrigger>
