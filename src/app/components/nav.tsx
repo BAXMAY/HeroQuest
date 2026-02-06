@@ -7,6 +7,9 @@ import {
   SidebarContent,
   SidebarFooter,
   useSidebar,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -23,10 +26,14 @@ import {
   Map,
   Shield,
   Paintbrush,
+  ChevronRight,
 } from 'lucide-react';
 import Logo from '@/app/components/logo';
 import { useLanguage } from '@/app/context/language-context';
 import { useAdmin } from '@/firebase';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { cn } from '@/lib/utils';
+import { useState, useEffect } from 'react';
 
 
 export default function Nav() {
@@ -34,6 +41,7 @@ export default function Nav() {
   const { t } = useLanguage();
   const { isAdmin } = useAdmin();
   const { setOpenMobile } = useSidebar();
+  const [openCollapsibles, setOpenCollapsibles] = useState<string[]>([]);
 
 
   const navItems = [
@@ -42,17 +50,36 @@ export default function Nav() {
     { href: '/leaderboard', label: t('nav.hallOfHeroes'), icon: Users },
     { href: '/achievements', label: t('nav.trophyRoom'), icon: Trophy },
     { href: '/roadmap', label: t('nav.levelRoadmap'), icon: Map },
-    { href: '/approvals', label: t('nav.questReview'), icon: CheckSquare, admin: true },
-    { href: '/admin/users', label: t('nav.classroom'), icon: Users, admin: true },
-    { href: '/admin', label: 'Admin', icon: Shield, admin: true },
+    { 
+      label: t('nav.admin'), 
+      icon: Shield, 
+      admin: true,
+      subItems: [
+        { href: '/admin', label: 'Admin Management' },
+        { href: '/approvals', label: t('nav.questReview') },
+        { href: '/admin/users', label: t('nav.classroom') },
+        { href: '/artificer-studio', label: "Artificer's Studio" },
+      ]
+    },
     { href: '/gallery', label: t('nav.opportunityBoard'), icon: Sparkles },
-    { href: '/artificer-studio', label: "Artificer's Studio", icon: Paintbrush },
     { href: '/rewards', label: t('nav.rewardShop'), icon: ShoppingBag },
     { href: '/lorebook', label: t('nav.lorebook'), icon: BookMarked },
   ];
 
+  useEffect(() => {
+    const activeCollapsible = navItems.find(item => item.subItems?.some(sub => pathname.startsWith(sub.href)));
+    if (activeCollapsible && !openCollapsibles.includes(activeCollapsible.label)) {
+      setOpenCollapsibles(prev => [...prev, activeCollapsible.label]);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
   const handleLinkClick = () => {
     setOpenMobile(false);
+  }
+  
+  const handleToggleCollapsible = (label: string) => {
+    setOpenCollapsibles(prev => prev.includes(label) ? prev.filter(l => l !== label) : [...prev, label]);
   }
 
   return (
@@ -70,6 +97,39 @@ export default function Nav() {
         <SidebarMenu>
           {navItems.map((item) => {
             if (item.admin && !isAdmin) return null;
+
+            if (item.subItems) {
+              const isSubActive = item.subItems.some(sub => pathname.startsWith(sub.href));
+              const isOpen = openCollapsibles.includes(item.label);
+
+              return (
+                <SidebarMenuItem key={item.label}>
+                  <Collapsible open={isOpen} onOpenChange={() => handleToggleCollapsible(item.label)}>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuButton isActive={isSubActive}>
+                        <item.icon />
+                        <span>{item.label}</span>
+                        <ChevronRight className={cn("ml-auto h-4 w-4 transition-transform", isOpen && "rotate-90")} />
+                      </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {item.subItems.map((subItem) => (
+                          <SidebarMenuSubItem key={subItem.href}>
+                             <Link href={subItem.href} onClick={handleLinkClick} legacyBehavior passHref>
+                                <SidebarMenuSubButton isActive={pathname.startsWith(subItem.href)}>
+                                    {subItem.label}
+                                </SidebarMenuSubButton>
+                            </Link>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </Collapsible>
+                </SidebarMenuItem>
+              )
+            }
+
             return (
                 <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
