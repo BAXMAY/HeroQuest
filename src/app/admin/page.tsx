@@ -62,9 +62,9 @@ const AchievementFormDialog = ({ achievement, onSave, children }: { achievement?
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>{achievement ? 'Edit Achievement' : 'Add New Achievement'}</DialogTitle>
+                    <DialogTitle>{achievement ? t('adminPage.editAchievement') : t('adminPage.addNewAchievement')}</DialogTitle>
                     <DialogDescription>
-                        {achievement ? 'Edit the details of this achievement.' : 'Create a new achievement for players to unlock.'}
+                        {achievement ? t('adminPage.editAchievementDescription') : t('adminPage.addAchievementDescription')}
                     </DialogDescription>
                 </DialogHeader>
                  <Form {...form}>
@@ -104,9 +104,9 @@ const AchievementFormDialog = ({ achievement, onSave, children }: { achievement?
                         />
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button type="button" variant="secondary">Cancel</Button>
+                                <Button type="button" variant="secondary">{t('adminPage.cancel')}</Button>
                             </DialogClose>
-                            <Button type="submit">Save</Button>
+                            <Button type="submit">{t('adminPage.save')}</Button>
                         </DialogFooter>
                     </form>
                  </Form>
@@ -136,9 +136,9 @@ const RewardFormDialog = ({ reward, onSave, children }: { reward?: Reward; onSav
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>{reward ? 'Edit Reward' : 'Add New Reward'}</DialogTitle>
+                    <DialogTitle>{reward ? t('adminPage.editReward') : t('adminPage.addNewReward')}</DialogTitle>
                     <DialogDescription>
-                        {reward ? 'Edit the details of this reward.' : 'Create a new reward for the shop.'}
+                        {reward ? t('adminPage.editRewardDescription') : t('adminPage.addRewardDescription')}
                     </DialogDescription>
                 </DialogHeader>
                  <Form {...form}>
@@ -189,9 +189,9 @@ const RewardFormDialog = ({ reward, onSave, children }: { reward?: Reward; onSav
                         />
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button type="button" variant="secondary">Cancel</Button>
+                                <Button type="button" variant="secondary">{t('adminPage.cancel')}</Button>
                             </DialogClose>
-                            <Button type="submit">Save</Button>
+                            <Button type="submit">{t('adminPage.save')}</Button>
                         </DialogFooter>
                     </form>
                  </Form>
@@ -225,7 +225,7 @@ export default function AdminPage() {
 
   const handleImageUpload = async () => {
     if (!imageFile) {
-        toast({ title: "No file selected", description: "Please select an image file to upload.", variant: "destructive" });
+        toast({ title: t('adminPage.noFileSelected'), description: t('adminPage.selectFileToUpload'), variant: "destructive" });
         return;
     }
     setIsUploading(true);
@@ -236,10 +236,10 @@ export default function AdminPage() {
         const snapshot = await uploadBytes(fileRef, imageFile);
         const downloadUrl = await getDownloadURL(snapshot.ref);
         setUploadedImageUrl(downloadUrl);
-        toast({ title: "Upload Successful!", description: "You can now copy the URL below." });
+        toast({ title: t('adminPage.uploadSuccessTitle'), description: t('adminPage.uploadSuccessDescription') });
     } catch (error) {
         console.error("Error uploading image: ", error);
-        toast({ title: "Upload Failed", description: "There was an error uploading your image.", variant: "destructive" });
+        toast({ title: t('adminPage.uploadFailedTitle'), description: t('adminPage.uploadFailedDescription'), variant: "destructive" });
     } finally {
         setIsUploading(false);
     }
@@ -247,7 +247,7 @@ export default function AdminPage() {
 
   const handleGrantAdminRole = async () => {
     if (!firebaseApp || !adminEmail) {
-        toast({ title: "Email required", description: "Please enter the user's email.", variant: "destructive" });
+        toast({ title: t('adminPage.emailRequiredTitle'), description: t('adminPage.emailRequiredDescription'), variant: "destructive" });
         return;
     }
     setIsMakingAdmin(true);
@@ -255,11 +255,11 @@ export default function AdminPage() {
         const functions = getFunctions(firebaseApp);
         const addAdminRole = httpsCallable(functions, 'addAdminRole');
         const result: any = await addAdminRole({ email: adminEmail });
-        toast({ title: "Success!", description: result.data.message });
+        toast({ title: t('adminPage.successTitle'), description: result.data.message });
         setAdminEmail('');
     } catch (error: any) {
         console.error("Error granting admin role:", error);
-        toast({ title: "Error", description: error.message || "Could not grant admin privileges.", variant: "destructive" });
+        toast({ title: t('adminPage.errorTitle'), description: error.message || t('adminPage.grantAdminError'), variant: "destructive" });
     } finally {
         setIsMakingAdmin(false);
     }
@@ -267,7 +267,7 @@ export default function AdminPage() {
 
   const handleRevokeAdminRole = async () => {
     if (!firebaseApp || !adminEmail) {
-        toast({ title: "Email required", description: "Please enter the user's email.", variant: "destructive" });
+        toast({ title: t('adminPage.emailRequiredTitle'), description: t('adminPage.emailRequiredDescription'), variant: "destructive" });
         return;
     }
     setIsMakingAdmin(true);
@@ -275,11 +275,11 @@ export default function AdminPage() {
         const functions = getFunctions(firebaseApp);
         const removeAdminRole = httpsCallable(functions, 'removeAdminRole');
         const result: any = await removeAdminRole({ email: adminEmail });
-        toast({ title: "Success!", description: result.data.message });
+        toast({ title: t('adminPage.successTitle'), description: result.data.message });
         setAdminEmail('');
     } catch (error: any) {
         console.error("Error revoking admin role:", error);
-        toast({ title: "Error", description: error.message || "Could not revoke admin privileges.", variant: "destructive" });
+        toast({ title: t('adminPage.errorTitle'), description: error.message || t('adminPage.revokeAdminError'), variant: "destructive" });
     } finally {
         setIsMakingAdmin(false);
     }
@@ -297,14 +297,14 @@ export default function AdminPage() {
     try {
       await batch.commit();
       toast({
-        title: "Rewards Seeded!",
-        description: "The mock rewards have been added to the database.",
+        title: t('adminPage.rewardsSeededTitle'),
+        description: t('adminPage.rewardsSeededDescription'),
       });
     } catch (error) {
       console.error("Error seeding rewards: ", error);
       toast({
-        title: "Seeding Failed",
-        description: "Could not seed the rewards.",
+        title: t('adminPage.seedingFailedTitle'),
+        description: t('adminPage.seedRewardsError'),
         variant: "destructive",
       });
     }
@@ -327,14 +327,14 @@ export default function AdminPage() {
     try {
       await batch.commit();
       toast({
-        title: "Quests Seeded!",
-        description: "The mock quests have been added to various users.",
+        title: t('adminPage.questsSeededTitle'),
+        description: t('adminPage.questsSeededDescription'),
       });
     } catch (error) {
       console.error("Error seeding quests: ", error);
       toast({
-        title: "Seeding Failed",
-        description: "Could not seed the quests. Ensure mock users exist.",
+        title: t('adminPage.seedingFailedTitle'),
+        description: t('adminPage.seedQuestsError'),
         variant: "destructive",
       });
     }
@@ -351,14 +351,14 @@ export default function AdminPage() {
     try {
       await batch.commit();
       toast({
-        title: "Achievements Seeded!",
-        description: "The mock achievements have been added to the database.",
+        title: t('adminPage.achievementsSeededTitle'),
+        description: t('adminPage.achievementsSeededDescription'),
       });
     } catch (error) {
       console.error("Error seeding achievements: ", error);
       toast({
-        title: "Seeding Failed",
-        description: "Could not seed the achievements.",
+        title: t('adminPage.seedingFailedTitle'),
+        description: t('adminPage.seedAchievementsError'),
         variant: "destructive",
       });
     }
@@ -369,21 +369,21 @@ export default function AdminPage() {
         if (data.id) {
             const ref = doc(firestore, 'achievements', data.id);
             updateDocumentNonBlocking(ref, data);
-            toast({ title: "Achievement Updated!", description: `${data.name} has been updated.` });
+            toast({ title: t('adminPage.achievementUpdatedTitle'), description: t('adminPage.achievementUpdatedDescription', { name: data.name }) });
         } else {
             addDocumentNonBlocking(achievementsCollectionRef, data);
-            toast({ title: "Achievement Added!", description: `${data.name} has been added.` });
+            toast({ title: t('adminPage.achievementAddedTitle'), description: t('adminPage.achievementAddedDescription', { name: data.name }) });
         }
     } catch (error) {
         console.error(error);
-        toast({ title: "Error Saving Achievement", variant: "destructive" });
+        toast({ title: t('adminPage.achievementSaveError'), variant: "destructive" });
     }
   };
 
   const handleDeleteAchievement = (achievementId: string) => {
     const ref = doc(firestore, 'achievements', achievementId);
     deleteDocumentNonBlocking(ref);
-    toast({ title: "Achievement Removed", description: "The achievement has been removed." });
+    toast({ title: t('adminPage.achievementRemovedTitle'), description: t('adminPage.achievementRemovedDescription') });
   }
 
   const handleSaveReward = (data: RewardFormValues) => {
@@ -391,21 +391,21 @@ export default function AdminPage() {
         if (data.id) {
             const ref = doc(firestore, 'rewards', data.id);
             updateDocumentNonBlocking(ref, data);
-            toast({ title: "Reward Updated!", description: `${data.name} has been updated.` });
+            toast({ title: t('adminPage.rewardUpdatedTitle'), description: t('adminPage.rewardUpdatedDescription', { name: data.name }) });
         } else {
             addDocumentNonBlocking(rewardsCollectionRef, data);
-            toast({ title: "Reward Added!", description: `${data.name} has been added to the shop.` });
+            toast({ title: t('adminPage.rewardAddedTitle'), description: t('adminPage.rewardAddedDescription', { name: data.name }) });
         }
     } catch (error) {
         console.error(error);
-        toast({ title: "Error Saving Reward", variant: "destructive" });
+        toast({ title: t('adminPage.rewardSaveError'), variant: "destructive" });
     }
   };
 
   const handleDeleteReward = (rewardId: string) => {
     const ref = doc(firestore, 'rewards', rewardId);
     deleteDocumentNonBlocking(ref);
-    toast({ title: "Reward Removed", description: "The reward has been removed from the shop." });
+    toast({ title: t('adminPage.rewardRemovedTitle'), description: t('adminPage.rewardRemovedDescription') });
   }
   
   const isLoading = loadingAchievements || loadingRewards;
@@ -422,24 +422,24 @@ export default function AdminPage() {
 
        <Card>
         <CardHeader>
-          <CardTitle>Image Uploader</CardTitle>
-          <CardDescription>Upload images to Firebase Storage to get a usable URL.</CardDescription>
+          <CardTitle>{t('adminPage.imageUploader')}</CardTitle>
+          <CardDescription>{t('adminPage.imageUploaderDescription')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="image-upload">Select Image</Label>
+            <Label htmlFor="image-upload">{t('adminPage.selectImage')}</Label>
             <Input id="image-upload" type="file" accept="image/*" onChange={handleImageFileChange} />
           </div>
           <Button onClick={handleImageUpload} disabled={isUploading || !imageFile}>
             {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
-            Upload Image
+            {t('adminPage.uploadImage')}
           </Button>
           {uploadedImageUrl && (
             <div className="space-y-4">
-              <p className="text-sm font-medium">Upload successful! Copy this URL:</p>
+              <p className="text-sm font-medium">{t('adminPage.copyUrlPrompt')}</p>
               <Input readOnly value={uploadedImageUrl} onFocus={(e) => e.target.select()} />
               <div className="relative aspect-video w-full max-w-sm rounded-md border overflow-hidden">
-                <Image src={uploadedImageUrl} alt="Uploaded image preview" fill className="object-contain" />
+                <Image src={uploadedImageUrl} alt={t('adminPage.imagePreviewAlt')} fill className="object-contain" />
               </div>
             </div>
           )}
@@ -448,16 +448,16 @@ export default function AdminPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Grant or Revoke Admin Privileges</CardTitle>
-          <CardDescription>Enter a user's email to grant or revoke administrator rights.</CardDescription>
+          <CardTitle>{t('adminPage.grantRevokeTitle')}</CardTitle>
+          <CardDescription>{t('adminPage.grantRevokeDescription')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="admin-email">User Email</Label>
+            <Label htmlFor="admin-email">{t('adminPage.userEmail')}</Label>
             <Input 
               id="admin-email" 
               type="email" 
-              placeholder="adventurer@heroquest.com"
+              placeholder={t('adminPage.userEmailPlaceholder')}
               value={adminEmail}
               onChange={(e) => setAdminEmail(e.target.value)}
             />
@@ -465,11 +465,11 @@ export default function AdminPage() {
           <div className="flex gap-2">
             <Button onClick={handleGrantAdminRole} disabled={isMakingAdmin}>
               {isMakingAdmin ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ShieldCheck className="mr-2 h-4 w-4" />}
-              Make Admin
+              {t('adminPage.makeAdmin')}
             </Button>
              <Button variant="destructive" onClick={handleRevokeAdminRole} disabled={isMakingAdmin}>
                 {isMakingAdmin ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ShieldOff className="mr-2 h-4 w-4" />}
-                Remove Admin
+                {t('adminPage.removeAdmin')}
             </Button>
           </div>
         </CardContent>
@@ -490,7 +490,7 @@ export default function AdminPage() {
                     <div className="flex gap-2">
                         <Button type="button" variant="secondary" onClick={handleSeedAchievements}>
                             <Database className="w-4 h-4 mr-2"/>
-                            Seed Achievements
+                            {t('adminPage.seedAchievements')}
                         </Button>
                          <AchievementFormDialog onSave={handleSaveAchievement}>
                             <Button variant="outline">
@@ -509,7 +509,7 @@ export default function AdminPage() {
                                         <TableHead>{t('name')}</TableHead>
                                         <TableHead className="hidden md:table-cell">{t('description')}</TableHead>
                                         <TableHead>{t('icon')}</TableHead>
-                                        <TableHead className="text-right">Actions</TableHead>
+                                        <TableHead className="text-right">{t('adminPage.actions')}</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -547,11 +547,11 @@ export default function AdminPage() {
                     <div className="flex gap-2">
                     <Button type="button" variant="secondary" onClick={handleSeedRewards}>
                         <Database className="w-4 h-4 mr-2"/>
-                        Seed Rewards
+                        {t('adminPage.seedRewards')}
                     </Button>
                         <Button type="button" variant="secondary" onClick={handleSeedQuests}>
                         <Database className="w-4 h-4 mr-2"/>
-                        สร้างเควสจำลอง
+                        {t('adminPage.seedQuests')}
                     </Button>
                     </div>
                 </CardHeader>
@@ -572,7 +572,7 @@ export default function AdminPage() {
                                         <TableHead>{t('name')}</TableHead>
                                         <TableHead className="hidden md:table-cell">{t('description')}</TableHead>
                                         <TableHead className="text-right">{t('costInBraveCoins')}</TableHead>
-                                        <TableHead className="text-right">Actions</TableHead>
+                                        <TableHead className="text-right">{t('adminPage.actions')}</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
