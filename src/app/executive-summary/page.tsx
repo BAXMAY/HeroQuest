@@ -32,21 +32,10 @@ export default function ExecutiveSummaryPage() {
         return collectionGroup(firestore, 'volunteer_work');
     }, [firestore, isAdmin, isAdminLoading]);
 
-    const recentApprovedDeedsQuery = useMemoFirebase(() => {
-        if (!firestore || isAdminLoading || !isAdmin) return null;
-        return query(
-            collectionGroup(firestore, 'volunteer_work'),
-            where('status', '==', 'approved'),
-            orderBy('submittedAt', 'desc'),
-            limit(5)
-        );
-    }, [firestore, isAdmin, isAdminLoading]);
-
     const { data: users, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
     const { data: allDeeds, isLoading: isLoadingDeeds } = useCollection<Deed>(allDeedsQuery);
-    const { data: recentDeeds, isLoading: isLoadingRecentDeeds } = useCollection<Deed>(recentApprovedDeedsQuery);
 
-    const isLoading = isAdminLoading || isLoadingUsers || isLoadingDeeds || isLoadingRecentDeeds;
+    const isLoading = isAdminLoading || isLoadingUsers || isLoadingDeeds;
 
     // Route protection
     useEffect(() => {
@@ -230,7 +219,7 @@ export default function ExecutiveSummaryPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {recentDeeds?.map(deed => {
+                            {allDeeds?.filter(d => d.status === 'approved').sort((a, b) => b.submittedAt.seconds - a.submittedAt.seconds).slice(0, 5).map(deed => {
                                 const user = users?.find(u => u.id === deed.userProfileId);
                                 return (
                                 <TableRow key={deed.id}>
