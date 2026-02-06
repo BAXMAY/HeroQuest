@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
-import { useAdmin, useDoc, useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { useAdmin, useDoc, useCollection, useFirestore, useMemoFirebase, updateDocumentNonBlocking } from '@/firebase';
 import { doc, collection, orderBy, query } from 'firebase/firestore';
 import type { UserProfile, Deed } from '@/app/lib/types';
 import { Loader2, User, Award, Coins, Star, ArrowLeft, CheckCircle, XCircle, Hourglass } from 'lucide-react';
@@ -15,6 +15,8 @@ import Link from 'next/link';
 import { useLanguage } from '@/app/context/language-context';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 export default function UserQuestsPage() {
   const params = useParams();
@@ -73,6 +75,11 @@ export default function UserQuestsPage() {
     }
   }
 
+  const handleToggleLeaderboard = (checked: boolean) => {
+    if (!userProfileRef) return;
+    updateDocumentNonBlocking(userProfileRef, { showOnLeaderboard: checked });
+  };
+
   return (
     <div className="space-y-8">
         <Button asChild variant="outline" size="sm" className="mb-4">
@@ -107,6 +114,14 @@ export default function UserQuestsPage() {
                     <span>{userProfile.questsCompleted || 0} Quests</span>
                  </div>
               </div>
+        </div>
+        <div className="flex items-center space-x-2">
+            <Switch
+                id="leaderboard-toggle"
+                checked={userProfile.showOnLeaderboard !== false}
+                onCheckedChange={handleToggleLeaderboard}
+            />
+            <Label htmlFor="leaderboard-toggle">Show on Leaderboard</Label>
         </div>
       </div>
 

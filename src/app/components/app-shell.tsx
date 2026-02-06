@@ -8,7 +8,7 @@ import { useAdmin } from '@/firebase';
 import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 
-const adminRoutes = ['/approvals', '/admin', '/admin/users'];
+const adminRoutes = ['/approvals', '/admin', '/artificer-studio'];
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -17,13 +17,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   const isLandingPage = pathname === '/';
   const isAuthPage = pathname === '/login' || pathname === '/register' || pathname === '/onboarding';
-  const isProtectedAdminRoute = adminRoutes.includes(pathname);
+  
+  const isProtectedAdminRoute = adminRoutes.some(route => pathname.startsWith(route));
 
   useEffect(() => {
     if (!isAdminLoading && isProtectedAdminRoute && !isAdmin) {
       router.push('/dashboard');
     }
-  }, [isAdmin, isAdminLoading, isProtectedAdminRoute, router]);
+  }, [isAdmin, isAdminLoading, isProtectedAdminRoute, router, pathname]);
 
   if (isLandingPage || isAuthPage) {
     return <main>{children}</main>;

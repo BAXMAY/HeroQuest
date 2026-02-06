@@ -15,9 +15,6 @@ export default function LeaderboardPage() {
 
   const usersQuery = useMemoFirebase(() => {
     if (!firestore) return null;
-    // We filter out users named 'Anonymous' on the client-side for simplicity,
-    // but for larger datasets, a where clause like below would be more efficient.
-    // return query(collection(firestore, 'users'), where('firstName', '!=', 'Anonymous'), orderBy('totalPoints', 'desc'));
     return query(collection(firestore, 'users'), orderBy('totalPoints', 'desc'));
   }, [firestore]);
 
@@ -45,7 +42,7 @@ export default function LeaderboardPage() {
     }
   };
   
-  const displayedUsers = sortedUsers?.filter(user => user.firstName !== 'Anonymous');
+  const displayedUsers = sortedUsers?.filter(user => user.firstName !== 'Anonymous' && user.showOnLeaderboard !== false);
 
   if (isLoading) {
     return (

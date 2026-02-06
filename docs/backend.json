@@ -53,6 +53,10 @@
             "type": "string",
             "description": "The user's birthday.",
             "format": "date"
+        },
+        "showOnLeaderboard": {
+            "type": "boolean",
+            "description": "Whether the user should be shown on the public leaderboard."
         }
       },
       "required": [

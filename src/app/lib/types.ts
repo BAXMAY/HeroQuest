@@ -34,6 +34,7 @@ export type UserProfile = {
     }
   }
   avatarConfig?: AvatarConfig;
+  showOnLeaderboard?: boolean;
 };
 
 export type AvatarConfig = {
