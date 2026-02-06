@@ -181,16 +181,16 @@ export default function ApprovalsPage() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const allDeedsQuery = useMemoFirebase(() => {
-    if (!firestore || !isAdmin) return null;
+    if (!firestore || isAdminLoading || !isAdmin) return null;
     return collectionGroup(firestore, 'volunteer_work');
-  }, [firestore, isAdmin]);
+  }, [firestore, isAdmin, isAdminLoading]);
 
   const { data: allDeeds, isLoading: isLoadingDeeds } = useCollection<Deed>(allDeedsQuery);
   
   const usersQuery = useMemoFirebase(() => {
-    if (!firestore || !isAdmin) return null;
+    if (!firestore || isAdminLoading || !isAdmin) return null;
     return collection(firestore, 'users');
-  }, [firestore, isAdmin]);
+  }, [firestore, isAdmin, isAdminLoading]);
   
   const { data: users, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
   const pendingDeeds = allDeeds?.filter(d => d.status === 'pending');

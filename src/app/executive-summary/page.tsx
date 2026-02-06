@@ -23,24 +23,24 @@ export default function ExecutiveSummaryPage() {
 
     // Data fetching
     const usersQuery = useMemoFirebase(() => {
-        if (!firestore || !isAdmin) return null;
+        if (!firestore || isAdminLoading || !isAdmin) return null;
         return collection(firestore, 'users');
-    }, [firestore, isAdmin]);
+    }, [firestore, isAdmin, isAdminLoading]);
 
     const allDeedsQuery = useMemoFirebase(() => {
-        if (!firestore || !isAdmin) return null;
+        if (!firestore || isAdminLoading || !isAdmin) return null;
         return collectionGroup(firestore, 'volunteer_work');
-    }, [firestore, isAdmin]);
+    }, [firestore, isAdmin, isAdminLoading]);
 
     const recentApprovedDeedsQuery = useMemoFirebase(() => {
-        if (!firestore || !isAdmin) return null;
+        if (!firestore || isAdminLoading || !isAdmin) return null;
         return query(
             collectionGroup(firestore, 'volunteer_work'),
             where('status', '==', 'approved'),
             orderBy('submittedAt', 'desc'),
             limit(5)
         );
-    }, [firestore, isAdmin]);
+    }, [firestore, isAdmin, isAdminLoading]);
 
     const { data: users, isLoading: isLoadingUsers } = useCollection<UserProfile>(usersQuery);
     const { data: allDeeds, isLoading: isLoadingDeeds } = useCollection<Deed>(allDeedsQuery);
