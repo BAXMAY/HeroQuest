@@ -62,6 +62,7 @@ export const en = {
   experiencePoints: 'Experience Points (XP)',
   totalExperience: 'Total experience points earned',
   braveCoins: 'Brave Coins',
+  questCompleted: 'Quest Completed',
   yourTreasure: 'Your treasure to spend',
   logNewQuest: 'Log a New Quest!',
   everyDeedBetter: 'Every brave deed makes the world better.',

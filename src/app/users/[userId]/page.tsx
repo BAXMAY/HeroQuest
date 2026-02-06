@@ -112,7 +112,7 @@ export default function UserQuestsPage() {
                  </div>
                   <div className="flex items-center gap-1.5">
                     <Star className="w-4 h-4 text-green-500" />
-                    <span>{userProfile.questsCompleted || 0} {t('nav.startQuest')}s</span>
+                    <span>{userProfile.questsCompleted || 0} {t('questCompleted')}</span>
                  </div>
               </div>
         </div>

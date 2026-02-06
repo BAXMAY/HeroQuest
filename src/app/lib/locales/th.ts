@@ -62,6 +62,7 @@ export const th = {
     experiencePoints: 'คะแนนประสบการณ์ (XP)',
     totalExperience: 'คะแนนประสบการณ์ทั้งหมดที่ได้รับ',
     braveCoins: 'เหรียญกล้าหาญ',
+    questCompleted: 'เควสสำเร็จ',
     yourTreasure: 'สมบัติของคุณที่จะใช้จ่าย',
     logNewQuest: 'บันทึกเควสใหม่!',
     everyDeedBetter: 'ทุกการกระทำที่กล้าหาญทำให้โลกดีขึ้น',
