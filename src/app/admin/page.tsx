@@ -11,7 +11,7 @@ import { addDocumentNonBlocking, useCollection, useFirebase, useMemoFirebase, up
 import { zodResolver } from "@hookform/resolvers/zod";
 import { collection, doc, writeBatch, serverTimestamp } from "firebase/firestore";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
-import { Loader2, PlusCircle, Save, Shield, Trash2, Database, Upload, Edit, Check } from "lucide-react";
+import { Loader2, PlusCircle, Save, Shield, Trash2, Database, Upload, Edit, Check, ShieldCheck } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import type { Achievement, Reward, Deed } from "../lib/types";
@@ -20,6 +20,7 @@ import { rewards as mockRewards, deeds as mockDeeds, allAchievements as mockAchi
 import { useState } from "react";
 import Image from "next/image";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 
 const achievementSchema = z.object({
@@ -200,12 +201,14 @@ const RewardFormDialog = ({ reward, onSave, children }: { reward?: Reward; onSav
 }
 
 export default function AdminPage() {
-  const { firestore } = useFirebase();
+  const { firestore, firebaseApp } = useFirebase();
   const { toast } = useToast();
   const { t } = useLanguage();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+  const [adminEmail, setAdminEmail] = useState('');
+  const [isMakingAdmin, setIsMakingAdmin] = useState(false);
 
   const achievementsCollectionRef = useMemoFirebase(() => collection(firestore, 'achievements'), [firestore]);
   const rewardsCollectionRef = useMemoFirebase(() => collection(firestore, 'rewards'), [firestore]);
@@ -239,6 +242,26 @@ export default function AdminPage() {
         toast({ title: "Upload Failed", description: "There was an error uploading your image.", variant: "destructive" });
     } finally {
         setIsUploading(false);
+    }
+  };
+
+  const handleGrantAdminRole = async () => {
+    if (!firebaseApp || !adminEmail) {
+        toast({ title: "Email required", description: "Please enter the user's email.", variant: "destructive" });
+        return;
+    }
+    setIsMakingAdmin(true);
+    try {
+        const functions = getFunctions(firebaseApp);
+        const addAdminRole = httpsCallable(functions, 'addAdminRole');
+        const result: any = await addAdminRole({ email: adminEmail });
+        toast({ title: "Success!", description: result.data.message });
+        setAdminEmail('');
+    } catch (error: any) {
+        console.error("Error granting admin role:", error);
+        toast({ title: "Error", description: error.message || "Could not grant admin privileges.", variant: "destructive" });
+    } finally {
+        setIsMakingAdmin(false);
     }
   };
 
@@ -402,6 +425,29 @@ export default function AdminPage() {
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader>
+          <CardTitle>Grant Admin Privileges</CardTitle>
+          <CardDescription>Enter a user's email to grant them administrator rights.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="admin-email">User Email</Label>
+            <Input 
+              id="admin-email" 
+              type="email" 
+              placeholder="adventurer@heroquest.com"
+              value={adminEmail}
+              onChange={(e) => setAdminEmail(e.target.value)}
+            />
+          </div>
+          <Button onClick={handleGrantAdminRole} disabled={isMakingAdmin}>
+            {isMakingAdmin ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ShieldCheck className="mr-2 h-4 w-4" />}
+            Make Admin
+          </Button>
+        </CardContent>
+      </Card>
+
       <Tabs defaultValue="achievements">
         <TabsList>
             <TabsTrigger value="achievements">{t('achievements')} ({achievements?.length || 0})</TabsTrigger>
@@ -532,4 +578,5 @@ export default function AdminPage() {
   );
 }
 
+    
     
