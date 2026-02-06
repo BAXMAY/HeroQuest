@@ -35,6 +35,7 @@ export type UserProfile = {
   }
   avatarConfig?: AvatarConfig;
   showOnLeaderboard?: boolean;
+  role?: 'admin' | 'student';
 };
 
 export type AvatarConfig = {

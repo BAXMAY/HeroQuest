@@ -13,12 +13,12 @@ admin.initializeApp();
 export const addAdminRole = functions.https.onCall(async (data, context) => {
   // For development: allow any authenticated user to become an admin.
   // In production, you should reinstate this check:
-  // if (context.auth?.token.admin !== true) {
-  //   throw new functions.https.HttpsError(
-  //     "permission-denied",
-  //     "Only admins are authorized to add other admins."
-  //   );
-  // }
+  if (context.auth?.token.admin !== true) {
+    throw new functions.https.HttpsError(
+      "permission-denied",
+      "Only admins are authorized to add other admins."
+    );
+  }
 
   const email = data.email;
   if (!email || typeof email !== 'string') {
@@ -36,6 +36,10 @@ export const addAdminRole = functions.https.onCall(async (data, context) => {
     await admin.auth().setCustomUserClaims(user.uid, {
       admin: true,
     });
+    
+    // Set the role in Firestore
+    await admin.firestore().collection('users').doc(user.uid).set({ role: 'admin' }, { merge: true });
+
 
     return {
       message: `Success! ${email} has been made an admin.`,

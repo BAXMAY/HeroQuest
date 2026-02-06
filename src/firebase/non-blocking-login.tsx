@@ -29,6 +29,7 @@ const createProfile = (user: User, firestore: Firestore) => {
         totalPoints: isAnonymous ? 150 : 0,
         braveCoins: isAnonymous ? 15 : 0,
         questsCompleted: isAnonymous ? 2 : 0,
+        role: isAnonymous ? undefined : 'student',
     };
 
     setDoc(userProfileRef, profileData, { merge: true }).catch(error => {

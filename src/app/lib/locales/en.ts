@@ -222,7 +222,7 @@ export const en = {
   readyToBeAHerp: 'Ready to Become a Hero?',
   readyToBecomeAHeroDescription: 'Your adventure awaits. Join a community of young heroes making a real difference in the world, one quest at a time.',
   joinTheGuildNow: 'Join the Guild Now',
-  usersDescription: 'View all adventurers in a classroom-style grid.',
+  usersDescription: 'View all students in your classroom.',
   // Admin Page
   adminDescription: 'Manage achievements and rewards for the entire application.',
   manageAchievements: 'Manage Achievements',
@@ -349,5 +349,3 @@ export const en = {
     'The Unwritten': 'The Unwritten',
   }
 };
-
-    

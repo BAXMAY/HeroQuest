@@ -13,6 +13,8 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 export default function AdminUsersPage() {
   const firestore = useFirestore();
@@ -76,7 +78,13 @@ export default function AdminUsersPage() {
         {users?.filter(u => u.firstName !== 'Anonymous').map((user) => (
           <Link key={user.id} href={`/users/${user.id}`} className="block">
             <Card className="flex flex-col text-center items-center h-full hover:bg-card/90 hover:shadow-md transition-all">
-              <CardHeader className="pb-4">
+              <CardHeader className="pb-4 relative w-full">
+                <Badge className={cn(
+                    "absolute top-2 right-2",
+                    user.role === 'admin' ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
+                )}>
+                    {user.role === 'admin' ? 'Teacher' : 'Student'}
+                </Badge>
                 <Avatar className="h-24 w-24 border-4 border-primary/20 mx-auto">
                   {user.avatarConfig ? (
                     <CustomAvatar config={user.avatarConfig} />

@@ -223,7 +223,7 @@ export const th = {
     readyToBeAHerp: 'พร้อมที่จะเป็นฮีโร่แล้วหรือยัง?',
     readyToBecomeAHeroDescription: 'การผจญภัยของคุณกำลังรออยู่ เข้าร่วมชุมชนของฮีโร่รุ่นเยาว์ที่สร้างความแตกต่างอย่างแท้จริงในโลก ทีละเควส',
     joinTheGuildNow: 'เข้าร่วมกิลด์ทันที',
-    usersDescription: 'ดูนักผจญภัยทั้งหมดในตารางห้องเรียนของคุณ',
+    usersDescription: 'ดูนักเรียนทั้งหมดในห้องเรียนของคุณ',
     // Admin Page
     adminDescription: 'จัดการความสำเร็จและรางวัลสำหรับทั้งแอปพลิเคชัน',
     manageAchievements: 'จัดการความสำเร็จ',
@@ -350,5 +350,3 @@ export const th = {
         'The Unwritten': 'ผู้ไม่ถูกจารึก',
     }
 };
-
-    

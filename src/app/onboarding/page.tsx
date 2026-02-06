@@ -70,7 +70,7 @@ export default function OnboardingPage() {
     const { firestore } = getSdks(auth.app);
     const userProfileRef = doc(firestore, 'users', user.uid);
 
-    const profileData: Omit<UserProfile, 'id' | 'totalPoints' | 'braveCoins' | 'questsCompleted'> = {
+    const profileData: Omit<UserProfile, 'id' | 'totalPoints' | 'braveCoins' | 'questsCompleted' | 'role'> = {
         email: user.email || '',
         firstName: values.firstName,
         lastName: values.lastName,
@@ -86,6 +86,7 @@ export default function OnboardingPage() {
         totalPoints: 0,
         braveCoins: 0,
         questsCompleted: 0,
+        role: 'student',
     }
 
     try {
