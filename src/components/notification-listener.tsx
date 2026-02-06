@@ -12,7 +12,7 @@ export default function NotificationListener() {
   const { toast } = useToast();
 
   const notificationsQuery = useMemoFirebase(() => {
-    if (!user || !firestore) return null;
+    if (!user || !firestore || user.isAnonymous) return null;
     return query(
       collection(firestore, 'users', user.uid, 'notifications'),
       where('read', '==', false)

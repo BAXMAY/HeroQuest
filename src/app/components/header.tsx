@@ -42,7 +42,7 @@ export function AppHeader() {
   }, [user, firestore]);
   
   const notificationsRef = useMemoFirebase(() => {
-    if(!user) return null;
+    if(!user || user.isAnonymous) return null;
     return collection(firestore, 'users', user.uid, 'notifications');
   }, [user, firestore]);
 
