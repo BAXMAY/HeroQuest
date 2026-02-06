@@ -39,6 +39,7 @@ export const th = {
       admin: 'แอดมิน',
       artificerStudio: "สตูดิโอช่างศิลป์",
       executiveSummary: 'สรุปสำหรับผู้บริหาร',
+      adminManagement: "จัดการระบบ"
     },
     // Header
     adventurer: 'นักผจญภัย',

@@ -39,6 +39,7 @@ export const en = {
     admin: 'Admin',
     artificerStudio: "Artificer's Studio",
     executiveSummary: 'Executive Summary',
+    adminManagement: "Admin Management"
   },
   // Header
   adventurer: 'Adventurer',

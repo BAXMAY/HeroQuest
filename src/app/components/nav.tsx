@@ -57,13 +57,13 @@ export default function Nav() {
       admin: true,
       subItems: [
         { href: '/executive-summary', label: t('nav.executiveSummary'), icon: BarChart3 },
-        { href: '/admin', label: 'Admin Management', icon: Settings },
+        { href: '/admin', label: t('nav.adminManagement'), icon: Settings },
         { href: '/approvals', label: t('nav.questReview'), icon: CheckSquare },
         { href: '/users', label: t('nav.classroom'), icon: Users },
-        { href: '/artificer-studio', label: "Artificer's Studio", icon: Paintbrush },
+        // { href: '/artificer-studio', label: "Artificer's Studio", icon: Paintbrush },
       ]
     },
-    { href: '/gallery', label: t('nav.opportunityBoard'), icon: Sparkles },
+    // { href: '/gallery', label: t('nav.opportunityBoard'), icon: Sparkles },
     { href: '/rewards', label: t('nav.rewardShop'), icon: ShoppingBag },
     { href: '/lorebook', label: t('nav.lorebook'), icon: BookMarked },
   ];
