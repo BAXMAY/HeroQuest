@@ -6,7 +6,7 @@ import type { UserProfile } from '@/app/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import CustomAvatar from '@/app/profile/custom-avatar';
-import { Loader2, Users, Award, Coins, Star } from 'lucide-react';
+import { Loader2, Users, Award, Coins, Star, Mail } from 'lucide-react';
 import { useLanguage } from '@/app/context/language-context';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -91,6 +91,10 @@ export default function AdminUsersPage() {
               <CardContent className="flex-grow space-y-2">
                 <CardTitle className="text-lg">{user.firstName} {user.lastName}</CardTitle>
                 <CardDescription>@{user.username}</CardDescription>
+                <p className="text-xs text-muted-foreground truncate flex items-center justify-center gap-1">
+                    <Mail className="w-3 h-3" />
+                    <span>{user.email}</span>
+                </p>
                 <div className="text-xs text-muted-foreground space-y-1 pt-2">
                    <div className="flex items-center justify-center gap-2">
                       <Award className="w-4 h-4 text-yellow-500" />
