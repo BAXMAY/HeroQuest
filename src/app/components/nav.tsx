@@ -57,7 +57,7 @@ export default function Nav() {
       subItems: [
         { href: '/admin', label: 'Admin Management' },
         { href: '/approvals', label: t('nav.questReview') },
-        { href: '/admin/users', label: t('nav.classroom') },
+        { href: '/users', label: t('nav.classroom') },
         { href: '/artificer-studio', label: "Artificer's Studio" },
       ]
     },

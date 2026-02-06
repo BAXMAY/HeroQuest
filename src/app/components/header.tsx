@@ -53,7 +53,7 @@ export function AppHeader() {
 
   const pathname = usePathname();
   let titleKey;
-  if (pathname.startsWith('/admin/users/')) {
+  if (pathname.startsWith('/users/')) {
     titleKey = 'userDetails';
   } else {
     const parts = pathname.split('/').filter(p => p);

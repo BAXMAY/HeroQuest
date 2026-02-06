@@ -60,7 +60,7 @@ export default function UserQuestsPage() {
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] gap-4">
         <p>User not found.</p>
         <Button asChild variant="outline">
-            <Link href="/admin/users"><ArrowLeft className="mr-2 h-4 w-4" />Back to Classroom</Link>
+            <Link href="/users"><ArrowLeft className="mr-2 h-4 w-4" />Back to Classroom</Link>
         </Button>
       </div>
     );
@@ -83,7 +83,7 @@ export default function UserQuestsPage() {
   return (
     <div className="space-y-8">
         <Button asChild variant="outline" size="sm" className="mb-4">
-            <Link href="/admin/users"><ArrowLeft className="mr-2 h-4 w-4" />Back to Classroom</Link>
+            <Link href="/users"><ArrowLeft className="mr-2 h-4 w-4" />Back to Classroom</Link>
         </Button>
 
       <div className="flex flex-col md:flex-row items-center gap-6">

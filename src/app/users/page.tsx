@@ -74,7 +74,7 @@ export default function AdminUsersPage() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {users?.filter(u => u.firstName !== 'Anonymous').map((user) => (
-          <Link key={user.id} href={`/admin/users/${user.id}`} className="block">
+          <Link key={user.id} href={`/users/${user.id}`} className="block">
             <Card className="flex flex-col text-center items-center h-full hover:bg-card/90 hover:shadow-md transition-all">
               <CardHeader className="pb-4">
                 <Avatar className="h-24 w-24 border-4 border-primary/20 mx-auto">
