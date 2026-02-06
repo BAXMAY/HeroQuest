@@ -11,7 +11,7 @@ import { addDocumentNonBlocking, useCollection, useFirebase, useMemoFirebase, up
 import { zodResolver } from "@hookform/resolvers/zod";
 import { collection, doc, writeBatch, serverTimestamp } from "firebase/firestore";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
-import { Loader2, PlusCircle, Save, Shield, Trash2, Database, Upload, Edit, Check, ShieldCheck } from "lucide-react";
+import { Loader2, PlusCircle, Save, Shield, Trash2, Database, Upload, Edit, Check, ShieldCheck, ShieldOff } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import type { Achievement, Reward, Deed } from "../lib/types";
@@ -265,6 +265,27 @@ export default function AdminPage() {
     }
   };
 
+  const handleRevokeAdminRole = async () => {
+    if (!firebaseApp || !adminEmail) {
+        toast({ title: "Email required", description: "Please enter the user's email.", variant: "destructive" });
+        return;
+    }
+    setIsMakingAdmin(true);
+    try {
+        const functions = getFunctions(firebaseApp);
+        const removeAdminRole = httpsCallable(functions, 'removeAdminRole');
+        const result: any = await removeAdminRole({ email: adminEmail });
+        toast({ title: "Success!", description: result.data.message });
+        setAdminEmail('');
+    } catch (error: any) {
+        console.error("Error revoking admin role:", error);
+        toast({ title: "Error", description: error.message || "Could not revoke admin privileges.", variant: "destructive" });
+    } finally {
+        setIsMakingAdmin(false);
+    }
+  };
+
+
   const handleSeedRewards = async () => {
     if (!firestore) return;
     const batch = writeBatch(firestore);
@@ -427,8 +448,8 @@ export default function AdminPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Grant Admin Privileges</CardTitle>
-          <CardDescription>Enter a user's email to grant them administrator rights.</CardDescription>
+          <CardTitle>Grant or Revoke Admin Privileges</CardTitle>
+          <CardDescription>Enter a user's email to grant or revoke administrator rights.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -441,10 +462,16 @@ export default function AdminPage() {
               onChange={(e) => setAdminEmail(e.target.value)}
             />
           </div>
-          <Button onClick={handleGrantAdminRole} disabled={isMakingAdmin}>
-            {isMakingAdmin ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ShieldCheck className="mr-2 h-4 w-4" />}
-            Make Admin
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={handleGrantAdminRole} disabled={isMakingAdmin}>
+              {isMakingAdmin ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ShieldCheck className="mr-2 h-4 w-4" />}
+              Make Admin
+            </Button>
+             <Button variant="destructive" onClick={handleRevokeAdminRole} disabled={isMakingAdmin}>
+                {isMakingAdmin ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ShieldOff className="mr-2 h-4 w-4" />}
+                Remove Admin
+            </Button>
+          </div>
         </CardContent>
       </Card>
 

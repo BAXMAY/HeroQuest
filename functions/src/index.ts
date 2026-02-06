@@ -60,3 +60,51 @@ export const addAdminRole = functions.https.onCall(async (data, context) => {
     );
   }
 });
+
+
+export const removeAdminRole = functions.https.onCall(async (data, context) => {
+    // Check if the caller is an admin
+    if (context.auth?.token.admin !== true) {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        "Only admins are authorized to remove admin roles."
+      );
+    }
+  
+    const email = data.email;
+    if (!email || typeof email !== 'string') {
+      throw new functions.https.HttpsError(
+          "invalid-argument",
+          "The function must be called with a valid email address."
+      );
+    }
+  
+    try {
+      // Get the user record by email.
+      const user = await admin.auth().getUserByEmail(email);
+  
+      // Set custom claims to an empty object to remove the admin claim.
+      await admin.auth().setCustomUserClaims(user.uid, {});
+      
+      // Set the role in Firestore to 'student'
+      await admin.firestore().collection('users').doc(user.uid).set({ role: 'student' }, { merge: true });
+  
+      return {
+        message: `Success! ${email} is no longer an admin.`,
+      };
+    } catch (error) {
+      console.error("Error removing custom claim:", error);
+      if (error instanceof Error) {
+          if ((error as any).code === 'auth/user-not-found') {
+               throw new functions.https.HttpsError(
+                  "not-found",
+                  `User with email ${email} not found.`
+              );
+          }
+      }
+      throw new functions.https.HttpsError(
+        "internal",
+        "An unexpected error occurred while removing the admin role."
+      );
+    }
+  });
