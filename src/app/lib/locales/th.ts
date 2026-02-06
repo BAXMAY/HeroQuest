@@ -21,6 +21,7 @@ export const th = {
       "artificer-studio": "สตูดิโอช่างศิลป์",
       userDetails: 'รายละเอียดผู้ใช้',
       portfolio: 'ผลงานของคุณ',
+      'executive-summary': 'สรุปสำหรับผู้บริหาร',
     },
     // Navigation
     nav: {
@@ -37,6 +38,7 @@ export const th = {
       settings: 'การตั้งค่า',
       admin: 'แอดมิน',
       artificerStudio: "สตูดิโอช่างศิลป์",
+      executiveSummary: 'สรุปสำหรับผู้บริหาร',
     },
     // Header
     adventurer: 'นักผจญภัย',

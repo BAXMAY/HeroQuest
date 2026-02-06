@@ -21,6 +21,7 @@ export const en = {
     "artificer-studio": "Artificer's Studio",
     userDetails: 'User Details',
     portfolio: 'Your Portfolio',
+    'executive-summary': 'Executive Summary',
   },
   // Navigation
   nav: {
@@ -37,6 +38,7 @@ export const en = {
     settings: 'Settings',
     admin: 'Admin',
     artificerStudio: "Artificer's Studio",
+    executiveSummary: 'Executive Summary',
   },
   // Header
   adventurer: 'Adventurer',

@@ -27,6 +27,7 @@ import {
   Shield,
   Paintbrush,
   ChevronRight,
+  BarChart3,
 } from 'lucide-react';
 import Logo from '@/app/components/logo';
 import { useLanguage } from '@/app/context/language-context';
@@ -55,10 +56,11 @@ export default function Nav() {
       icon: Shield, 
       admin: true,
       subItems: [
-        { href: '/admin', label: 'Admin Management' },
-        { href: '/approvals', label: t('nav.questReview') },
-        { href: '/users', label: t('nav.classroom') },
-        { href: '/artificer-studio', label: "Artificer's Studio" },
+        { href: '/executive-summary', label: t('nav.executiveSummary'), icon: BarChart3 },
+        { href: '/admin', label: 'Admin Management', icon: Settings },
+        { href: '/approvals', label: t('nav.questReview'), icon: CheckSquare },
+        { href: '/users', label: t('nav.classroom'), icon: Users },
+        { href: '/artificer-studio', label: "Artificer's Studio", icon: Paintbrush },
       ]
     },
     { href: '/gallery', label: t('nav.opportunityBoard'), icon: Sparkles },
@@ -118,6 +120,7 @@ export default function Nav() {
                           <SidebarMenuSubItem key={subItem.href}>
                              <SidebarMenuSubButton asChild isActive={pathname.startsWith(subItem.href)}>
                                 <Link href={subItem.href} onClick={handleLinkClick}>
+                                    {subItem.icon && <subItem.icon />}
                                     {subItem.label}
                                 </Link>
                             </SidebarMenuSubButton>
