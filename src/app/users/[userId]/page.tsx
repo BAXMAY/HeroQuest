@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect } from 'react';
@@ -58,9 +59,9 @@ export default function UserQuestsPage() {
   if (!userProfile) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] gap-4">
-        <p>User not found.</p>
+        <p>{t('userDetailsPage.userNotFound')}</p>
         <Button asChild variant="outline">
-            <Link href="/users"><ArrowLeft className="mr-2 h-4 w-4" />Back to Classroom</Link>
+            <Link href="/users"><ArrowLeft className="mr-2 h-4 w-4" />{t('userDetailsPage.backToClassroom')}</Link>
         </Button>
       </div>
     );
@@ -83,7 +84,7 @@ export default function UserQuestsPage() {
   return (
     <div className="space-y-8">
         <Button asChild variant="outline" size="sm" className="mb-4">
-            <Link href="/users"><ArrowLeft className="mr-2 h-4 w-4" />Back to Classroom</Link>
+            <Link href="/users"><ArrowLeft className="mr-2 h-4 w-4" />{t('userDetailsPage.backToClassroom')}</Link>
         </Button>
 
       <div className="flex flex-col md:flex-row items-center gap-6">
@@ -103,15 +104,15 @@ export default function UserQuestsPage() {
              <div className="flex items-center justify-center md:justify-start gap-4 text-sm mt-2 text-muted-foreground">
                  <div className="flex items-center gap-1.5">
                     <Award className="w-4 h-4 text-yellow-500" />
-                    <span>{(userProfile.totalPoints || 0).toLocaleString()} XP</span>
+                    <span>{(userProfile.totalPoints || 0).toLocaleString()} {t('xp')}</span>
                  </div>
                  <div className="flex items-center gap-1.5">
                     <Coins className="w-4 h-4 text-amber-500" />
-                    <span>{(userProfile.braveCoins || 0).toLocaleString()} Coins</span>
+                    <span>{(userProfile.braveCoins || 0).toLocaleString()} {t('braveCoins')}</span>
                  </div>
                   <div className="flex items-center gap-1.5">
                     <Star className="w-4 h-4 text-green-500" />
-                    <span>{userProfile.questsCompleted || 0} Quests</span>
+                    <span>{userProfile.questsCompleted || 0} {t('nav.startQuest')}s</span>
                  </div>
               </div>
         </div>
@@ -121,24 +122,24 @@ export default function UserQuestsPage() {
                 checked={userProfile.showOnLeaderboard !== false}
                 onCheckedChange={handleToggleLeaderboard}
             />
-            <Label htmlFor="leaderboard-toggle">Show on Leaderboard</Label>
+            <Label htmlFor="leaderboard-toggle">{t('userDetailsPage.showOnLeaderboard')}</Label>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Submitted Quests</CardTitle>
-          <CardDescription>A log of all quests submitted by {userProfile.firstName}.</CardDescription>
+          <CardTitle>{t('userDetailsPage.submittedQuests')}</CardTitle>
+          <CardDescription>{t('userDetailsPage.submittedQuestsDescription', { firstName: userProfile.firstName || ''})}</CardDescription>
         </CardHeader>
         <CardContent>
             <div className="border rounded-lg">
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="hidden md:table-cell">Image</TableHead>
-                            <TableHead>Description</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead className="text-right">XP</TableHead>
+                            <TableHead className="hidden md:table-cell">{t('userDetailsPage.image')}</TableHead>
+                            <TableHead>{t('userDetailsPage.description')}</TableHead>
+                            <TableHead>{t('userDetailsPage.status')}</TableHead>
+                            <TableHead className="text-right">{t('userDetailsPage.xp')}</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -162,7 +163,7 @@ export default function UserQuestsPage() {
                          {quests?.length === 0 && (
                             <TableRow>
                                 <TableCell colSpan={4} className="h-24 text-center">
-                                    This adventurer hasn't submitted any quests yet.
+                                    {t('userDetailsPage.noQuests')}
                                 </TableCell>
                             </TableRow>
                         )}

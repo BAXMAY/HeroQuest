@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useCollection, useFirestore, useMemoFirebase, useAdmin } from '@/firebase';
@@ -59,16 +60,16 @@ export default function AdminUsersPage() {
           <p className="text-muted-foreground">{t('usersDescription')}</p>
         </div>
         <div className="flex items-center gap-2">
-            <Label htmlFor="sort-by">Sort by</Label>
+            <Label htmlFor="sort-by">{t('usersPage.sortBy')}</Label>
             <Select onValueChange={setSortBy} defaultValue={sortBy}>
               <SelectTrigger id="sort-by" className="w-[180px]">
                 <SelectValue placeholder="Sort by..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="firstName">Name</SelectItem>
-                <SelectItem value="totalPoints">XP</SelectItem>
-                <SelectItem value="braveCoins">Coins</SelectItem>
-                <SelectItem value="questsCompleted">Quests</SelectItem>
+                <SelectItem value="firstName">{t('usersPage.sortByName')}</SelectItem>
+                <SelectItem value="totalPoints">{t('usersPage.sortByXP')}</SelectItem>
+                <SelectItem value="braveCoins">{t('usersPage.sortByCoins')}</SelectItem>
+                <SelectItem value="questsCompleted">{t('usersPage.sortByQuests')}</SelectItem>
               </SelectContent>
             </Select>
         </div>
@@ -83,7 +84,7 @@ export default function AdminUsersPage() {
                     "absolute top-2 right-2",
                     user.role === 'admin' ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
                 )}>
-                    {user.role === 'admin' ? 'Teacher' : 'Student'}
+                    {t(user.role === 'admin' ? 'usersPage.teacher' : 'usersPage.student')}
                 </Badge>
                 <Avatar className="h-24 w-24 border-4 border-primary/20 mx-auto">
                   {user.avatarConfig ? (
@@ -106,15 +107,15 @@ export default function AdminUsersPage() {
                 <div className="text-xs text-muted-foreground space-y-1 pt-2">
                    <div className="flex items-center justify-center gap-2">
                       <Award className="w-4 h-4 text-yellow-500" />
-                      <span>{(user.totalPoints || 0).toLocaleString()} XP</span>
+                      <span>{(user.totalPoints || 0).toLocaleString()} {t('xp')}</span>
                    </div>
                    <div className="flex items-center justify-center gap-2">
                       <Coins className="w-4 h-4 text-amber-500" />
-                      <span>{(user.braveCoins || 0).toLocaleString()} Coins</span>
+                      <span>{(user.braveCoins || 0).toLocaleString()} {t('braveCoins')}</span>
                    </div>
                     <div className="flex items-center justify-center gap-2">
                       <Star className="w-4 h-4 text-green-500" />
-                      <span>{user.questsCompleted || 0} Quests</span>
+                      <span>{user.questsCompleted || 0} {t('nav.startQuest')}s</span>
                    </div>
                 </div>
               </CardContent>

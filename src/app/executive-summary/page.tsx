@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useAdmin, useCollection, useFirestore, useMemoFirebase } from '@/firebase';
@@ -105,51 +106,51 @@ export default function ExecutiveSummaryPage() {
             <div>
                 <h1 className="text-3xl font-bold tracking-tight font-headline flex items-center gap-2">
                     <BarChart3 className="w-8 h-8 text-primary"/>
-                    Executive Summary
+                    {t('pageTitles.executive-summary')}
                 </h1>
-                <p className="text-muted-foreground">A high-level overview of recent user activity.</p>
+                <p className="text-muted-foreground">{t('executiveSummary.description')}</p>
             </div>
             
             {/* Key Metrics */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+                        <CardTitle className="text-sm font-medium">{t('executiveSummary.totalUsers')}</CardTitle>
                         <Users className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{stats.totalUsers || 0}</div>
-                        <p className="text-xs text-muted-foreground">Total registered adventurers</p>
+                        <p className="text-xs text-muted-foreground">{t('executiveSummary.totalUsersDescription')}</p>
                     </CardContent>
                 </Card>
                  <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Approved Quests</CardTitle>
+                        <CardTitle className="text-sm font-medium">{t('executiveSummary.approvedQuests')}</CardTitle>
                         <CheckCircle className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{stats.approvedQuests || 0}</div>
-                        <p className="text-xs text-muted-foreground">Out of {stats.totalQuests || 0} total submissions</p>
+                        <p className="text-xs text-muted-foreground">{t('executiveSummary.approvedQuestsDescription', { count: stats.totalQuests || 0 })}</p>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total XP Awarded</CardTitle>
+                        <CardTitle className="text-sm font-medium">{t('executiveSummary.totalXp')}</CardTitle>
                         <Award className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{(stats.totalXp || 0).toLocaleString()}</div>
-                        <p className="text-xs text-muted-foreground">From all approved quests</p>
+                        <p className="text-xs text-muted-foreground">{t('executiveSummary.totalXpDescription')}</p>
                     </CardContent>
                 </Card>
                  <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Top Adventurer</CardTitle>
+                        <CardTitle className="text-sm font-medium">{t('executiveSummary.topAdventurer')}</CardTitle>
                         <TrendingUp className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{topUsers[0]?.firstName || 'N/A'}</div>
-                        <p className="text-xs text-muted-foreground">with {(topUsers[0]?.totalPoints || 0).toLocaleString()} XP</p>
+                        <p className="text-xs text-muted-foreground">{t('executiveSummary.topAdventurerDescription', { xp: (topUsers[0]?.totalPoints || 0).toLocaleString() })}</p>
                     </CardContent>
                 </Card>
             </div>
@@ -158,7 +159,7 @@ export default function ExecutiveSummaryPage() {
                 {/* Quests per day chart */}
                 <Card className="lg:col-span-2">
                     <CardHeader>
-                        <CardTitle>Approved Quests (Last 7 Days)</CardTitle>
+                        <CardTitle>{t('executiveSummary.questsLast7Days')}</CardTitle>
                     </CardHeader>
                     <CardContent>
                          <ChartContainer config={{quests: {label: "Quests", color: "hsl(var(--chart-1))"}}} className="h-[250px] w-full">
@@ -176,7 +177,7 @@ export default function ExecutiveSummaryPage() {
                 {/* Top Users */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>Top 5 Adventurers</CardTitle>
+                        <CardTitle>{t('executiveSummary.top5Adventurers')}</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-4">
@@ -207,15 +208,15 @@ export default function ExecutiveSummaryPage() {
             {/* Recent Activity Table */}
             <Card>
                 <CardHeader>
-                    <CardTitle>Recent Quest Approvals</CardTitle>
+                    <CardTitle>{t('executiveSummary.recentApprovals')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Adventurer</TableHead>
-                                <TableHead>Quest</TableHead>
-                                <TableHead className="text-right">XP Awarded</TableHead>
+                                <TableHead>{t('executiveSummary.adventurer')}</TableHead>
+                                <TableHead>{t('executiveSummary.quest')}</TableHead>
+                                <TableHead className="text-right">{t('executiveSummary.xpAwarded')}</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
