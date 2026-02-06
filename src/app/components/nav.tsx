@@ -116,11 +116,11 @@ export default function Nav() {
                       <SidebarMenuSub>
                         {item.subItems.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.href}>
-                             <Link href={subItem.href} onClick={handleLinkClick} legacyBehavior passHref>
-                                <SidebarMenuSubButton isActive={pathname.startsWith(subItem.href)}>
+                             <SidebarMenuSubButton asChild isActive={pathname.startsWith(subItem.href)}>
+                                <Link href={subItem.href} onClick={handleLinkClick}>
                                     {subItem.label}
-                                </SidebarMenuSubButton>
-                            </Link>
+                                </Link>
+                            </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
                         ))}
                       </SidebarMenuSub>
