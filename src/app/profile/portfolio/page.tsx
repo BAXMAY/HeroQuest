@@ -2,7 +2,8 @@
 
 import { useRef } from 'react';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+// import html2canvas from 'html2canvas';
+import { snapdom } from  '@zumer/snapdom';
 import { useUser, useFirestore, useDoc, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, doc, query, where, orderBy } from 'firebase/firestore';
 import type { UserProfile, Deed, Achievement } from '@/app/lib/types';
@@ -46,41 +47,42 @@ export default function PortfolioPage() {
   const { data: quests, isLoading: areQuestsLoading } = useCollection<Deed>(approvedQuestsQuery);
   const { data: achievements, isLoading: areAchievementsLoading } = useCollection<Achievement>(achievementsRef);
 
-  const handleExport = () => {
+  const handleExport = async () => {
     if (portfolioRef.current) {
-      html2canvas(portfolioRef.current, { 
-        scale: 2, // Higher scale for better quality
-        useCORS: true,
-        backgroundColor: null, // Use background from the element
-      }).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        
-        const canvasWidth = canvas.width;
-        const canvasHeight = canvas.height;
-        
-        // Calculate the height of the image in the PDF given the width is the full page width
-        const imgHeightInPdf = (canvasHeight * pdfWidth) / canvasWidth;
-        
-        let heightLeft = imgHeightInPdf;
-        let position = 0;
-        
-        // Add the first page
-        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeightInPdf);
-        heightLeft -= pdfHeight;
-        
-        // Add more pages if content is longer than one page
-        while (heightLeft > 0) {
-          position = position - pdfHeight; // Move the image up for the next page
-          pdf.addPage();
-          pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeightInPdf);
-          heightLeft -= pdfHeight;
-        }
-        
-        pdf.save(`${userProfile?.firstName ?? 'Hero'}-Portfolio.pdf`);
+      const result = await snapdom(portfolioRef.current, {
+        scale: 2,
+        embedFonts: true,
       });
+      await result.download({ format: 'png', filename: `${userProfile?.firstName ?? 'Hero'}-Portfolio.png` });
+      // snapdom(portfolioRef.current).then(async result => {
+      //   const imgData = await result.toPng();
+      //   const pdf = new jsPDF('p', 'mm', 'a4');
+      //   const pdfWidth = pdf.internal.pageSize.getWidth();
+      //   const pdfHeight = pdf.internal.pageSize.getHeight();
+        
+      //   const canvasWidth = result.width;
+      //   const canvasHeight = result.height;
+        
+      //   // Calculate the height of the image in the PDF given the width is the full page width
+      //   const imgHeightInPdf = (canvasHeight * pdfWidth) / canvasWidth;
+        
+      //   let heightLeft = imgHeightInPdf;
+      //   let position = 0;
+        
+      //   // Add the first page
+      //   pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeightInPdf);
+      //   heightLeft -= pdfHeight;
+        
+      //   // Add more pages if content is longer than one page
+      //   while (heightLeft > 0) {
+      //     position = position - pdfHeight; // Move the image up for the next page
+      //     pdf.addPage();
+      //     pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeightInPdf);
+      //     heightLeft -= pdfHeight;
+      //   }
+        
+      //   pdf.save(`${userProfile?.firstName ?? 'Hero'}-Portfolio.pdf`);
+      // });
     }
   };
 

@@ -10,7 +10,6 @@ import Link from 'next/link';
 import { useLanguage } from './context/language-context';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-import Logo from '@/app/components/logo';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,6 +22,7 @@ export default function LandingPage() {
   const featureImage2 = PlaceHolderImages.find(img => img.id === 'deed7')?.imageUrl || 'https://picsum.photos/seed/deed7/600/400';
   const featureImage3 = PlaceHolderImages.find(img => img.id === 'reward1')?.imageUrl || 'https://picsum.photos/seed/reward1/600/400';
   const xpCoinIcon = PlaceHolderImages.find(img => img.id === 'xp-coin-icon')?.imageUrl;
+  const logoOrgIcon = PlaceHolderImages.find(img => img.id === 'logo-org-icon')?.imageUrl;
 
 
   useEffect(() => {
@@ -194,10 +194,12 @@ export default function LandingPage() {
         </Card>
       </section>
 
-      <footer className="container mx-auto px-4 md:px-6 text-sm text-muted-foreground mt-8 border-t pt-8">
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-          <Logo className="w-8 h-8" />
-          <span>© 2024 HeroQuest Creator. All Rights Reserved.</span>
+      <footer className="w-full bg-background text-sm text-muted-foreground mt-8 border-t pt-8 pb-8">
+        <div className="container mx-auto px-4 md:px-6 flex flex-col sm:flex-row justify-center items-center gap-4">
+          {logoOrgIcon && <Image src={logoOrgIcon} width={100} height={10} alt="Logo Org Icon" />}
+          <span>
+            © 2024 HeroQuest Creator. All Rights Reserved.
+          </span>
         </div>
       </footer>
     </div>

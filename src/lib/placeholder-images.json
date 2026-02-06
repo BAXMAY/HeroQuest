@@ -131,6 +131,12 @@
       "description": "An icon representing XP and Coins",
       "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3450126925-72971.firebasestorage.app/o/uploads%2F1766120509508_Gemini_Generated_Image_60aclk60aclk60ac__1_-removebg-preview.png?alt=media&token=8f56f00c-4728-4fd8-826f-bc8528d29154",
       "imageHint": "coin icon"
+    },
+    {
+      "id": "logo-org-icon",
+      "description": "Logo for organization",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/studio-3450126925-72971.firebasestorage.app/o/uploads%2F1770358751961_nbi-logo.png?alt=media&token=91da3743-36ea-4897-9811-86ef7a79d4964",
+      "imageHint": "logo icon"
     }
   ]
 }
