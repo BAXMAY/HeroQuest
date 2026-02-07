@@ -24,11 +24,6 @@ import { useAuth, useUser } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { getSdks } from "@/firebase";
 import { UserProfile } from "@/app/lib/types";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLanguage } from "../context/language-context";
 
@@ -46,7 +41,7 @@ export default function OnboardingPage() {
     lastName: z.string().min(2, t('onboardingPage.lastNameTooShort')),
     username: z.string().min(2, t('onboardingPage.usernameTooShort')),
     gender: z.enum(["male", "female"], { required_error: t('onboardingPage.genderRequired') }),
-    birthday: z.date({ required_error: t('onboardingPage.birthdayRequired') }),
+    birthday: z.string().min(1, { message: t('onboardingPage.birthdayRequired') }),
   });
   
   useEffect(() => {
@@ -62,6 +57,7 @@ export default function OnboardingPage() {
       firstName: user?.displayName?.split(' ')[0] || "",
       lastName: user?.displayName?.split(' ')[1] || "",
       username: user?.email?.split('@')[0] || "",
+      birthday: "",
     },
   });
 
@@ -79,7 +75,7 @@ export default function OnboardingPage() {
         username: values.username,
         profilePicture: user.photoURL || '',
         gender: values.gender,
-        birthday: format(values.birthday, 'yyyy-MM-dd'),
+        birthday: values.birthday,
     };
     
     const fullProfile: UserProfile = {
@@ -199,43 +195,12 @@ export default function OnboardingPage() {
                             control={form.control}
                             name="birthday"
                             render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                <FormLabel>{t('onboardingPage.birthday')}</FormLabel>
-                                <Popover>
-                                    <PopoverTrigger asChild>
+                                <FormItem>
+                                    <FormLabel>{t('onboardingPage.birthday')}</FormLabel>
                                     <FormControl>
-                                        <Button
-                                        variant={"outline"}
-                                        className={cn(
-                                            "w-full pl-3 text-left font-normal",
-                                            !field.value && "text-muted-foreground"
-                                        )}
-                                        >
-                                        {field.value ? (
-                                            format(field.value, "PPP")
-                                        ) : (
-                                            <span>{t('onboardingPage.pickDate')}</span>
-                                        )}
-                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                        </Button>
+                                        <Input placeholder="YYYY-MM-DD" {...field} />
                                     </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                        mode="single"
-                                        selected={field.value}
-                                        onSelect={field.onChange}
-                                        captionLayout="dropdown-nav"
-                                        fromYear={new Date().getFullYear() - 100}
-                                        toYear={new Date().getFullYear()}
-                                        disabled={(date) =>
-                                        date > new Date() || date < new Date("1900-01-01")
-                                        }
-                                        initialFocus
-                                    />
-                                    </PopoverContent>
-                                </Popover>
-                                <FormMessage />
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />

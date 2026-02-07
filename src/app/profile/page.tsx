@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { collection, doc } from 'firebase/firestore';
-import { Award, Coins, Loader2, Save, Shield, Star, Wand2, FileText, CalendarIcon } from 'lucide-react';
+import { Award, Coins, Loader2, Save, Shield, Star, Wand2, FileText } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -23,10 +23,6 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import AvatarCreator from './avatar-creator';
 import CustomAvatar from './custom-avatar';
 import Link from 'next/link';
-import { format } from 'date-fns';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { cn } from '@/lib/utils';
 
 
 export default function ProfilePage() {
@@ -40,7 +36,7 @@ export default function ProfilePage() {
     firstName: z.string().min(2, t('onboardingPage.firstNameTooShort')).max(50, 'First name is too long'),
     lastName: z.string().min(2, t('onboardingPage.lastNameTooShort')).max(50, 'Last name is too long'),
     username: z.string().min(3, t('onboardingPage.usernameTooShort')).max(30, 'Username is too long'),
-    birthday: z.date({ required_error: t('onboardingPage.birthdayRequired') }),
+    birthday: z.string().min(1, { message: t('onboardingPage.birthdayRequired') }),
   });
   
   type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -65,7 +61,7 @@ export default function ProfilePage() {
       firstName: '',
       lastName: '',
       username: '',
-      birthday: undefined,
+      birthday: '',
     },
   });
 
@@ -75,7 +71,7 @@ export default function ProfilePage() {
         firstName: userProfile.firstName || '',
         lastName: userProfile.lastName || '',
         username: userProfile.username || '',
-        birthday: userProfile.birthday ? new Date(userProfile.birthday) : undefined,
+        birthday: userProfile.birthday || '',
       });
     }
   }, [userProfile, form]);
@@ -84,7 +80,7 @@ export default function ProfilePage() {
     if (!userProfileRef) return;
     const dataToSave = {
         ...data,
-        birthday: format(data.birthday, 'yyyy-MM-dd'),
+        birthday: data.birthday,
     }
     updateDocumentNonBlocking(userProfileRef, dataToSave);
     toast({
@@ -289,43 +285,12 @@ export default function ProfilePage() {
                     control={form.control}
                     name="birthday"
                     render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                        <FormLabel>{t('onboardingPage.birthday')}</FormLabel>
-                        <Popover>
-                            <PopoverTrigger asChild>
+                        <FormItem>
+                            <FormLabel>{t('onboardingPage.birthday')}</FormLabel>
                             <FormControl>
-                                <Button
-                                variant={"outline"}
-                                className={cn(
-                                    "w-full pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
-                                )}
-                                >
-                                {field.value ? (
-                                    format(field.value, "PPP")
-                                ) : (
-                                    <span>{t('onboardingPage.pickDate')}</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
+                                <Input placeholder="YYYY-MM-DD" {...field} />
                             </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                captionLayout="dropdown-nav"
-                                fromYear={new Date().getFullYear() - 100}
-                                toYear={new Date().getFullYear()}
-                                disabled={(date) =>
-                                date > new Date() || date < new Date("1900-01-01")
-                                }
-                                initialFocus
-                            />
-                            </PopoverContent>
-                        </Popover>
-                        <FormMessage />
+                            <FormMessage />
                         </FormItem>
                     )}
                 />
