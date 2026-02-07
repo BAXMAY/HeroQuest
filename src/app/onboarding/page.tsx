@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,15 +31,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useLanguage } from "../context/language-context";
 
-
-const formSchema = z.object({
-  firstName: z.string().min(2, "First name is too short"),
-  lastName: z.string().min(2, "Last name is too short"),
-  username: z.string().min(3, "Username must be at least 3 characters."),
-  gender: z.enum(["male", "female", "other"], { required_error: "Please select a gender." }),
-  birthday: z.date({ required_error: "Please select your birthday." }),
-});
 
 export default function OnboardingPage() {
   const { toast } = useToast();
@@ -46,6 +40,15 @@ export default function OnboardingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { user, isUserLoading } = useUser();
   const auth = useAuth();
+  const { t } = useLanguage();
+
+  const formSchema = z.object({
+    firstName: z.string().min(2, t('onboardingPage.firstNameTooShort')),
+    lastName: z.string().min(2, t('onboardingPage.lastNameTooShort')),
+    username: z.string().min(2, t('onboardingPage.usernameTooShort')),
+    gender: z.enum(["male", "female", "other"], { required_error: t('onboardingPage.genderRequired') }),
+    birthday: z.date({ required_error: t('onboardingPage.birthdayRequired') }),
+  });
   
   useEffect(() => {
     // If user is not logged in or is anonymous, redirect them
@@ -92,15 +95,15 @@ export default function OnboardingPage() {
     try {
         await setDoc(userProfileRef, fullProfile);
         toast({
-            title: "Profile Created!",
-            description: "Welcome to the guild! Your adventure begins now.",
+            title: t('onboardingPage.profileCreatedTitle'),
+            description: t('onboardingPage.profileCreatedDescription'),
         });
         router.push('/dashboard');
     } catch(e) {
         console.error(e);
         toast({
-            title: "Something went wrong",
-            description: "Could not save your profile. Please try again.",
+            title: t('onboardingPage.profileSaveErrorTitle'),
+            description: t('onboardingPage.profileSaveErrorDescription'),
             variant: "destructive",
         })
     } finally {
@@ -123,8 +126,8 @@ export default function OnboardingPage() {
                  <div className="flex justify-center mb-4">
                     <Logo className="w-16 h-16" />
                 </div>
-                <CardTitle className="text-3xl font-headline">Welcome to the Guild!</CardTitle>
-                <CardDescription>Let's create your hero profile to get you started.</CardDescription>
+                <CardTitle className="text-3xl font-headline">{t('onboardingPage.title')}</CardTitle>
+                <CardDescription>{t('onboardingPage.description')}</CardDescription>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
@@ -135,9 +138,9 @@ export default function OnboardingPage() {
                             name="firstName"
                             render={({ field }) => (
                                 <FormItem>
-                                <FormLabel>First Name</FormLabel>
+                                <FormLabel>{t('onboardingPage.firstName')}</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Brave" {...field} />
+                                    <Input placeholder={t('onboardingPage.firstNamePlaceholder')} {...field} />
                                 </FormControl>
                                 <FormMessage />
                                 </FormItem>
@@ -148,9 +151,9 @@ export default function OnboardingPage() {
                             name="lastName"
                             render={({ field }) => (
                                 <FormItem>
-                                <FormLabel>Last Name</FormLabel>
+                                <FormLabel>{t('onboardingPage.lastName')}</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Hero" {...field} />
+                                    <Input placeholder={t('onboardingPage.lastNamePlaceholder')} {...field} />
                                 </FormControl>
                                 <FormMessage />
                                 </FormItem>
@@ -162,11 +165,11 @@ export default function OnboardingPage() {
                       name="username"
                       render={({ field }) => (
                           <FormItem>
-                          <FormLabel>Nickname</FormLabel>
+                          <FormLabel>{t('onboardingPage.username')}</FormLabel>
                           <FormControl>
-                              <Input placeholder="BraveHero123" {...field} />
+                              <Input placeholder={t('onboardingPage.usernamePlaceholder')} {...field} />
                           </FormControl>
-                           <FormDescription>This is your public display name.</FormDescription>
+                           <FormDescription>{t('onboardingPage.usernameDescription')}</FormDescription>
                           <FormMessage />
                           </FormItem>
                       )}
@@ -177,17 +180,17 @@ export default function OnboardingPage() {
                             name="gender"
                             render={({ field }) => (
                                 <FormItem>
-                                <FormLabel>Gender</FormLabel>
+                                <FormLabel>{t('onboardingPage.gender')}</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Select your gender" />
+                                        <SelectValue placeholder={t('onboardingPage.selectGender')} />
                                     </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                    <SelectItem value="male">Male</SelectItem>
-                                    <SelectItem value="female">Female</SelectItem>
-                                    <SelectItem value="other">Other</SelectItem>
+                                    <SelectItem value="male">{t('onboardingPage.male')}</SelectItem>
+                                    <SelectItem value="female">{t('onboardingPage.female')}</SelectItem>
+                                    <SelectItem value="other">{t('onboardingPage.other')}</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -199,7 +202,7 @@ export default function OnboardingPage() {
                             name="birthday"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
-                                <FormLabel>Date of birth</FormLabel>
+                                <FormLabel>{t('onboardingPage.birthday')}</FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
                                     <FormControl>
@@ -213,7 +216,7 @@ export default function OnboardingPage() {
                                         {field.value ? (
                                             format(field.value, "PPP")
                                         ) : (
-                                            <span>Pick a date</span>
+                                            <span>{t('onboardingPage.pickDate')}</span>
                                         )}
                                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                         </Button>
@@ -239,7 +242,7 @@ export default function OnboardingPage() {
                     
                     <Button type="submit" className="w-full" disabled={isLoading}>
                         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Complete Profile
+                        {t('onboardingPage.completeProfile')}
                     </Button>
                 </form>
                 </Form>
@@ -248,3 +251,5 @@ export default function OnboardingPage() {
     </div>
   );
 }
+
+    

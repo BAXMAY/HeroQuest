@@ -22,6 +22,7 @@ export const en = {
     userDetails: 'User Details',
     portfolio: 'Your Portfolio',
     'executive-summary': 'Executive Summary',
+    onboarding: 'Create Your Profile',
   },
   // Navigation
   nav: {
@@ -250,6 +251,14 @@ export const en = {
     sortByQuests: 'Quests',
     teacher: 'Teacher',
     student: 'Student',
+    deleteUserTitle: 'Delete User',
+    deleteUserDescription: 'Are you sure you want to permanently delete this user? This action cannot be undone.',
+    deleteUserSuccess: 'User Deleted',
+    deleteUserError: 'Could not delete user.',
+    deleteAllAnonymous: 'Delete All Anonymous',
+    deleteAllAnonymousDescription: 'This will permanently delete all {count} anonymous user accounts. This action cannot be undone.',
+    deleteAllAnonymousSuccess: 'Anonymous Users Deleted',
+    deleteAllAnonymousError: 'Could not delete all anonymous users.',
   },
   userDetailsPage: {
     backToClassroom: 'Back to Classroom',
@@ -347,6 +356,35 @@ export const en = {
     rewardSaveError: 'Error Saving Reward',
     rewardRemovedTitle: 'Reward Removed',
     rewardRemovedDescription: 'The reward has been removed from the shop.',
+  },
+  onboardingPage: {
+    title: 'Welcome to the Guild!',
+    description: "Let's create your hero profile to get you started.",
+    firstName: 'First Name',
+    firstNamePlaceholder: 'Brave',
+    lastName: 'Last Name',
+    lastNamePlaceholder: 'Hero',
+    username: 'Nickname',
+    usernamePlaceholder: 'BraveHero123',
+    usernameDescription: 'This is your public display name.',
+    gender: 'Gender',
+    selectGender: 'Select your gender',
+    male: 'Male',
+    female: 'Female',
+    other: 'Other',
+    birthday: 'Date of birth',
+    pickDate: 'Pick a date',
+    completeProfile: 'Complete Profile',
+    profileCreatedTitle: 'Profile Created!',
+    profileCreatedDescription: 'Welcome to the guild! Your adventure begins now.',
+    profileSaveErrorTitle: 'Something went wrong',
+    profileSaveErrorDescription: 'Could not save your profile. Please try again.',
+    // Validations
+    firstNameTooShort: 'First name is too short',
+    lastNameTooShort: 'Last name is too short',
+    usernameTooShort: 'Username must be at least 2 characters.',
+    genderRequired: 'Please select a gender.',
+    birthdayRequired: 'Please select your birthday.',
   },
   // Level Names
   levelNames: {
@@ -453,3 +491,5 @@ export const en = {
     'The Unwritten': 'The Unwritten',
   }
 };
+
+    

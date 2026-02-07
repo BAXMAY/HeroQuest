@@ -22,6 +22,7 @@ export const th = {
       userDetails: 'รายละเอียดผู้ใช้',
       portfolio: 'ผลงานของคุณ',
       'executive-summary': 'สรุปสำหรับผู้บริหาร',
+      onboarding: 'สร้างโปรไฟล์ของคุณ',
     },
     // Navigation
     nav: {
@@ -251,6 +252,14 @@ export const th = {
         sortByQuests: 'เควส',
         teacher: 'ครู',
         student: 'นักเรียน',
+        deleteUserTitle: 'ลบผู้ใช้',
+        deleteUserDescription: 'คุณแน่ใจหรือไม่ว่าต้องการลบผู้ใช้นี้อย่างถาวร? การกระทำนี้ไม่สามารถยกเลิกได้',
+        deleteUserSuccess: 'ลบผู้ใช้แล้ว',
+        deleteUserError: 'ไม่สามารถลบผู้ใช้ได้',
+        deleteAllAnonymous: 'ลบผู้ใช้ที่ไม่ระบุชื่อทั้งหมด',
+        deleteAllAnonymousDescription: 'การดำเนินการนี้จะลบบัญชีผู้ใช้ที่ไม่ระบุชื่อทั้งหมด {count} บัญชีอย่างถาวร การดำเนินการนี้ไม่สามารถยกเลิกได้',
+        deleteAllAnonymousSuccess: 'ลบผู้ใช้ที่ไม่ระบุชื่อแล้ว',
+        deleteAllAnonymousError: 'ไม่สามารถลบผู้ใช้ที่ไม่ระบุชื่อทั้งหมดได้',
     },
     userDetailsPage: {
         backToClassroom: 'กลับไปที่ห้องเรียน',
@@ -348,6 +357,35 @@ export const th = {
       rewardSaveError: 'เกิดข้อผิดพลาดในการบันทึกรางวัล',
       rewardRemovedTitle: 'ลบรางวัลแล้ว',
       rewardRemovedDescription: 'รางวัลถูกลบออกจากร้านค้าแล้ว',
+    },
+    onboardingPage: {
+        title: 'ยินดีต้อนรับสู่กิลด์!',
+        description: 'มาสร้างโปรไฟล์ฮีโร่ของคุณเพื่อเริ่มต้นกันเลย',
+        firstName: 'ชื่อจริง',
+        firstNamePlaceholder: 'ผู้กล้า',
+        lastName: 'นามสกุล',
+        lastNamePlaceholder: 'ฮีโร่',
+        username: 'ชื่อเล่น',
+        usernamePlaceholder: 'BraveHero123',
+        usernameDescription: 'นี่คือชื่อที่แสดงต่อสาธารณะของคุณ',
+        gender: 'เพศ',
+        selectGender: 'เลือกเพศของคุณ',
+        male: 'ชาย',
+        female: 'หญิง',
+        other: 'อื่นๆ',
+        birthday: 'วันเกิด',
+        pickDate: 'เลือกวันที่',
+        completeProfile: 'สร้างโปรไฟล์ให้สมบูรณ์',
+        profileCreatedTitle: 'สร้างโปรไฟล์แล้ว!',
+        profileCreatedDescription: 'ยินดีต้อนรับสู่กิลด์! การผจญภัยของคุณเริ่มต้นขึ้นแล้ว',
+        profileSaveErrorTitle: 'เกิดข้อผิดพลาดบางอย่าง',
+        profileSaveErrorDescription: 'ไม่สามารถบันทึกโปรไฟล์ของคุณได้ กรุณาลองใหม่อีกครั้ง',
+        // Validations
+        firstNameTooShort: 'ชื่อจริงสั้นเกินไป',
+        lastNameTooShort: 'นามสกุลสั้นเกินไป',
+        usernameTooShort: 'ชื่อเล่นต้องมีอย่างน้อย 2 ตัวอักษร',
+        genderRequired: 'กรุณาเลือกเพศของคุณ',
+        birthdayRequired: 'กรุณาเลือกวันเกิดของคุณ',
     },
     // Level Names
     levelNames: {
@@ -454,3 +492,5 @@ export const th = {
         'The Unwritten': 'ผู้ไม่ถูกจารึก',
     }
 };
+
+    
