@@ -139,7 +139,7 @@ export default function SettingsPage() {
             </CardContent>
         </Card>
 
-        <Card>
+        {/* <Card>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <Code className="w-5 h-5"/>
@@ -157,7 +157,7 @@ export default function SettingsPage() {
                     Grant Admin Privileges
                 </Button>
             </CardContent>
-        </Card>
+        </Card> */}
     </div>
   );
 }

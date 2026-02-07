@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { collection, doc } from 'firebase/firestore';
-import { Award, Coins, Loader2, Save, Shield, Star, Wand2, FileText } from 'lucide-react';
+import { Award, Coins, Loader2, Save, Shield, Star, Wand2, FileText, CalendarIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -23,14 +23,11 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import AvatarCreator from './avatar-creator';
 import CustomAvatar from './custom-avatar';
 import Link from 'next/link';
+import { format } from 'date-fns';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
 
-const profileFormSchema = z.object({
-  firstName: z.string().min(2, 'First name is too short').max(50, 'First name is too long'),
-  lastName: z.string().min(2, 'Last name is too short').max(50, 'Last name is too long'),
-  username: z.string().min(3, 'Username is too short').max(30, 'Username is too long'),
-});
-
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 export default function ProfilePage() {
   const { user, isUserLoading } = useUser();
@@ -38,6 +35,15 @@ export default function ProfilePage() {
   const { toast } = useToast();
   const { t } = useLanguage();
   const [isAvatarCreatorOpen, setIsAvatarCreatorOpen] = useState(false);
+
+  const profileFormSchema = z.object({
+    firstName: z.string().min(2, t('onboardingPage.firstNameTooShort')).max(50, 'First name is too long'),
+    lastName: z.string().min(2, t('onboardingPage.lastNameTooShort')).max(50, 'Last name is too long'),
+    username: z.string().min(3, t('onboardingPage.usernameTooShort')).max(30, 'Username is too long'),
+    birthday: z.date({ required_error: t('onboardingPage.birthdayRequired') }),
+  });
+  
+  type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
   const userProfileRef = useMemoFirebase(() => {
     if (!user) return null;
@@ -59,6 +65,7 @@ export default function ProfilePage() {
       firstName: '',
       lastName: '',
       username: '',
+      birthday: undefined,
     },
   });
 
@@ -68,13 +75,18 @@ export default function ProfilePage() {
         firstName: userProfile.firstName || '',
         lastName: userProfile.lastName || '',
         username: userProfile.username || '',
+        birthday: userProfile.birthday ? new Date(userProfile.birthday) : undefined,
       });
     }
   }, [userProfile, form]);
 
   const onSubmit = (data: ProfileFormValues) => {
     if (!userProfileRef) return;
-    updateDocumentNonBlocking(userProfileRef, data);
+    const dataToSave = {
+        ...data,
+        birthday: format(data.birthday, 'yyyy-MM-dd'),
+    }
+    updateDocumentNonBlocking(userProfileRef, dataToSave);
     toast({
       title: t('profileUpdated'),
       description: t('profileUpdatedDescription'),
@@ -259,19 +271,62 @@ export default function ProfilePage() {
                   )}
                 />
               </div>
-               <FormField
-                  control={form.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('username')}</FormLabel>
-                      <FormControl>
-                        <Input placeholder={t('username')} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <FormField
+                    control={form.control}
+                    name="username"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('username')}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t('username')} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="birthday"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                        <FormLabel>{t('onboardingPage.birthday')}</FormLabel>
+                        <Popover>
+                            <PopoverTrigger asChild>
+                            <FormControl>
+                                <Button
+                                variant={"outline"}
+                                className={cn(
+                                    "w-full pl-3 text-left font-normal",
+                                    !field.value && "text-muted-foreground"
+                                )}
+                                >
+                                {field.value ? (
+                                    format(field.value, "PPP")
+                                ) : (
+                                    <span>{t('onboardingPage.pickDate')}</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                            </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                disabled={(date) =>
+                                date > new Date() || date < new Date("1900-01-01")
+                                }
+                                initialFocus
+                            />
+                            </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                        </FormItem>
+                    )}
                 />
+               </div>
               <Button type="submit" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
