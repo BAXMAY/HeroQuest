@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "UserProfile": {
@@ -47,7 +48,7 @@
         "gender": {
             "type": "string",
             "description": "The gender of the user.",
-            "enum": ["male", "female", "other"]
+            "enum": ["male", "female"]
         },
         "birthday": {
             "type": "string",

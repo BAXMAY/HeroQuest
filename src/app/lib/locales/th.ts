@@ -372,7 +372,6 @@ export const th = {
         selectGender: 'เลือกเพศของคุณ',
         male: 'ชาย',
         female: 'หญิง',
-        other: 'อื่นๆ',
         birthday: 'วันเกิด',
         pickDate: 'เลือกวันที่',
         completeProfile: 'สร้างโปรไฟล์ให้สมบูรณ์',
@@ -492,5 +491,3 @@ export const th = {
         'The Unwritten': 'ผู้ไม่ถูกจารึก',
     }
 };
-
-    

@@ -1,3 +1,4 @@
+
 'use client';
 import type { Timestamp } from 'firebase/firestore';
 import type { 
@@ -25,7 +26,7 @@ export type UserProfile = {
   totalPoints: number;
   braveCoins: number;
   questsCompleted: number;
-  gender?: 'male' | 'female' | 'other';
+  gender?: 'male' | 'female';
   birthday?: string;
   settings?: {
     notifications?: {

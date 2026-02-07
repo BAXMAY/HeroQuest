@@ -46,7 +46,7 @@ export default function OnboardingPage() {
     firstName: z.string().min(2, t('onboardingPage.firstNameTooShort')),
     lastName: z.string().min(2, t('onboardingPage.lastNameTooShort')),
     username: z.string().min(2, t('onboardingPage.usernameTooShort')),
-    gender: z.enum(["male", "female", "other"], { required_error: t('onboardingPage.genderRequired') }),
+    gender: z.enum(["male", "female"], { required_error: t('onboardingPage.genderRequired') }),
     birthday: z.date({ required_error: t('onboardingPage.birthdayRequired') }),
   });
   
@@ -190,7 +190,6 @@ export default function OnboardingPage() {
                                     <SelectContent>
                                     <SelectItem value="male">{t('onboardingPage.male')}</SelectItem>
                                     <SelectItem value="female">{t('onboardingPage.female')}</SelectItem>
-                                    <SelectItem value="other">{t('onboardingPage.other')}</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -251,5 +250,3 @@ export default function OnboardingPage() {
     </div>
   );
 }
-
-    

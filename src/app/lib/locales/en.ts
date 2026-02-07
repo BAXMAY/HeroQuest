@@ -371,7 +371,6 @@ export const en = {
     selectGender: 'Select your gender',
     male: 'Male',
     female: 'Female',
-    other: 'Other',
     birthday: 'Date of birth',
     pickDate: 'Pick a date',
     completeProfile: 'Complete Profile',
@@ -491,5 +490,3 @@ export const en = {
     'The Unwritten': 'The Unwritten',
   }
 };
-
-    
