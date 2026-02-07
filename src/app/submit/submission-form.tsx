@@ -33,8 +33,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 const formSchema = z.object({
   description: z.string().min(10, {
     message: "Description must be at least 10 characters.",
-  }).max(200, {
-    message: "Description must be less than 200 characters.",
   }),
   category: z.string({
     required_error: "Please select a category.",
@@ -277,14 +275,17 @@ export default function SubmissionForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="environment">สิ่งแวดล้อม (Environment)</SelectItem>
+                  <SelectItem value="good">ความดี</SelectItem>
+                  <SelectItem value="excellent">ความเก่ง</SelectItem>
+                  <SelectItem value="brave">ความกล้า</SelectItem>
+                    {/* <SelectItem value="environment">สิ่งแวดล้อม (Environment)</SelectItem>
                     <SelectItem value="animals">สัตว์ (Animals)</SelectItem>
                     <SelectItem value="community">ชุมชน (Community)</SelectItem>
                     <SelectItem value="education">การศึกษา (Education)</SelectItem>
                     <SelectItem value="health">สุขภาพ (Health)</SelectItem>
                     <SelectItem value="charity">การให้ทาน (Charity)</SelectItem>
                     <SelectItem value="family">ครอบครัวและความเคารพ (Family & Respect)</SelectItem>
-                    <SelectItem value="quran">การอ่านอัลกุรอาน (Quran Reading)</SelectItem>
+                    <SelectItem value="quran">การอ่านอัลกุรอาน (Quran Reading)</SelectItem> */}
                   </SelectContent>
                 </Select>
                 <FormDescription>
