@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Coins, Crown, Sparkles, Trophy, Flame, Heart } from "lucide-react";
 import { MascotSparky } from "@/components/game/mascot-sparky";
+import { useBrand } from "@/components/brand-provider";
 
 /**
  * Landing page — bright + RPG hero with mascot teaser, feature cards.
@@ -11,6 +12,7 @@ export const Route = createFileRoute("/")({
 });
 
 function LandingPage() {
+  const brand = useBrand();
   return (
     <main className="relative isolate overflow-hidden">
       {/* Gradient backdrop */}
@@ -26,7 +28,7 @@ function LandingPage() {
           animate={{ y: 0, opacity: 1 }}
           className="rounded-full border border-magic/30 bg-card px-4 py-1 text-sm font-bold uppercase tracking-[0.2em] text-magic"
         >
-          HeroQuest v2
+          {brand.appName}
         </motion.p>
         <motion.h1
           initial={{ y: 20, opacity: 0 }}
@@ -85,7 +87,7 @@ function LandingPage() {
           />
           <Feature
             icon={<Coins className="h-6 w-6 text-accent" />}
-            title="Earn XP & coins"
+            title={`Earn ${brand.xpName} & ${brand.currencyName.toLowerCase()}`}
             body="Level up, unlock badges, spin the daily wheel, and redeem rewards."
           />
         </div>

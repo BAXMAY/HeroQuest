@@ -1,23 +1,42 @@
 /**
- * Static system prompts — kept long-form and immutable so they can be sent
- * with `cache_control: { type: 'ephemeral' }` and re-used across calls within
- * the cache window. Cached input tokens are ~90% cheaper.
+ * System prompt builders — long-form text templated with brand-specific
+ * names (app, XP, currency). Brand strings are stable across requests for
+ * a given community, so the resulting text still hits Anthropic's prompt
+ * cache (`cache_control: { type: 'ephemeral' }`) ~100% of the time.
+ *
+ * Per-community cache isolation is automatic: a different brand → different
+ * prompt text → different cache key. No cross-tenant leakage even after
+ * we go multi-tenant.
  *
  * Wherever a kid-facing prompt is concerned: NO violence, NO religion, NO
  * politics. Keep it warm and age-appropriate.
  */
 
-export const EVAL_QUEST_SYSTEM = `You are the AI judge for "HeroQuest", a game where children (ages 6-14) complete real-world good deeds and earn rewards approved by their parent or teacher.
+export type PromptBrand = {
+  appName: string;
+  currencyName: string;
+  xpName: string;
+};
 
-Your job: look at a child's submitted quest (photo + description) and suggest fair Experience Points (XP) and Brave Coins. An adult will make the final call — your suggestion just speeds them up.
+const DEFAULT_BRAND: PromptBrand = {
+  appName: "HeroQuest",
+  currencyName: "Brave Coins",
+  xpName: "XP",
+};
+
+/** Quest-evaluator system prompt. */
+export function buildEvalQuestSystem(brand: PromptBrand = DEFAULT_BRAND): string {
+  return `You are the AI judge for "${brand.appName}", a game where children (ages 6-14) complete real-world good deeds and earn rewards approved by their parent or teacher.
+
+Your job: look at a child's submitted quest (photo + description) and suggest fair Experience Points (${brand.xpName}) and ${brand.currencyName}. An adult will make the final call — your suggestion just speeds them up.
 
 # Reward rubric
 
-- A typical "average" quest is worth ~50 XP.
-- Trivial or very short quests: 10-30 XP.
-- Quests that took real effort, time, or help others meaningfully: 60-120 XP.
-- Exceptional quests (sustained effort, big positive impact, creativity): 130-200 XP.
-- Brave Coins ≈ 10% of XP, rounded to the nearest whole coin (minimum 1 if XP > 0).
+- A typical "average" quest is worth ~50 ${brand.xpName}.
+- Trivial or very short quests: 10-30 ${brand.xpName}.
+- Quests that took real effort, time, or help others meaningfully: 60-120 ${brand.xpName}.
+- Exceptional quests (sustained effort, big positive impact, creativity): 130-200 ${brand.xpName}.
+- ${brand.currencyName} ≈ 10% of ${brand.xpName}, rounded to the nearest whole coin (minimum 1 if ${brand.xpName} > 0).
 
 # What to look for
 
@@ -40,8 +59,11 @@ Respond ONLY with a single JSON object matching this exact schema:
 }
 
 No prose outside the JSON. No markdown fences.`;
+}
 
-export const GENERATE_TRIVIA_SYSTEM = `You are the trivia author for "HeroQuest", a game for children ages 6-14. You write multiple-choice questions about kindness, honesty, helping others, the environment, animals, health, and good citizenship.
+/** Trivia generator system prompt. */
+export function buildGenerateTriviaSystem(brand: PromptBrand = DEFAULT_BRAND): string {
+  return `You are the trivia author for "${brand.appName}", a game for children ages 6-14. You write multiple-choice questions about kindness, honesty, helping others, the environment, animals, health, and good citizenship.
 
 # Rules
 
@@ -65,8 +87,11 @@ Respond ONLY with a JSON array of question objects. No prose outside JSON, no ma
   "difficulty": "easy" | "medium",
   "topic": "<one of: kindness, honesty, helping, animals, environment, health, sharing, courage, friendship, learning, gratitude>"
 }`;
+}
 
-export const SUGGEST_OPPORTUNITIES_SYSTEM = `You are an idea generator for "HeroQuest", a game for children ages 6-14. Given a child's age, locale, and interests, suggest 3-5 age-appropriate good deeds they could do at home, school, or in their community.
+/** Opportunity-suggester system prompt. */
+export function buildSuggestOpportunitiesSystem(brand: PromptBrand = DEFAULT_BRAND): string {
+  return `You are an idea generator for "${brand.appName}", a game for children ages 6-14. Given a child's age, locale, and interests, suggest 3-5 age-appropriate good deeds they could do at home, school, or in their community.
 
 # Rules
 
@@ -82,3 +107,10 @@ Each suggestion:
   "description": "<one or two sentences, locale-appropriate>",
   "category": "family" | "environment" | "animals" | "community" | "education" | "health"
 }`;
+}
+
+// Backwards-compatible constants for code that hasn't been updated yet
+// (smoke-test only — every real caller should pass a brand).
+export const EVAL_QUEST_SYSTEM = buildEvalQuestSystem();
+export const GENERATE_TRIVIA_SYSTEM = buildGenerateTriviaSystem();
+export const SUGGEST_OPPORTUNITIES_SYSTEM = buildSuggestOpportunitiesSystem();

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { Locale } from "@heroquest/db/types";
 import { getAnthropic, MODEL_FAST, type AnthropicEnv } from "./client";
-import { EVAL_QUEST_SYSTEM } from "./prompts";
+import { buildEvalQuestSystem, type PromptBrand } from "./prompts";
 
 const evaluationSchema = z.object({
   xp: z.number().int().min(0).max(200),
@@ -16,6 +16,8 @@ export type EvaluateQuestInput = {
   /** Presigned R2 URL — must be reachable for the lifetime of this call. */
   photoUrl: string;
   locale: Locale;
+  /** Active brand (app/XP/currency names). Defaults to HeroQuest. */
+  brand?: PromptBrand;
 };
 
 /**
@@ -30,6 +32,7 @@ export async function evaluateQuest(
   input: EvaluateQuestInput,
 ): Promise<QuestEvaluation> {
   const anthropic = getAnthropic(env);
+  const systemPrompt = buildEvalQuestSystem(input.brand);
 
   const messageRequest = (instructionSuffix?: string) =>
     anthropic.messages.create({
@@ -38,7 +41,7 @@ export async function evaluateQuest(
       system: [
         {
           type: "text",
-          text: EVAL_QUEST_SYSTEM,
+          text: systemPrompt,
           cache_control: { type: "ephemeral" },
         },
       ],

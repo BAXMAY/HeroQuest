@@ -69,3 +69,27 @@ export async function presignQuestRead(
     expiresIn: READ_TTL_SECONDS,
   });
 }
+
+/**
+ * Generic presigned-PUT for any R2 bucket (used by brand-asset uploads).
+ * Key shape: `{keyPrefix}-{nanoid}.{ext}` so callers control the prefix
+ * (e.g. `tenants/default/logo`) and we tack on a collision-safe suffix.
+ */
+export async function presignR2Upload(args: {
+  bucket: string;
+  env: CloudflareEnv;
+  keyPrefix: string;
+  contentType: string;
+}): Promise<PresignedUpload> {
+  const { bucket, env, keyPrefix, contentType } = args;
+  const s3 = buildR2S3(env);
+  const subtype = contentType.split("/")[1]?.toLowerCase() ?? "bin";
+  const ext = subtype === "svg+xml" ? "svg" : subtype === "jpeg" ? "jpg" : subtype;
+  const key = `${keyPrefix}-${nanoid(10)}.${ext}`;
+  const uploadUrl = await getSignedUrl(
+    s3,
+    new PutObjectCommand({ Bucket: bucket, Key: key, ContentType: contentType }),
+    { expiresIn: UPLOAD_TTL_SECONDS },
+  );
+  return { uploadUrl, key, expiresAt: Date.now() + UPLOAD_TTL_SECONDS * 1000 };
+}

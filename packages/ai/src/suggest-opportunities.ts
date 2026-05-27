@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { QUEST_CATEGORIES, type Locale } from "@heroquest/db/types";
 import { getAnthropic, MODEL_FAST, type AnthropicEnv } from "./client";
-import { SUGGEST_OPPORTUNITIES_SYSTEM } from "./prompts";
+import { buildSuggestOpportunitiesSystem, type PromptBrand } from "./prompts";
 
 const opportunitySchema = z.object({
   title: z.string().min(3).max(80),
@@ -18,6 +18,7 @@ export type SuggestOpportunitiesInput = {
   locale: Locale;
   interests?: string[];
   count?: number;
+  brand?: PromptBrand;
 };
 
 export async function suggestOpportunities(
@@ -29,6 +30,7 @@ export async function suggestOpportunities(
   const interestsLine = input.interests?.length
     ? `Interests: ${input.interests.join(", ")}.`
     : "Interests: not specified — give a varied mix.";
+  const systemPrompt = buildSuggestOpportunitiesSystem(input.brand);
 
   const response = await anthropic.messages.create({
     model: MODEL_FAST,
@@ -36,7 +38,7 @@ export async function suggestOpportunities(
     system: [
       {
         type: "text",
-        text: SUGGEST_OPPORTUNITIES_SYSTEM,
+        text: systemPrompt,
         cache_control: { type: "ephemeral" },
       },
     ],

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { Locale } from "@heroquest/db/types";
 import { getAnthropic, MODEL_FAST, type AnthropicEnv } from "./client";
-import { GENERATE_TRIVIA_SYSTEM } from "./prompts";
+import { buildGenerateTriviaSystem, type PromptBrand } from "./prompts";
 
 const TRIVIA_TOPICS = [
   "kindness",
@@ -33,6 +33,7 @@ export type TriviaItem = z.infer<typeof triviaItemSchema>;
 export type GenerateTriviaInput = {
   locale: Locale;
   count?: number; // default 5
+  brand?: PromptBrand;
 };
 
 export async function generateDailyTrivia(
@@ -41,6 +42,7 @@ export async function generateDailyTrivia(
 ): Promise<TriviaItem[]> {
   const anthropic = getAnthropic(env);
   const count = input.count ?? 5;
+  const systemPrompt = buildGenerateTriviaSystem(input.brand);
 
   const response = await anthropic.messages.create({
     model: MODEL_FAST,
@@ -48,7 +50,7 @@ export async function generateDailyTrivia(
     system: [
       {
         type: "text",
-        text: GENERATE_TRIVIA_SYSTEM,
+        text: systemPrompt,
         cache_control: { type: "ephemeral" },
       },
     ],

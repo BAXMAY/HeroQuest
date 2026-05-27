@@ -51,25 +51,20 @@
   }
 
   .dark {
-    --background: 240 25% 8%;
-    --foreground: 235 40% 96%;
-
+    /* Brand vars (--brand-*, --background, --foreground) are injected
+     * authoritatively by <BrandStyleTag /> from the active tenant's
+     * theme — see apps/v2/src/components/brand-provider.tsx. Dark mode
+     * just adjusts neutral surfaces. */
     --card: 240 22% 12%;
     --card-foreground: 235 40% 96%;
     --popover: 240 22% 12%;
     --popover-foreground: 235 40% 96%;
 
-    --brand-primary: 262 70% 65%;
-    --brand-secondary: 162 60% 50%;
-    --brand-accent: 38 90% 60%;
-    --brand-magic: 300 70% 65%;
-    --brand-flame: 15 85% 60%;
-
     --muted: 240 18% 18%;
     --muted-foreground: 235 20% 70%;
     --border: 240 18% 22%;
     --input: 240 18% 22%;
-    --ring: 262 70% 65%;
+    --ring: var(--brand-primary);
   }
 
   * {

@@ -1,13 +1,17 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { cn } from "@heroquest/ui";
+import { useBrand } from "@/components/brand-provider";
 
 export type MascotMood = "idle" | "wave" | "cheer" | "sleep";
 
 /**
- * Sparky — a small friendly dragon SVG anchored bottom-right. State-machine
- * animates idle breathing, occasional wave, cheering on celebrations, and
- * sleeping after 2 minutes of inactivity.
+ * Sparky — the default mascot SVG, anchored bottom-right.
+ *
+ * If the active brand has `mascotUrl` set, that image replaces the inline
+ * SVG. The same wrapper handles state-machine animations (idle breathing,
+ * wave on mount, cheer on celebration, sleep after inactivity) so custom
+ * mascots still bob + scale on hover.
  */
 export function MascotSparky({
   mood = "idle",
@@ -18,6 +22,7 @@ export function MascotSparky({
   className?: string;
   onClick?: () => void;
 }) {
+  const brand = useBrand();
   // Wave once on mount.
   const [hasWavedIn, setHasWavedIn] = useState(false);
   useEffect(() => {
@@ -40,7 +45,7 @@ export function MascotSparky({
     <motion.button
       type="button"
       onClick={onClick}
-      aria-label="Sparky the dragon"
+      aria-label={`${brand.appName} mascot`}
       whileHover={{ scale: 1.06 }}
       whileTap={{ scale: 0.94 }}
       animate={bodyAnim}
@@ -50,7 +55,15 @@ export function MascotSparky({
         className,
       )}
     >
-      <svg viewBox="0 0 80 80" className="h-16 w-16" aria-hidden>
+      {brand.mascotUrl ? (
+        <img
+          src={brand.mascotUrl}
+          alt={`${brand.appName} mascot`}
+          className="h-16 w-16 object-contain"
+          loading="lazy"
+        />
+      ) : (
+        <svg viewBox="0 0 80 80" className="h-16 w-16" aria-hidden>
         {/* Background glow */}
         <circle cx="40" cy="42" r="30" fill="hsl(var(--brand-magic) / 0.12)" />
         {/* Wing */}
@@ -103,7 +116,8 @@ export function MascotSparky({
             strokeLinecap="round"
           />
         )}
-      </svg>
+        </svg>
+      )}
     </motion.button>
   );
 }

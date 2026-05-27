@@ -25,7 +25,8 @@
   ],
   "r2_buckets": [
     { "binding": "QUEST_PHOTOS", "bucket_name": "heroquest-quest-photos" },
-    { "binding": "AVATARS", "bucket_name": "heroquest-avatars" }
+    { "binding": "AVATARS", "bucket_name": "heroquest-avatars" },
+    { "binding": "BRAND_ASSETS", "bucket_name": "heroquest-brand-assets" }
   ],
   "kv_namespaces": [
     { "binding": "TRIVIA_KV", "id": "REPLACE_ME_LOCAL" }
@@ -50,7 +51,8 @@
       ],
       "r2_buckets": [
         { "binding": "QUEST_PHOTOS", "bucket_name": "heroquest-quest-photos-preview" },
-        { "binding": "AVATARS", "bucket_name": "heroquest-avatars-preview" }
+        { "binding": "AVATARS", "bucket_name": "heroquest-avatars-preview" },
+        { "binding": "BRAND_ASSETS", "bucket_name": "heroquest-brand-assets-preview" }
       ],
       "kv_namespaces": [{ "binding": "TRIVIA_KV", "id": "REPLACE_ME_PREVIEW" }]
     },
@@ -67,7 +69,8 @@
       ],
       "r2_buckets": [
         { "binding": "QUEST_PHOTOS", "bucket_name": "heroquest-quest-photos" },
-        { "binding": "AVATARS", "bucket_name": "heroquest-avatars" }
+        { "binding": "AVATARS", "bucket_name": "heroquest-avatars" },
+        { "binding": "BRAND_ASSETS", "bucket_name": "heroquest-brand-assets" }
       ],
       "kv_namespaces": [{ "binding": "TRIVIA_KV", "id": "REPLACE_ME_PROD" }]
     }

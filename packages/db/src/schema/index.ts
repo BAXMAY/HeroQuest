@@ -11,3 +11,4 @@ export * from "./notifications";
 export * from "./streaks";
 export * from "./mini-games";
 export * from "./trivia";
+export * from "./tenants";

@@ -5,7 +5,7 @@ import {
   redirect,
   useNavigate,
 } from "@tanstack/react-router";
-import { Home, ScrollText, Sparkles, ShieldCheck, LogOut, Trophy, Gift, Award, Gamepad2, Users, Repeat } from "lucide-react";
+import { Home, ScrollText, Sparkles, ShieldCheck, LogOut, Trophy, Gift, Award, Gamepad2, Users, Repeat, Palette } from "lucide-react";
 import { NotificationsDropdown } from "@/components/notifications-dropdown";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { SoundToggle } from "@/components/game/sound-provider";
@@ -15,6 +15,7 @@ import { MascotSparky } from "@/components/game/mascot-sparky";
 import { useEffect } from "react";
 import { signOut, useSession } from "@/lib/auth-client";
 import { getMe } from "@/server/fns/profile";
+import { useBrand } from "@/components/brand-provider";
 
 /**
  * Authenticated app shell — sidebar nav + topbar. Loader prefetches the
@@ -51,6 +52,7 @@ function AppLayout() {
   const { profile } = Route.useRouteContext();
   const navigate = useNavigate();
   const session = useSession();
+  const brand = useBrand();
 
   // Better Auth's React client may need a hydration tick to populate session
   // — when the cookie expires mid-session we redirect to login.
@@ -62,8 +64,15 @@ function AppLayout() {
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border bg-card/80 px-6 backdrop-blur">
         <div className="flex items-center gap-6">
-          <Link to="/dashboard" className="font-heading text-xl font-bold text-primary">
-            HeroQuest
+          <Link to="/dashboard" className="flex items-center gap-2 font-heading text-xl font-bold text-primary">
+            {brand.logoUrl ? (
+              <img
+                src={brand.logoUrl}
+                alt={brand.appName}
+                className="h-7 w-7 rounded object-contain"
+              />
+            ) : null}
+            {brand.appName}
           </Link>
           <nav className="hidden gap-1 md:flex">
             <NavLink to="/dashboard" icon={<Home className="h-4 w-4" />}>
@@ -100,6 +109,9 @@ function AppLayout() {
                 <NavLink to="/admin" icon={<ShieldCheck className="h-4 w-4" />}>
                   Admin
                 </NavLink>
+                <NavLink to="/branding" icon={<Palette className="h-4 w-4" />}>
+                  Branding
+                </NavLink>
                 <NavLink
                   to="/executive-summary"
                   icon={<Trophy className="h-4 w-4" />}
@@ -116,7 +128,7 @@ function AppLayout() {
           ) : null}
           <span className="hidden items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-sm font-bold sm:inline-flex">
             <Sparkles className="h-4 w-4 text-magic" />
-            {profile.totalXp.toLocaleString()} XP
+            {profile.totalXp.toLocaleString()} {brand.xpName}
           </span>
           <CoinCounter value={profile.braveCoins} />
           <LanguageSwitcher />

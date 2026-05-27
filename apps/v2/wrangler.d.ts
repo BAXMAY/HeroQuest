@@ -13,6 +13,7 @@ declare global {
     // R2
     QUEST_PHOTOS: R2Bucket;
     AVATARS: R2Bucket;
+    BRAND_ASSETS: R2Bucket;
 
     // KV
     TRIVIA_KV: KVNamespace;
