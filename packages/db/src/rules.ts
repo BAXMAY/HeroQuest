@@ -94,6 +94,52 @@ export function canRedeem(input: RedemptionInput): boolean {
   return input.cost >= 0 && input.currentCoins >= input.cost;
 }
 
+export type RedemptionResult = {
+  newCoins: number;
+};
+
+/**
+ * Apply a redemption: subtract cost from coin balance. Throws if the user
+ * cannot afford it — caller should check `canRedeem` first.
+ */
+export function applyRedemption(input: RedemptionInput): RedemptionResult {
+  if (!canRedeem(input)) {
+    throw new Error(
+      `INSUFFICIENT_COINS: have ${input.currentCoins}, need ${input.cost}`,
+    );
+  }
+  return { newCoins: input.currentCoins - input.cost };
+}
+
+/**
+ * Leaderboard entry sorted by total XP descending, then by username for
+ * stable ordering when XP ties. Pure so we can unit-test ranking.
+ */
+export type LeaderboardRow = {
+  userId: string;
+  username: string;
+  totalXp: number;
+  showOnLeaderboard: boolean;
+};
+
+export function rankLeaderboard(rows: readonly LeaderboardRow[]): Array<LeaderboardRow & { rank: number }> {
+  const visible = rows.filter((r) => r.showOnLeaderboard);
+  const sorted = [...visible].sort((a, b) => {
+    if (b.totalXp !== a.totalXp) return b.totalXp - a.totalXp;
+    return a.username.localeCompare(b.username);
+  });
+  let lastXp = -1;
+  let lastRank = 0;
+  let nextRank = 1;
+  return sorted.map((row) => {
+    const rank = row.totalXp === lastXp ? lastRank : nextRank;
+    lastXp = row.totalXp;
+    lastRank = rank;
+    nextRank++;
+    return { ...row, rank };
+  });
+}
+
 /**
  * Permitted transitions for a quest's status — used by `decideQuest` to
  * reject double-approvals or attempts to un-approve a finished quest.

@@ -5,7 +5,8 @@ import {
   redirect,
   useNavigate,
 } from "@tanstack/react-router";
-import { Coins, Home, ScrollText, Sparkles, ShieldCheck, LogOut } from "lucide-react";
+import { Coins, Home, ScrollText, Sparkles, ShieldCheck, LogOut, Trophy, Gift, Award } from "lucide-react";
+import { NotificationsDropdown } from "@/components/notifications-dropdown";
 import { useEffect } from "react";
 import { signOut, useSession } from "@/lib/auth-client";
 import { getMe } from "@/server/fns/profile";
@@ -51,6 +52,15 @@ function AppLayout() {
             <NavLink to="/submit" icon={<ScrollText className="h-4 w-4" />}>
               Submit quest
             </NavLink>
+            <NavLink to="/rewards" icon={<Gift className="h-4 w-4" />}>
+              Rewards
+            </NavLink>
+            <NavLink to="/leaderboard" icon={<Trophy className="h-4 w-4" />}>
+              Leaderboard
+            </NavLink>
+            <NavLink to="/achievements" icon={<Award className="h-4 w-4" />}>
+              Badges
+            </NavLink>
             {(profile.role === "admin" || profile.role === "parent") && (
               <NavLink to="/approvals" icon={<ShieldCheck className="h-4 w-4" />}>
                 Approvals
@@ -67,6 +77,7 @@ function AppLayout() {
             <Coins className="h-4 w-4 text-accent" />
             {profile.braveCoins.toLocaleString()}
           </span>
+          <NotificationsDropdown />
           <button
             type="button"
             onClick={async () => {

@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   applyDecision,
+  applyRedemption,
   canApprove,
   canRedeem,
   isTransitionAllowed,
+  rankLeaderboard,
   type ProfileStats,
 } from "./rules";
 
@@ -124,6 +126,50 @@ describe("canRedeem", () => {
   });
   it("rejects negative cost", () => {
     expect(canRedeem({ currentCoins: 50, cost: -1 })).toBe(false);
+  });
+});
+
+describe("applyRedemption", () => {
+  it("subtracts cost when affordable", () => {
+    expect(applyRedemption({ currentCoins: 100, cost: 30 })).toEqual({ newCoins: 70 });
+  });
+  it("allows spending the exact balance", () => {
+    expect(applyRedemption({ currentCoins: 50, cost: 50 })).toEqual({ newCoins: 0 });
+  });
+  it("throws when unaffordable", () => {
+    expect(() => applyRedemption({ currentCoins: 10, cost: 50 })).toThrow(/INSUFFICIENT_COINS/);
+  });
+  it("throws on negative cost", () => {
+    expect(() => applyRedemption({ currentCoins: 10, cost: -5 })).toThrow(/INSUFFICIENT_COINS/);
+  });
+});
+
+describe("rankLeaderboard", () => {
+  it("orders by XP descending then by username", () => {
+    const out = rankLeaderboard([
+      { userId: "a", username: "alice", totalXp: 200, showOnLeaderboard: true },
+      { userId: "b", username: "bob", totalXp: 500, showOnLeaderboard: true },
+      { userId: "c", username: "carol", totalXp: 200, showOnLeaderboard: true },
+    ]);
+    expect(out.map((r) => r.userId)).toEqual(["b", "a", "c"]);
+    expect(out.map((r) => r.rank)).toEqual([1, 2, 2]); // ties share a rank
+  });
+
+  it("filters out users who opted out", () => {
+    const out = rankLeaderboard([
+      { userId: "a", username: "alice", totalXp: 200, showOnLeaderboard: true },
+      { userId: "b", username: "bob", totalXp: 500, showOnLeaderboard: false },
+    ]);
+    expect(out.map((r) => r.userId)).toEqual(["a"]);
+  });
+
+  it("produces 1-indexed ranks with proper skipping after ties", () => {
+    const out = rankLeaderboard([
+      { userId: "a", username: "a", totalXp: 100, showOnLeaderboard: true },
+      { userId: "b", username: "b", totalXp: 100, showOnLeaderboard: true },
+      { userId: "c", username: "c", totalXp: 50, showOnLeaderboard: true },
+    ]);
+    expect(out.map((r) => r.rank)).toEqual([1, 1, 3]);
   });
 });
 
