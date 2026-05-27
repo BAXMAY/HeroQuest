@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { eq } from "drizzle-orm";
 import { schema } from "@heroquest/db";
 import { db } from "@/server/db";
-import { getEnv } from "@/lib/env";
+import { getEnv } from "@/lib/env.server";
 import { getSessionContext } from "@/server/middleware";
 
 /**

@@ -34,20 +34,26 @@ See [`apps/v2/.dev.vars.demo`](apps/v2/.dev.vars.demo) for the keys it sets, and
 
 ## Screenshots
 
-> _The app boots offline via `pnpm demo` — screenshots below are captured against that flow so they reproduce on any machine._
->
-> _Pages render but PNGs haven't been committed yet — drop them under `docs/screens/` and replace the placeholders. Pre-sized 1440×900 (desktop) and 390×844 (mobile) recommended._
+Captured with Playwright against the demo dev server. Reproduce them on your machine via:
 
-| Screen | Path | Placeholder |
-| --- | --- | --- |
-| Landing | `/` | ![landing](docs/screens/landing.png) |
-| Dashboard | `/dashboard` (XP bar, streak flame, Sparky, recent quests) | ![dashboard](docs/screens/dashboard.png) |
-| Submit quest | `/submit` (camera + compression + form) | ![submit](docs/screens/submit.png) |
-| Approvals | `/approvals` (admin / parent decides XP+coins per row) | ![approvals](docs/screens/approvals.png) |
-| Games hub | `/games` (Spin / Memory / Trivia, one-per-day) | ![games](docs/screens/games.png) |
-| Rewards shop | `/rewards` (redeem with Brave Coins) | ![rewards](docs/screens/rewards.png) |
-| Family + sibling leaderboard | `/family` | ![family](docs/screens/family.png) |
-| Branding admin | `/branding` (rename app, swap mascot, recolor) | ![branding](docs/screens/branding.png) |
+```bash
+pnpm demo                # in one terminal
+PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers node scripts/capture-screenshots.mjs
+```
+
+### Landing — bright + RPG hero with Sparky in the corner
+
+![landing](docs/screens/01-landing.png)
+
+### Sign up / sign in
+
+| Register | Login |
+| --- | --- |
+| ![register](docs/screens/02-register.png) | ![login](docs/screens/03-login.png) |
+
+### Authenticated pages (TODO)
+
+Dashboard, Submit, Approvals, Games (Spin/Memory/Trivia), Rewards, Family, Branding admin — the authenticated routes need a working DB-bound env from `@cloudflare/vite-plugin` during `vite dev`. Today the env resolution between TanStack Start's SSR and the plugin's workerd context doesn't reliably propagate, so auth POSTs return 500 in dev. They work in production deploy (`wrangler deploy`) where the worker entry is canonical. The capture script will pick up these pages once that gap closes — see [the open issue in scripts/capture-screenshots.mjs](scripts/capture-screenshots.mjs).
 
 ---
 

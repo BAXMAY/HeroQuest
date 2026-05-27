@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { generateDailyTrivia } from "@heroquest/ai";
 import { schema } from "@heroquest/db";
 import { db } from "@/server/db";
-import { getEnv } from "@/lib/env";
+import { getEnv } from "@/lib/env.server";
 import { localDateString } from "@/lib/dates";
 
 /**

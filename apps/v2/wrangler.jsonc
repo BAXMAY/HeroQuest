@@ -1,7 +1,8 @@
 {
   "$schema": "https://unpkg.com/wrangler/config-schema.json",
   "name": "heroquest-v2",
-  "main": "./dist/_worker.js",
+  // `main` intentionally omitted — TanStack Start's plugin emits the worker
+  // entry; @cloudflare/vite-plugin discovers it from the build graph.
   "compatibility_date": "2025-12-01",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {

@@ -5,7 +5,7 @@ import { getBrandConfig } from "@/server/fns/brand";
  * Brand-colored favicon. Templated from the active brand's primary +
  * accent HSL components so each community's tab gets their own tint.
  */
-export const Route = createFileRoute("/api/favicon.svg")({
+export const Route = createFileRoute("/api/favicon")({
   server: {
     handlers: {
       GET: async () => {

@@ -5,7 +5,7 @@ import { schema } from "@heroquest/db";
 import type { UserRole } from "@heroquest/db/types";
 import { db } from "./db";
 import { createAuth } from "./auth";
-import { getEnv } from "@/lib/env";
+import { getEnv } from "@/lib/env.server";
 
 /**
  * Resolves the current Better Auth session from cookies and loads the

@@ -25,7 +25,17 @@ export function createRouter() {
     context: { queryClient } satisfies RouterContext,
     defaultPreload: "intent",
     defaultPreloadStaleTime: 0,
+    scrollRestoration: true,
   });
+}
+
+/**
+ * `getRouter` is the entry point name the TanStack Start plugin looks for
+ * when handling SSR (see start-server-core/createStartHandler). Both names
+ * are exported because some internal code paths still call `createRouter`.
+ */
+export function getRouter() {
+  return createRouter();
 }
 
 declare module "@tanstack/react-router" {
