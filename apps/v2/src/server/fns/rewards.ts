@@ -105,3 +105,76 @@ export const updateRedemptionStatus = createServerFn({ method: "POST" })
       .where(eq(schema.redeemedReward.id, data.id));
     return { ok: true };
   });
+
+// ---------- Catalog CRUD (admin only) ----------
+
+const rewardInput = z.object({
+  name: z.string().min(1).max(80),
+  nameEn: z.string().max(80).optional(),
+  description: z.string().min(1).max(500),
+  descriptionEn: z.string().max(500).optional(),
+  cost: z.number().int().min(1).max(100_000),
+  imageUrl: z.string().min(1).max(500),
+  active: z.boolean().default(true),
+});
+
+function assertAdmin(ctx: { profile?: { role?: string } | null }) {
+  if (ctx.profile?.role !== "admin") throw new Error("FORBIDDEN");
+}
+
+/** List all rewards (including inactive) — admin CRUD page. */
+export const listAllRewards = createServerFn({ method: "GET" }).handler(async () => {
+  const ctx = await getSessionContext(getRequest());
+  if (!ctx.user) throw new Error("UNAUTHORIZED");
+  assertAdmin(ctx);
+  return db().select().from(schema.reward).orderBy(schema.reward.cost);
+});
+
+export const createReward = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => rewardInput.parse(data))
+  .handler(async ({ data }) => {
+    const ctx = await getSessionContext(getRequest());
+    if (!ctx.user) throw new Error("UNAUTHORIZED");
+    assertAdmin(ctx);
+    const id = nanoid();
+    await db().insert(schema.reward).values({
+      id,
+      name: data.name,
+      nameEn: data.nameEn,
+      description: data.description,
+      descriptionEn: data.descriptionEn,
+      cost: data.cost,
+      imageUrl: data.imageUrl,
+      active: data.active,
+      createdAt: new Date(),
+    });
+    return { id };
+  });
+
+export const updateReward = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) =>
+    rewardInput.partial().extend({ id: z.string().min(1) }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    const ctx = await getSessionContext(getRequest());
+    if (!ctx.user) throw new Error("UNAUTHORIZED");
+    assertAdmin(ctx);
+    const { id, ...rest } = data;
+    if (Object.keys(rest).length === 0) return { ok: true };
+    await db().update(schema.reward).set(rest).where(eq(schema.reward.id, id));
+    return { ok: true };
+  });
+
+export const deleteReward = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ id: z.string().min(1) }).parse(data))
+  .handler(async ({ data }) => {
+    const ctx = await getSessionContext(getRequest());
+    if (!ctx.user) throw new Error("UNAUTHORIZED");
+    assertAdmin(ctx);
+    // Soft-delete via active=false to preserve the FK from redeemed_reward.
+    await db()
+      .update(schema.reward)
+      .set({ active: false })
+      .where(eq(schema.reward.id, data.id));
+    return { ok: true };
+  });

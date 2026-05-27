@@ -1,10 +1,12 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Award, Gift, Palette, Star } from "lucide-react";
 import { listAllUsers, setUserRole } from "@/server/fns/admin";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -26,8 +28,37 @@ function AdminPage() {
   });
 
   return (
-    <div className="flex flex-col gap-4">
-      <h1 className="font-heading text-3xl">Admin · Users</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="font-heading text-3xl">Admin</h1>
+
+      <section className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
+        <AdminTile
+          to="/branding"
+          icon={<Palette className="h-5 w-5 text-magic" />}
+          title="Branding"
+          desc="Name, mascot, colors, terminology"
+        />
+        <AdminTile
+          to="/admin-rewards"
+          icon={<Gift className="h-5 w-5 text-accent" />}
+          title="Rewards catalog"
+          desc="What kids can redeem"
+        />
+        <AdminTile
+          to="/admin-achievements"
+          icon={<Award className="h-5 w-5 text-secondary" />}
+          title="Achievements"
+          desc="Badge copy + icons"
+        />
+        <AdminTile
+          to="/admin-levels"
+          icon={<Star className="h-5 w-5 text-flame" />}
+          title="Level titles"
+          desc="100 hero ranks"
+        />
+      </section>
+
+      <h2 className="font-heading text-xl">Users</h2>
       {users.isLoading ? (
         <p className="text-sm text-muted-foreground">Loading…</p>
       ) : (
@@ -73,5 +104,31 @@ function AdminPage() {
         </Card>
       )}
     </div>
+  );
+}
+
+function AdminTile({
+  to,
+  icon,
+  title,
+  desc,
+}: {
+  to: string;
+  icon: React.ReactNode;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <Link to={to} className="group">
+      <Card className="h-full transition group-hover:border-primary">
+        <CardHeader className="flex-row items-start gap-3 space-y-0">
+          <div className="rounded-2xl bg-muted p-2.5">{icon}</div>
+          <div>
+            <CardTitle className="text-base">{title}</CardTitle>
+            <CardDescription className="text-xs">{desc}</CardDescription>
+          </div>
+        </CardHeader>
+      </Card>
+    </Link>
   );
 }
