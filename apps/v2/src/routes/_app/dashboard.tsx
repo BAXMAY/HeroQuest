@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { XPBar } from "@/components/game/xp-bar";
 import { QuestCard } from "@/components/game/quest-card";
+import { InstallPrompt } from "@/components/install-prompt";
 
 export const Route = createFileRoute("/_app/dashboard")({
   loader: ({ context }) => context,
@@ -24,9 +25,12 @@ function DashboardPage() {
   return (
     <div className="flex flex-col gap-6">
       <section className="flex flex-col gap-3">
-        <h1 className="font-heading text-3xl">
-          Welcome back, {profile.firstName || profile.username}!
-        </h1>
+        <div className="flex items-center justify-between gap-3">
+          <h1 className="font-heading text-3xl">
+            Welcome back, {profile.firstName || profile.username}!
+          </h1>
+          <InstallPrompt />
+        </div>
         <XPBar xp={profile.totalXp} size="lg" />
       </section>
 

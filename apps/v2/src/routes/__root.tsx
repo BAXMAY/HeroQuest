@@ -6,7 +6,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
 import type { RouterContext } from "@/router";
 import globalsCss from "@/styles/globals.css?url";
 import { SoundProvider } from "@/components/game/sound-provider";
@@ -59,6 +59,10 @@ function RootDocument({ children }: { children: ReactNode }) {
 
 function QueryClientShell({ children }: { children: ReactNode }) {
   const { queryClient } = Route.useRouteContext();
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    void import("@/lib/pwa-register").then(({ setupPwa }) => setupPwa());
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <SoundProvider>
