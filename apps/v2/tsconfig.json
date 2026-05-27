@@ -1,0 +1,20 @@
+{
+  "extends": "@heroquest/config/tsconfig.cloudflare.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["@cloudflare/workers-types", "vite/client", "node"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "vite.config.ts",
+    "drizzle.config.ts",
+    "wrangler.d.ts",
+    "seed/**/*.ts",
+    "scripts/**/*.ts"
+  ],
+  "exclude": ["node_modules", ".output", ".tanstack", ".wrangler", "dist"]
+}

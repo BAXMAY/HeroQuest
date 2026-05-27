@@ -1,0 +1,40 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "stream",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".output/**", ".next/**", "!.next/cache/**", "dist/**", ".vinxi/**", ".tanstack/**"],
+      "env": ["NODE_ENV"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^build"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"]
+    },
+    "test": {
+      "dependsOn": ["^build"]
+    },
+    "gen": {
+      "cache": false
+    },
+    "db:migrate:local": {
+      "cache": false
+    },
+    "db:migrate:prod": {
+      "cache": false
+    },
+    "db:seed": {
+      "cache": false
+    },
+    "deploy": {
+      "cache": false,
+      "dependsOn": ["build"]
+    }
+  }
+}

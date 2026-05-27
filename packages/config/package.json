@@ -1,0 +1,15 @@
+{
+  "name": "@heroquest/config",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.js",
+  "files": [
+    "tsconfig.base.json",
+    "tsconfig.cloudflare.json",
+    "tailwind.preset.ts"
+  ],
+  "dependencies": {
+    "tailwindcss": "^3.4.17",
+    "tailwindcss-animate": "^1.0.7"
+  }
+}
