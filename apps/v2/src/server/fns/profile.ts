@@ -120,4 +120,18 @@ export const setLeaderboardOptIn = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export const setLocale = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) =>
+    z.object({ locale: z.enum(["en", "th"]) }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    const ctx = await getSessionContext(getRequest());
+    if (!ctx.user) throw new Error("UNAUTHORIZED");
+    await db()
+      .update(schema.userProfile)
+      .set({ locale: data.locale as Locale, updatedAt: new Date() })
+      .where(eq(schema.userProfile.userId, ctx.user.id));
+    return { ok: true };
+  });
+
 void nanoid;

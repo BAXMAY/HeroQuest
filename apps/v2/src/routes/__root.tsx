@@ -11,6 +11,7 @@ import type { RouterContext } from "@/router";
 import globalsCss from "@/styles/globals.css?url";
 import { SoundProvider } from "@/components/game/sound-provider";
 import { CelebrateProvider } from "@/components/game/celebrate";
+import { LanguageProvider } from "@/i18n";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
@@ -65,9 +66,11 @@ function QueryClientShell({ children }: { children: ReactNode }) {
   }, []);
   return (
     <QueryClientProvider client={queryClient}>
-      <SoundProvider>
-        <CelebrateProvider>{children}</CelebrateProvider>
-      </SoundProvider>
+      <LanguageProvider>
+        <SoundProvider>
+          <CelebrateProvider>{children}</CelebrateProvider>
+        </SoundProvider>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }

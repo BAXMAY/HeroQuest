@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-router";
 import { Home, ScrollText, Sparkles, ShieldCheck, LogOut, Trophy, Gift, Award, Gamepad2, Users, Repeat } from "lucide-react";
 import { NotificationsDropdown } from "@/components/notifications-dropdown";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { SoundToggle } from "@/components/game/sound-provider";
 import { CoinCounter } from "@/components/game/coin-counter";
 import { StreakFlame } from "@/components/game/streak-flame";
@@ -94,6 +95,19 @@ function AppLayout() {
                 Approvals
               </NavLink>
             )}
+            {profile.role === "admin" && (
+              <>
+                <NavLink to="/admin" icon={<ShieldCheck className="h-4 w-4" />}>
+                  Admin
+                </NavLink>
+                <NavLink
+                  to="/executive-summary"
+                  icon={<Trophy className="h-4 w-4" />}
+                >
+                  Stats
+                </NavLink>
+              </>
+            )}
           </nav>
         </div>
         <div className="flex items-center gap-3">
@@ -105,6 +119,7 @@ function AppLayout() {
             {profile.totalXp.toLocaleString()} XP
           </span>
           <CoinCounter value={profile.braveCoins} />
+          <LanguageSwitcher />
           <SoundToggle />
           <NotificationsDropdown />
           <button
