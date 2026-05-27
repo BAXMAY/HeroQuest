@@ -22,3 +22,4 @@ export function getDb(d1: D1Database): Database {
 export * from "./types";
 export * from "./levels";
 export * from "./achievements";
+export * from "./rules";

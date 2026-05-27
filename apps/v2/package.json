@@ -15,7 +15,8 @@
     "db:gen": "drizzle-kit generate",
     "db:migrate:local": "wrangler d1 migrations apply heroquest --local",
     "db:migrate:prod": "wrangler d1 migrations apply heroquest --remote",
-    "db:seed": "tsx seed/seed.ts",
+    "db:seed": "wrangler d1 execute heroquest --local --file=seed/seed.sql",
+    "db:seed:prod": "wrangler d1 execute heroquest --remote --file=seed/seed.sql",
     "db:studio": "drizzle-kit studio",
     "i18n:check": "tsx scripts/check-i18n.ts"
   },
