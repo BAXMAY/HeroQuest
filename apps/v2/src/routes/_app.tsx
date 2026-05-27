@@ -5,7 +5,7 @@ import {
   redirect,
   useNavigate,
 } from "@tanstack/react-router";
-import { Home, ScrollText, Sparkles, ShieldCheck, LogOut, Trophy, Gift, Award, Gamepad2 } from "lucide-react";
+import { Home, ScrollText, Sparkles, ShieldCheck, LogOut, Trophy, Gift, Award, Gamepad2, Users, Repeat } from "lucide-react";
 import { NotificationsDropdown } from "@/components/notifications-dropdown";
 import { SoundToggle } from "@/components/game/sound-provider";
 import { CoinCounter } from "@/components/game/coin-counter";
@@ -82,6 +82,12 @@ function AppLayout() {
             </NavLink>
             <NavLink to="/achievements" icon={<Award className="h-4 w-4" />}>
               Badges
+            </NavLink>
+            <NavLink to="/family" icon={<Users className="h-4 w-4" />}>
+              Family
+            </NavLink>
+            <NavLink to="/chores" icon={<Repeat className="h-4 w-4" />}>
+              Chores
             </NavLink>
             {(profile.role === "admin" || profile.role === "parent") && (
               <NavLink to="/approvals" icon={<ShieldCheck className="h-4 w-4" />}>

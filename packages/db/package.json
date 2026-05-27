@@ -12,7 +12,8 @@
     "./levels": "./src/levels.ts",
     "./achievements": "./src/achievements.ts",
     "./rules": "./src/rules.ts",
-    "./games": "./src/games.ts"
+    "./games": "./src/games.ts",
+    "./chores-logic": "./src/chores.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
