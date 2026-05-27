@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { Locale } from "@heroquest/db/types";
 import { getAnthropic, MODEL_FAST, type AnthropicEnv } from "./client";
 import { buildEvalQuestSystem, type PromptBrand } from "./prompts";
+import { isDemoMode, stubEvaluateQuest } from "./demo-stubs";
 
 const evaluationSchema = z.object({
   xp: z.number().int().min(0).max(200),
@@ -31,6 +32,7 @@ export async function evaluateQuest(
   env: AnthropicEnv,
   input: EvaluateQuestInput,
 ): Promise<QuestEvaluation> {
+  if (isDemoMode(env)) return stubEvaluateQuest(input.description);
   const anthropic = getAnthropic(env);
   const systemPrompt = buildEvalQuestSystem(input.brand);
 

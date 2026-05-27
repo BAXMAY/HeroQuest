@@ -6,5 +6,7 @@ dist/
 .vite/
 .dev.vars
 .dev.vars.*
+!.dev.vars.example
+!.dev.vars.demo
 src/routeTree.gen.ts
 *.tsbuildinfo

@@ -17,6 +17,8 @@
     "db:migrate:local": "pnpm -F v2 db:migrate:local",
     "db:migrate:prod": "pnpm -F v2 db:migrate:prod",
     "db:seed": "pnpm -F v2 db:seed",
+    "demo:setup": "cp apps/v2/.dev.vars.demo apps/v2/.dev.vars",
+    "demo": "pnpm demo:setup && pnpm -F v2 demo",
     "deploy": "pnpm -F v2 deploy",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
   },

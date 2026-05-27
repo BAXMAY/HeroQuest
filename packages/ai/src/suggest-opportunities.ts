@@ -2,6 +2,7 @@ import { z } from "zod";
 import { QUEST_CATEGORIES, type Locale } from "@heroquest/db/types";
 import { getAnthropic, MODEL_FAST, type AnthropicEnv } from "./client";
 import { buildSuggestOpportunitiesSystem, type PromptBrand } from "./prompts";
+import { isDemoMode, stubSuggestOpportunities } from "./demo-stubs";
 
 const opportunitySchema = z.object({
   title: z.string().min(3).max(80),
@@ -25,8 +26,9 @@ export async function suggestOpportunities(
   env: AnthropicEnv,
   input: SuggestOpportunitiesInput,
 ): Promise<Opportunity[]> {
-  const anthropic = getAnthropic(env);
   const count = input.count ?? 4;
+  if (isDemoMode(env)) return stubSuggestOpportunities(input.locale, count);
+  const anthropic = getAnthropic(env);
   const interestsLine = input.interests?.length
     ? `Interests: ${input.interests.join(", ")}.`
     : "Interests: not specified — give a varied mix.";

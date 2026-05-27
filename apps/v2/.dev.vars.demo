@@ -1,0 +1,15 @@
+# Copy to .dev.vars to run in offline demo mode — no real Cloudflare account
+# or Anthropic key required. `pnpm demo` does this automatically.
+#
+# What the values do:
+#   ANTHROPIC_API_KEY=demo  → AI calls return canned data (see packages/ai/src/demo-stubs.ts)
+#   BETTER_AUTH_SECRET      → any string works locally
+#   R2_* secrets            → unused in local mode (wrangler emulates R2 via filesystem)
+#   GOOGLE_*                → leave empty to disable Google OAuth in demo
+BETTER_AUTH_SECRET="demo-only-not-for-prod-use-something-random"
+ANTHROPIC_API_KEY="demo"
+R2_ACCOUNT_ID="demo"
+R2_ACCESS_KEY_ID="demo"
+R2_SECRET_ACCESS_KEY="demo"
+GOOGLE_CLIENT_ID=""
+GOOGLE_CLIENT_SECRET=""
