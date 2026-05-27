@@ -5,8 +5,12 @@ import {
   redirect,
   useNavigate,
 } from "@tanstack/react-router";
-import { Coins, Home, ScrollText, Sparkles, ShieldCheck, LogOut, Trophy, Gift, Award } from "lucide-react";
+import { Home, ScrollText, Sparkles, ShieldCheck, LogOut, Trophy, Gift, Award } from "lucide-react";
 import { NotificationsDropdown } from "@/components/notifications-dropdown";
+import { SoundToggle } from "@/components/game/sound-provider";
+import { CoinCounter } from "@/components/game/coin-counter";
+import { StreakFlame } from "@/components/game/streak-flame";
+import { MascotSparky } from "@/components/game/mascot-sparky";
 import { useEffect } from "react";
 import { signOut, useSession } from "@/lib/auth-client";
 import { getMe } from "@/server/fns/profile";
@@ -69,14 +73,15 @@ function AppLayout() {
           </nav>
         </div>
         <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-sm font-bold">
+          {profile.streakCurrent > 0 ? (
+            <StreakFlame days={profile.streakCurrent} />
+          ) : null}
+          <span className="hidden items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-sm font-bold sm:inline-flex">
             <Sparkles className="h-4 w-4 text-magic" />
             {profile.totalXp.toLocaleString()} XP
           </span>
-          <span className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-sm font-bold">
-            <Coins className="h-4 w-4 text-accent" />
-            {profile.braveCoins.toLocaleString()}
-          </span>
+          <CoinCounter value={profile.braveCoins} />
+          <SoundToggle />
           <NotificationsDropdown />
           <button
             type="button"
@@ -94,6 +99,7 @@ function AppLayout() {
       <main className="container py-8">
         <Outlet />
       </main>
+      <MascotSparky />
     </div>
   );
 }

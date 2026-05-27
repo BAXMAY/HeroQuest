@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Flame, ScrollText, Trophy } from "lucide-react";
-import { getLevelProgress } from "@heroquest/db";
 import { listMyQuests } from "@/server/fns/quests";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { XPBar } from "@/components/game/xp-bar";
+import { QuestCard } from "@/components/game/quest-card";
 
 export const Route = createFileRoute("/_app/dashboard")({
   loader: ({ context }) => context,
@@ -17,33 +18,16 @@ function DashboardPage() {
     queryKey: ["my-quests"],
     queryFn: () => listMyQuests(),
   });
-  const level = getLevelProgress(profile.totalXp);
   const approved = quests.data?.filter((q) => q.status === "approved").length ?? 0;
   const pending = quests.data?.filter((q) => q.status === "pending").length ?? 0;
 
   return (
     <div className="flex flex-col gap-6">
-      <section className="flex flex-col gap-2">
+      <section className="flex flex-col gap-3">
         <h1 className="font-heading text-3xl">
           Welcome back, {profile.firstName || profile.username}!
         </h1>
-        <p className="text-muted-foreground">
-          Level {level.current.level} — {level.current.title}
-        </p>
-        <div className="h-3 overflow-hidden rounded-full bg-muted">
-          <div
-            className="h-full rounded-full bg-gradient-to-r from-primary via-magic to-accent transition-all"
-            style={{ width: `${Math.round(level.fractionToNext * 100)}%` }}
-          />
-        </div>
-        {level.next ? (
-          <p className="text-xs text-muted-foreground">
-            {level.xpIntoLevel.toLocaleString()} / {level.xpForNextLevel?.toLocaleString()} XP to{" "}
-            {level.next.title}
-          </p>
-        ) : (
-          <p className="text-xs text-magic">You've reached the highest hero rank!</p>
-        )}
+        <XPBar xp={profile.totalXp} size="lg" />
       </section>
 
       <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -74,25 +58,26 @@ function DashboardPage() {
         {quests.isLoading ? (
           <p className="text-sm text-muted-foreground">Loading…</p>
         ) : quests.data && quests.data.length > 0 ? (
-          <ul className="flex flex-col gap-2">
+          <ul className="flex flex-col gap-3">
             {quests.data.slice(0, 5).map((q) => (
-              <li
-                key={q.id}
-                className="flex items-center justify-between rounded-xl border border-border bg-card p-4"
-              >
-                <div>
-                  <p className="font-semibold">{q.description.slice(0, 64)}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {q.category} · {q.status}
-                  </p>
-                </div>
-                {q.status === "approved" ? (
-                  <span className="text-sm font-bold text-magic">
-                    +{q.xpAwarded} XP / +{q.coinsAwarded}c
-                  </span>
-                ) : (
-                  <span className="text-xs uppercase text-muted-foreground">{q.status}</span>
-                )}
+              <li key={q.id}>
+                <QuestCard xp={q.xpAwarded}>
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold">{q.description.slice(0, 80)}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {q.category} · {q.status}
+                      </p>
+                    </div>
+                    {q.status === "approved" ? (
+                      <span className="whitespace-nowrap text-sm font-bold text-magic">
+                        +{q.xpAwarded} XP · +{q.coinsAwarded}c
+                      </span>
+                    ) : (
+                      <span className="text-xs uppercase text-muted-foreground">{q.status}</span>
+                    )}
+                  </div>
+                </QuestCard>
               </li>
             ))}
           </ul>

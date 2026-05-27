@@ -9,6 +9,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import type { RouterContext } from "@/router";
 import globalsCss from "@/styles/globals.css?url";
+import { SoundProvider } from "@/components/game/sound-provider";
+import { CelebrateProvider } from "@/components/game/celebrate";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
@@ -57,5 +59,11 @@ function RootDocument({ children }: { children: ReactNode }) {
 
 function QueryClientShell({ children }: { children: ReactNode }) {
   const { queryClient } = Route.useRouteContext();
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <SoundProvider>
+        <CelebrateProvider>{children}</CelebrateProvider>
+      </SoundProvider>
+    </QueryClientProvider>
+  );
 }

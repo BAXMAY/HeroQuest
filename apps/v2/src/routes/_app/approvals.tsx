@@ -11,6 +11,9 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { useCelebrate } from "@/components/game/celebrate";
+import { useSound } from "@/components/game/sound-provider";
+import { ACHIEVEMENT_CATALOG } from "@heroquest/db";
 
 export const Route = createFileRoute("/_app/approvals")({
   beforeLoad: ({ context }) => {
@@ -22,15 +25,30 @@ export const Route = createFileRoute("/_app/approvals")({
 
 function ApprovalsPage() {
   const queryClient = useQueryClient();
+  const celebrate = useCelebrate();
+  const sound = useSound();
   const pending = useQuery({
     queryKey: ["pending-quests"],
     queryFn: () => listPendingQuests(),
   });
   const decide = useMutation({
     mutationFn: decideQuest,
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["pending-quests"] });
+      queryClient.invalidateQueries({ queryKey: ["me"] });
+      if (!data?.ok) return;
+      if (data.leveledUp && data.newLevel) {
+        celebrate.levelUp(data.newLevel);
+      } else {
+        celebrate.burst();
+      }
+      const catalogById = new Map(ACHIEVEMENT_CATALOG.map((a) => [a.id, a]));
+      data.newAchievements?.forEach((id) => {
+        const def = catalogById.get(id);
+        if (def) celebrate.achievement(def.name);
+      });
     },
+    onError: () => sound.play("reject"),
   });
 
   return (

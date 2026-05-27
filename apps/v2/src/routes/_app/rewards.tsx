@@ -4,6 +4,8 @@ import { Coins } from "lucide-react";
 import { listMyRedemptions, listRewards, redeemReward } from "@/server/fns/rewards";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useCelebrate } from "@/components/game/celebrate";
+import { useSound } from "@/components/game/sound-provider";
 
 export const Route = createFileRoute("/_app/rewards")({
   loader: ({ context }) => context,
@@ -15,13 +17,18 @@ function RewardsPage() {
   const queryClient = useQueryClient();
   const rewards = useQuery({ queryKey: ["rewards"], queryFn: () => listRewards() });
   const mine = useQuery({ queryKey: ["my-redemptions"], queryFn: () => listMyRedemptions() });
+  const celebrate = useCelebrate();
+  const sound = useSound();
   const redeem = useMutation({
     mutationFn: redeemReward,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["rewards"] });
       queryClient.invalidateQueries({ queryKey: ["my-redemptions"] });
       queryClient.invalidateQueries({ queryKey: ["me"] });
+      sound.play("coin");
+      celebrate.burst();
     },
+    onError: () => sound.play("reject"),
   });
 
   return (
