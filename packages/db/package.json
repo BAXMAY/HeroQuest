@@ -11,7 +11,8 @@
     "./types": "./src/types.ts",
     "./levels": "./src/levels.ts",
     "./achievements": "./src/achievements.ts",
-    "./rules": "./src/rules.ts"
+    "./rules": "./src/rules.ts",
+    "./games": "./src/games.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"

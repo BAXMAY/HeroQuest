@@ -5,7 +5,7 @@ import {
   redirect,
   useNavigate,
 } from "@tanstack/react-router";
-import { Home, ScrollText, Sparkles, ShieldCheck, LogOut, Trophy, Gift, Award } from "lucide-react";
+import { Home, ScrollText, Sparkles, ShieldCheck, LogOut, Trophy, Gift, Award, Gamepad2 } from "lucide-react";
 import { NotificationsDropdown } from "@/components/notifications-dropdown";
 import { SoundToggle } from "@/components/game/sound-provider";
 import { CoinCounter } from "@/components/game/coin-counter";
@@ -25,6 +25,21 @@ export const Route = createFileRoute("/_app")({
     const { user, profile } = await getMe();
     if (!user) throw redirect({ to: "/login" });
     if (!profile) throw redirect({ to: "/onboarding" });
+    // Fire-and-forget daily check-in; idempotent on server, gated by
+    // localStorage on client to skip when we've already pinged today.
+    if (typeof window !== "undefined") {
+      const today = new Date().toISOString().slice(0, 10);
+      const last = window.localStorage.getItem("hq:lastCheckIn");
+      if (last !== today) {
+        try {
+          const { checkInDaily } = await import("@/server/fns/streaks");
+          await checkInDaily();
+          window.localStorage.setItem("hq:lastCheckIn", today);
+        } catch {
+          /* non-fatal */
+        }
+      }
+    }
     return { user, profile };
   },
   loader: ({ context }) => context,
@@ -55,6 +70,9 @@ function AppLayout() {
             </NavLink>
             <NavLink to="/submit" icon={<ScrollText className="h-4 w-4" />}>
               Submit quest
+            </NavLink>
+            <NavLink to="/games" icon={<Gamepad2 className="h-4 w-4" />}>
+              Games
             </NavLink>
             <NavLink to="/rewards" icon={<Gift className="h-4 w-4" />}>
               Rewards

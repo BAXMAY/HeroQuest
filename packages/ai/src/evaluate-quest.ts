@@ -80,8 +80,8 @@ export async function evaluateQuest(
 
 function extractText(msg: { content: Array<{ type: string; text?: string }> }): string {
   return msg.content
-    .filter((b): b is { type: "text"; text: string } => b.type === "text" && typeof b.text === "string")
-    .map((b) => b.text)
+    .filter((b) => b.type === "text" && typeof (b as { text?: string }).text === "string")
+    .map((b) => (b as { text: string }).text)
     .join("\n")
     .trim();
 }

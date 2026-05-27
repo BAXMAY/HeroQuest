@@ -23,3 +23,4 @@ export * from "./types";
 export * from "./levels";
 export * from "./achievements";
 export * from "./rules";
+export * from "./games";
