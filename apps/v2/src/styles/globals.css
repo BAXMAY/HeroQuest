@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * HeroQuest v2 — Hybrid bright + RPG palette.
+ *
+ * Replaces the legacy dark-medieval theme (apps/legacy/src/app/globals.css).
+ * All colors are HSL component values so they compose cleanly with Tailwind's
+ * `hsl(var(--token))` pattern and rarity gradient utilities.
+ */
+@layer base {
+  :root {
+    --background: 235 60% 98%;
+    --foreground: 240 30% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 30% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 30% 12%;
+
+    /* Brand */
+    --brand-primary: 262 80% 60%; /* royal violet */
+    --brand-primary-fg: 0 0% 100%;
+    --brand-secondary: 162 70% 45%; /* mint emerald */
+    --brand-secondary-fg: 0 0% 100%;
+    --brand-accent: 38 95% 55%; /* gold */
+    --brand-accent-fg: 240 30% 12%;
+    --brand-magic: 300 75% 60%; /* pink magic */
+    --brand-magic-fg: 0 0% 100%;
+    --brand-flame: 15 90% 55%; /* ember */
+    --brand-flame-fg: 0 0% 100%;
+
+    /* Utility surfaces */
+    --muted: 235 25% 94%;
+    --muted-foreground: 240 15% 40%;
+    --border: 235 30% 88%;
+    --input: 235 30% 88%;
+    --ring: 262 80% 60%;
+    --destructive: 0 80% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Rarity */
+    --rarity-common: 220 10% 65%;
+    --rarity-rare: 200 80% 55%;
+    --rarity-epic: 280 75% 60%;
+    --rarity-legendary: 38 95% 55%;
+
+    --radius: 1rem;
+  }
+
+  .dark {
+    /* Brand vars (--brand-*, --background, --foreground) are injected
+     * authoritatively by <BrandStyleTag /> from the active tenant's
+     * theme — see apps/v2/src/components/brand-provider.tsx. Dark mode
+     * just adjusts neutral surfaces. */
+    --card: 240 22% 12%;
+    --card-foreground: 235 40% 96%;
+    --popover: 240 22% 12%;
+    --popover-foreground: 235 40% 96%;
+
+    --muted: 240 18% 18%;
+    --muted-foreground: 235 20% 70%;
+    --border: 240 18% 22%;
+    --input: 240 18% 22%;
+    --ring: var(--brand-primary);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

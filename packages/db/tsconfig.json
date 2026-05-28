@@ -1,0 +1,11 @@
+{
+  "extends": "@heroquest/config/tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "types": ["@cloudflare/workers-types"],
+    "noEmit": false,
+    "declaration": true
+  },
+  "include": ["src/**/*.ts"]
+}

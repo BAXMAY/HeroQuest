@@ -1,0 +1,79 @@
+{
+  "$schema": "https://unpkg.com/wrangler/config-schema.json",
+  "name": "heroquest-v2",
+  // `main` intentionally omitted — TanStack Start's plugin emits the worker
+  // entry; @cloudflare/vite-plugin discovers it from the build graph.
+  "compatibility_date": "2025-12-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist/client",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "PUBLIC_APP_URL": "http://localhost:5173"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "heroquest",
+      "database_id": "REPLACE_ME_LOCAL",
+      "migrations_dir": "./migrations"
+    }
+  ],
+  "r2_buckets": [
+    { "binding": "QUEST_PHOTOS", "bucket_name": "heroquest-quest-photos" },
+    { "binding": "AVATARS", "bucket_name": "heroquest-avatars" },
+    { "binding": "BRAND_ASSETS", "bucket_name": "heroquest-brand-assets" }
+  ],
+  "kv_namespaces": [
+    { "binding": "TRIVIA_KV", "id": "REPLACE_ME_LOCAL" }
+  ],
+  "triggers": {
+    "crons": [
+      "5 17 * * *",
+      "10 17 * * *"
+    ]
+  },
+  "env": {
+    "preview": {
+      "name": "heroquest-v2-preview",
+      "vars": { "PUBLIC_APP_URL": "https://preview.heroquest.app" },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "heroquest-preview",
+          "database_id": "REPLACE_ME_PREVIEW",
+          "migrations_dir": "./migrations"
+        }
+      ],
+      "r2_buckets": [
+        { "binding": "QUEST_PHOTOS", "bucket_name": "heroquest-quest-photos-preview" },
+        { "binding": "AVATARS", "bucket_name": "heroquest-avatars-preview" },
+        { "binding": "BRAND_ASSETS", "bucket_name": "heroquest-brand-assets-preview" }
+      ],
+      "kv_namespaces": [{ "binding": "TRIVIA_KV", "id": "REPLACE_ME_PREVIEW" }]
+    },
+    "production": {
+      "name": "heroquest-v2",
+      "vars": { "PUBLIC_APP_URL": "https://heroquest.app" },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "heroquest",
+          "database_id": "REPLACE_ME_PROD",
+          "migrations_dir": "./migrations"
+        }
+      ],
+      "r2_buckets": [
+        { "binding": "QUEST_PHOTOS", "bucket_name": "heroquest-quest-photos" },
+        { "binding": "AVATARS", "bucket_name": "heroquest-avatars" },
+        { "binding": "BRAND_ASSETS", "bucket_name": "heroquest-brand-assets" }
+      ],
+      "kv_namespaces": [{ "binding": "TRIVIA_KV", "id": "REPLACE_ME_PROD" }]
+    }
+  }
+}

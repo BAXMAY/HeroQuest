@@ -1,0 +1,13 @@
+# Copy to .dev.vars and fill in values for `wrangler dev` / `vite dev`.
+# Never commit .dev.vars — it's gitignored.
+
+BETTER_AUTH_SECRET="generate-with-openssl-rand-base64-32"
+GOOGLE_CLIENT_ID=""
+GOOGLE_CLIENT_SECRET=""
+
+ANTHROPIC_API_KEY="sk-ant-..."
+
+# R2 S3-compatible credentials for presigned uploads.
+R2_ACCOUNT_ID=""
+R2_ACCESS_KEY_ID=""
+R2_SECRET_ACCESS_KEY=""
