@@ -1,7 +1,5 @@
-import { S3Client } from "@aws-sdk/client-s3";
-import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { nanoid } from "nanoid";
+import { presignS3Url } from "./s3-presign";
 
 /**
  * R2 access patterns:
@@ -11,21 +9,16 @@ import { nanoid } from "nanoid";
  * - Reads: served via an auth-gated Worker route that streams from R2 after
  *   verifying the caller is the photo owner or an admin. We don't make the
  *   bucket public because the photos contain children.
+ *
+ * Uses the hand-rolled SigV4 signer in ./s3-presign rather than the AWS SDK
+ * (saved ~700 KB off the Worker bundle and removed a Node-y dependency from
+ * the workerd build).
  */
 
 const UPLOAD_TTL_SECONDS = 60 * 5; // 5 min
 const READ_TTL_SECONDS = 60 * 5; // 5 min (used by AI image fetches)
 
-function buildR2S3(env: CloudflareEnv): S3Client {
-  return new S3Client({
-    region: "auto",
-    endpoint: `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-    credentials: {
-      accessKeyId: env.R2_ACCESS_KEY_ID,
-      secretAccessKey: env.R2_SECRET_ACCESS_KEY,
-    },
-  });
-}
+const QUEST_BUCKET = "heroquest-quest-photos";
 
 export function makeQuestPhotoKey(userId: string, questId: string, ext = "jpg"): string {
   return `quests/${userId}/${questId}/${nanoid(12)}.${ext}`;
@@ -43,15 +36,18 @@ export async function presignQuestUpload(
   questId: string,
   contentType: string,
 ): Promise<PresignedUpload> {
-  const s3 = buildR2S3(env);
   const ext = contentType.split("/")[1]?.toLowerCase() ?? "jpg";
   const key = makeQuestPhotoKey(userId, questId, ext);
-  const cmd = new PutObjectCommand({
-    Bucket: "heroquest-quest-photos",
-    Key: key,
-    ContentType: contentType,
+  const uploadUrl = await presignS3Url({
+    method: "PUT",
+    accountId: env.R2_ACCOUNT_ID,
+    accessKeyId: env.R2_ACCESS_KEY_ID,
+    secretAccessKey: env.R2_SECRET_ACCESS_KEY,
+    bucket: QUEST_BUCKET,
+    key,
+    contentType,
+    expiresInSeconds: UPLOAD_TTL_SECONDS,
   });
-  const uploadUrl = await getSignedUrl(s3, cmd, { expiresIn: UPLOAD_TTL_SECONDS });
   return {
     uploadUrl,
     key,
@@ -60,13 +56,15 @@ export async function presignQuestUpload(
 }
 
 /** Used right before sending a quest photo to Claude for evaluation. */
-export async function presignQuestRead(
-  env: CloudflareEnv,
-  key: string,
-): Promise<string> {
-  const s3 = buildR2S3(env);
-  return getSignedUrl(s3, new GetObjectCommand({ Bucket: "heroquest-quest-photos", Key: key }), {
-    expiresIn: READ_TTL_SECONDS,
+export async function presignQuestRead(env: CloudflareEnv, key: string): Promise<string> {
+  return presignS3Url({
+    method: "GET",
+    accountId: env.R2_ACCOUNT_ID,
+    accessKeyId: env.R2_ACCESS_KEY_ID,
+    secretAccessKey: env.R2_SECRET_ACCESS_KEY,
+    bucket: QUEST_BUCKET,
+    key,
+    expiresInSeconds: READ_TTL_SECONDS,
   });
 }
 
@@ -82,14 +80,18 @@ export async function presignR2Upload(args: {
   contentType: string;
 }): Promise<PresignedUpload> {
   const { bucket, env, keyPrefix, contentType } = args;
-  const s3 = buildR2S3(env);
   const subtype = contentType.split("/")[1]?.toLowerCase() ?? "bin";
   const ext = subtype === "svg+xml" ? "svg" : subtype === "jpeg" ? "jpg" : subtype;
   const key = `${keyPrefix}-${nanoid(10)}.${ext}`;
-  const uploadUrl = await getSignedUrl(
-    s3,
-    new PutObjectCommand({ Bucket: bucket, Key: key, ContentType: contentType }),
-    { expiresIn: UPLOAD_TTL_SECONDS },
-  );
+  const uploadUrl = await presignS3Url({
+    method: "PUT",
+    accountId: env.R2_ACCOUNT_ID,
+    accessKeyId: env.R2_ACCESS_KEY_ID,
+    secretAccessKey: env.R2_SECRET_ACCESS_KEY,
+    bucket,
+    key,
+    contentType,
+    expiresInSeconds: UPLOAD_TTL_SECONDS,
+  });
   return { uploadUrl, key, expiresAt: Date.now() + UPLOAD_TTL_SECONDS * 1000 };
 }
