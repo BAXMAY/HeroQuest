@@ -75,7 +75,7 @@ function RootComponent() {
 
 function RootDocument({ brand, children }: { brand: BrandConfig; children: ReactNode }) {
   return (
-    <html lang="th" className="dark">
+    <html lang="th">
       <head>
         <HeadContent />
         <BrandStyleTag brand={brand} />
