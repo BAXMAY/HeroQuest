@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createAuth } from "@/server/auth";
-import { getEnv } from "@/lib/env.server";
+import { getEnv } from "@/lib/env";
 
 /**
  * Catch-all Better Auth handler at `/api/auth/*`.

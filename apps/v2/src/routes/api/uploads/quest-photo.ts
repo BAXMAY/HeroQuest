@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { nanoid } from "nanoid";
 import { z } from "zod";
-import { getEnv } from "@/lib/env.server";
+import { getEnv } from "@/lib/env";
 import { presignQuestUpload } from "@/server/r2";
 import { getSessionContext } from "@/server/middleware";
 

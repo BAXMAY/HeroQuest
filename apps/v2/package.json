@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
+    "dev": "tsr generate && vite dev",
+    "build": "tsr generate && vite build",
+    "routes:gen": "tsr generate",
     "preview": "wrangler dev --port 8788",
     "deploy": "vite build && wrangler deploy",
     "deploy:preview": "vite build && wrangler deploy --env preview",

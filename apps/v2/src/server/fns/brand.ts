@@ -11,7 +11,7 @@ import {
   type BrandTheme,
 } from "@heroquest/db";
 import { db } from "@/server/db";
-import { getEnv } from "@/lib/env.server";
+import { getEnv } from "@/lib/env";
 import { resolveTenantId } from "@/server/tenant";
 import { getSessionContext } from "@/server/middleware";
 

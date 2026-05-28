@@ -13,7 +13,7 @@ import { db } from "@/server/db";
 import { getSessionContext } from "@/server/middleware";
 import { getRequest } from "@tanstack/react-start/server";
 import { localDateString } from "@/lib/dates";
-import { getEnv } from "@/lib/env.server";
+import { getEnv } from "@/lib/env";
 import { generateDailyTrivia } from "@heroquest/ai";
 
 // ---------- Daily state ----------
