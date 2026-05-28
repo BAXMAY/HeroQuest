@@ -21,7 +21,7 @@ import {
 } from "@heroquest/db";
 import { db } from "@/server/db";
 import { getSessionContext } from "@/server/middleware";
-import { getEnv } from "@/lib/env.server";
+import { getEnv } from "@/lib/env";
 import { getRequest } from "@tanstack/react-start/server";
 
 // ---------- Submit ----------

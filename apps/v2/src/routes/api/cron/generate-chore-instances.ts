@@ -3,7 +3,7 @@ import { and, eq, inArray } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { isChoreDueOn, schema } from "@heroquest/db";
 import { db } from "@/server/db";
-import { getEnv } from "@/lib/env.server";
+import { getEnv } from "@/lib/env";
 import { localDateString } from "@/lib/dates";
 
 /**

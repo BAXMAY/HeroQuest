@@ -5,7 +5,7 @@ import { schema, rankLeaderboard } from "@heroquest/db";
 import { db } from "@/server/db";
 import { getSessionContext } from "@/server/middleware";
 import { getRequest } from "@tanstack/react-start/server";
-import { getEnv } from "@/lib/env.server";
+import { getEnv } from "@/lib/env";
 
 const KV_LEADERBOARD_TTL_SECONDS = 60;
 const TOP_LIMIT = 100;
