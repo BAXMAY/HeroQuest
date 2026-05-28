@@ -2,40 +2,24 @@
  * Helper for retrieving the typed Cloudflare env inside route handlers and
  * server functions.
  *
- * The @cloudflare/vite-plugin attaches the active worker `env` to each
- * incoming Request. We probe a couple of well-known property shapes so
- * this keeps working as the plugin's internal API evolves; fall back to
- * scanning symbol keys for anything that has our bindings.
+ * The active env is stashed in an AsyncLocalStorage by the custom worker
+ * entry (apps/v2/src/entry-server.ts) before delegating to TanStack Start's
+ * request pipeline. AsyncLocalStorage is request-scoped on the async chain,
+ * so concurrent requests stay isolated.
  *
  * Wrapped in `createServerOnlyFn` so the TanStack Start import-protection
- * plugin trusts the import chain even though `getRequest` is server-only.
- * The wrapper throws at runtime if accidentally called from the client.
+ * plugin trusts the import chain. The wrapper throws at runtime if it's
+ * accidentally called from the client.
  */
 import { createServerOnlyFn } from "@tanstack/react-start";
-import { getRequest } from "@tanstack/react-start/server";
+import { envStore } from "@/entry-server";
 
 export const getEnv = createServerOnlyFn((): CloudflareEnv => {
-  const req = getRequest() as unknown as Record<string | symbol, unknown> | undefined;
-  if (!req) throw new Error("getEnv() called outside a request context");
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const direct = ((req as any).cf?.env ?? (req as any).cloudflare?.env) as
-    | CloudflareEnv
-    | undefined;
-  if (direct?.DB) return direct;
-
-  for (const key of Reflect.ownKeys(req)) {
-    const v = (req as Record<string | symbol, unknown>)[key];
-    if (v && typeof v === "object") {
-      const maybe = v as Record<string, unknown>;
-      if (maybe.DB || maybe.env) {
-        const env = (maybe.env ?? maybe) as CloudflareEnv;
-        if (env.DB) return env;
-      }
-    }
+  const env = envStore.getStore();
+  if (!env) {
+    throw new Error(
+      "getEnv() called outside a request context — entry-server.ts not active?",
+    );
   }
-
-  throw new Error(
-    "Cloudflare env not found on request — @cloudflare/vite-plugin not active or shape changed.",
-  );
+  return env;
 });
