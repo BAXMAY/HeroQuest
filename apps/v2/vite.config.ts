@@ -26,12 +26,6 @@ export default defineConfig({
   plugins: [
     tanstackStart({
       srcDirectory: "./src",
-      server: {
-        // Custom worker entry — wraps the default with an AsyncLocalStorage
-        // that captures `env` from Workers' (request, env, ctx) so getEnv()
-        // can read it inside server fns / API routes / Better Auth handler.
-        entry: "./src/entry-server.ts",
-      },
       router: {
         generatedRouteTree: "./src/routeTree.gen.ts",
       },

@@ -1,7 +1,10 @@
 {
   "$schema": "https://unpkg.com/wrangler/config-schema.json",
   "name": "heroquest-v2",
-  "main": "./dist/server/server.js",
+  // worker.ts wraps dist/server/server.js with an AsyncLocalStorage that
+  // captures Workers' (request, env, ctx) env so getEnv() works inside
+  // server fns / Better Auth handler. See apps/v2/worker.ts.
+  "main": "./worker.ts",
   "compatibility_date": "2026-05-28",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
